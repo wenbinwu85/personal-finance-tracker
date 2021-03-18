@@ -64,9 +64,13 @@ class MainWindow(wx.Frame):
         self.add_time()
 
         self.data = self.load_data()
-        self.stock_list_model, self.stock_list = self._generate_stock_list(self.data)
-        self.Bind(dv.EVT_DATAVIEW_ITEM_EDITING_DONE, self.dump_data, self.stock_list)
-        # self.Bind(dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.OnValueChanged, self.stock_list)
+        self.stock_list_model, self.stock_list = self.generate_stock_list(self.data)
+        self.Bind(dv.EVT_DATAVIEW_ITEM_EDITING_DONE, self.enable_save_button, self.stock_list)
+        self.Bind(dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.enable_save_button, self.stock_list)
+
+        self.save_button = wx.Button(self.panel, label='Save')
+        self.save_button.Disable()
+        self.Bind(wx.EVT_BUTTON, self.dump_data, self.save_button)
 
         self.add_stock_row_button = wx.Button(self.panel, label='Add Row')
         self.add_stock_row_button.Disable()
@@ -76,6 +80,7 @@ class MainWindow(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.delete_stock_rows, self.delete_stock_rows_button)
 
         button_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        button_sizer.Add(self.save_button, 0, wx.LEFT|wx.RIGHT, 5)
         button_sizer.Add(self.add_stock_row_button, 0, wx.LEFT|wx.RIGHT, 5)
         button_sizer.Add(self.delete_stock_rows_button, 0, wx.LEFT|wx.RIGHT, 5)
 
@@ -107,6 +112,11 @@ class MainWindow(wx.Frame):
         )
         return filepath
 
+    def enable_save_button(self, event):
+        """"""
+
+        self.save_button.Enable()
+
     def load_data(self):
         """"""
 
@@ -120,8 +130,9 @@ class MainWindow(wx.Frame):
         dumper = CJS()
         file_path = self._get_path(folder='data', file='stocks.csv')
         dumper.dump(self.data, file_path)
+        self.save_button.Disable()
 
-    def _generate_stock_list(self, data):
+    def generate_stock_list(self, data):
         """"""
 
         stock_list_model = StockListModel(data)
@@ -136,18 +147,11 @@ class MainWindow(wx.Frame):
         header_row = loader.load(header_file_path)[0]
 
         for idx, val in enumerate(header_row):
-            stock_list.AppendTextColumn(val, idx+1, width=len(val)*8, mode=dv.DATAVIEW_CELL_EDITABLE)
-        col0 = stock_list.PrependTextColumn('ID', 0, width=40)
-
-        col0.Alignment = wx.ALIGN_RIGHT
-        col0.Renderer.Alignment = wx.ALIGN_RIGHT
-        col0.MinWidth = 30
+            stock_list.AppendTextColumn(val, idx, width=len(val)*8, mode=dv.DATAVIEW_CELL_EDITABLE)
 
         for col in stock_list.Columns:
             col.Sortable = True
             col.Reorderable = True
-        
-        col0.Reorderable = False
 
         return stock_list_model, stock_list
 
@@ -171,20 +175,22 @@ class MainWindow(wx.Frame):
             self.toolbar.AddControl(logout_button)
             self.toolbar.Realize()
             self.SetStatusText('Successfully logged in. Administrator functions enabled.')
-            
         return None
 
     def admin_logout(self, event):
         """disable admin mode"""
 
+        self.dump_data(None)
+
         self.login_button.Show()
+        self.save_button.Disable()
         self.add_stock_row_button.Disable()
         self.delete_stock_rows_button.Disable()
 
         count = self.toolbar.GetToolsCount()
         for _ in range(count-2):
             self.toolbar.DeleteToolByPos(2)
-        self.SetTitle(APP_NAME + VERSION)
+
         self.SetStatusText('Successfully logged out.')
         return None
 
@@ -192,12 +198,13 @@ class MainWindow(wx.Frame):
         items = self.stock_list.GetSelections()
         rows = [self.stock_list_model.GetRow(item) for item in items]
         self.stock_list_model.delete_rows(rows)
+        self.save_button.Enable()
 
     def add_stock_row(self, event):
-        new_row_id = len(self.stock_list_model.data) + 1
         col_count = self.stock_list.GetColumnCount()
-        value = [str(new_row_id)] + ['' for i in range(col_count-1)]
+        value = ['New position'] + ['' for i in range(col_count-1)]
         self.stock_list_model.add_row(value)
+        self.save_button.Enable()
 
     def search(self, event):
         """"""
