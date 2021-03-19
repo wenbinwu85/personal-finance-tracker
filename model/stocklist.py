@@ -1,4 +1,3 @@
-import wx
 import wx.dataview as dv
 
 class StockListModel(dv.DataViewIndexListModel):

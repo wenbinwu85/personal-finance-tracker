@@ -1,4 +1,4 @@
-APP_NAME = 'NiuB Financial Manager'
+APP_NAME = 'NiuB Finman'
 VERSION = '  Ver 0.0.2  alpha'
 EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'

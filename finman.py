@@ -11,7 +11,7 @@ except:
 #-------------------------------------------
     
 
-class MyApp(wx.App):
+class Finman(wx.App):
     """My app class"""
 
     def OnInit(self):
@@ -21,5 +21,5 @@ class MyApp(wx.App):
 
 
 if __name__ == '__main__':
-    app = MyApp()
+    app = Finman()
     app.MainLoop()
