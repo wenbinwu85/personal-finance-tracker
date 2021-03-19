@@ -47,7 +47,7 @@ class MainWindow(wx.Frame):
         self.search_field.Bind(wx.EVT_TEXT, self.search)
 
         self.login_button = wx.Button(self.toolbar, label='Login')
-        self.login_button.Bind(wx.EVT_BUTTON, self.admin_login)
+        self.login_button.Bind(wx.EVT_BUTTON, self.login)
 
         self.toolbar.AddControl(self.search_field)
         self.toolbar.AddControl(self.login_button)
@@ -101,17 +101,6 @@ class MainWindow(wx.Frame):
         st = time.strftime("%Y-%b-%d   %I:%M:%S", t)
         self.SetStatusText(st, 2)
 
-    def _get_path(self, folder, file):
-        """"""
-
-        filepath = os.path.join(
-            os.path.dirname(__file__),
-            '..',
-            folder,
-            file
-        )
-        return filepath
-
     def enable_save_button(self, event):
         """"""
 
@@ -121,15 +110,13 @@ class MainWindow(wx.Frame):
         """"""
 
         loader = CJS()
-        file_path = self._get_path(folder='data', file='stocks.csv')
-        return loader.load(file_path)
+        return loader.load('./data/stocks.csv')
 
     def dump_data(self, event):
         """"""
 
         dumper = CJS()
-        file_path = self._get_path(folder='data', file='stocks.csv')
-        dumper.dump(self.data, file_path)
+        dumper.dump(self.data, './data/stocks.csv')
         self.save_button.Disable()
 
     def generate_stock_list(self, data):
@@ -143,8 +130,7 @@ class MainWindow(wx.Frame):
         stock_list.AssociateModel(stock_list_model)
 
         loader = CJS()
-        header_file_path = self._get_path(folder='data', file='stock_list_headers.csv')
-        header_row = loader.load(header_file_path)[0]
+        header_row = loader.load('./data/stock_list_headers.csv')[0]
 
         for idx, val in enumerate(header_row):
             stock_list.AppendTextColumn(val, idx, width=len(val)*8, mode=dv.DATAVIEW_CELL_EDITABLE)
@@ -155,7 +141,7 @@ class MainWindow(wx.Frame):
 
         return stock_list_model, stock_list
 
-    def admin_login(self, event):
+    def login(self, event):
         """enbable admin mode"""
 
         dialog = LoginDialog(self, title='Admin Login')

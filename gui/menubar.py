@@ -12,15 +12,17 @@ class MyMenuBar(wx.MenuBar):
         self.frame = frame
 
         menu1 = wx.Menu()
-        menu1.Append(101, 'Open', 'Open file')
+        menu1.Append(101, 'Open', 'Open a file')
+        menu1.Append(102, 'Login', 'User login')
         menu1.AppendSeparator()
-        menu1.Append(102, 'Exit', 'Exit')
+        menu1.Append(109, 'Exit', 'Exit')
         window_menu = wx.Menu()
         help_menu = wx.Menu()
         about = help_menu.Append(wx.ID_ABOUT)
 
         self.Bind(wx.EVT_MENU, self.open_dialog, id=101)
-        self.Bind(wx.EVT_MENU, self.quit, id=102)
+        self.Bind(wx.EVT_BUTTON, self.login, id=102)
+        self.Bind(wx.EVT_MENU, self.quit, id=109)
         self.Bind(wx.EVT_MENU, self.about_dialog, about)
 
         self.Append(menu1, 'File')
@@ -41,8 +43,12 @@ class MyMenuBar(wx.MenuBar):
         wx.adv.AboutBox(info)
         return None
 
-    def open_dialog(self):
+    def open_dialog(self, event):
         """"""
     
+    def login(self, event):
+        """"""
+
+
     def quit(self, event):
         sys.exit()
