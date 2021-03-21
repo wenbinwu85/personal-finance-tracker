@@ -1,4 +1,3 @@
-from distutils.log import info
 import logging as logger
 
 

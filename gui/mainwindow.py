@@ -101,14 +101,22 @@ class MainWindow(wx.Frame):
         st = time.strftime("%Y-%b-%d   %I:%M:%S", t)
         self.SetStatusText(st, 2)
 
+    def enable_save_button(self, event):
+        """"""
+
+        self.save_button.Enable()
+
     def load_data(self):
         """"""
 
         loader = CJS()
         try:
-            return loader.load('./data/stocks.csv')
+            data = loader.load('./data/stocks.csv')
         except Exception as e:
             logger.exception(f'Unable to load data from file: {e}')
+        else:
+            logger.info('Successful data load.')
+            return data
 
     def dump_data(self, event):
         """"""
@@ -118,6 +126,8 @@ class MainWindow(wx.Frame):
             dumper.dump(self.data, './data/stocks.csv')
         except Exception as e:
             logger.exception(f'Unable to dump data to file: {e}')
+        else:
+            logger.info('Succesfully data dump.')
 
         if self.save_button:
             self.save_button.Disable()
