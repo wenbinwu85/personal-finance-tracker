@@ -2,7 +2,7 @@ import sys
 import wx
 import wx.adv
 from settings.app import *
-from helper.logger import logger
+from functions.logger import logger
 
 
 class MyMenuBar(wx.MenuBar):

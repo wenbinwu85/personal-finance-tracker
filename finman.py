@@ -1,6 +1,6 @@
 import wx
 from gui.mainwindow import MainWindow
-from helper.logger import logger
+from functions.logger import logger
 
 # ----- fix pixelated fonts in windows -----
 import ctypes
@@ -15,10 +15,9 @@ class Finman(wx.App):
     """My app class"""
 
     def OnInit(self):
+        logger.info('Program started.')
         self.frame = MainWindow()
         self.frame.Show()
-
-        logger.info('Program started.')
         return True
 
     def OnExit(self):

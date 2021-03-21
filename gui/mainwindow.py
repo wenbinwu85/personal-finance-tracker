@@ -3,12 +3,14 @@ import wx
 import wx.dataview as dv
 
 from settings.app import *
-from helper.cjs import CJS
-from helper.logger import logger
+from functions.logger import logger
+from functions.funcs import load_data, dump_data
 from model.stocklist import StockListModel
 from gui.menubar import MyMenuBar
 from gui.logindialog import LoginDialog
 
+
+LOGIN_STATUS = False
 
 class MainWindow(wx.Frame):
     """Main window GUI"""
@@ -70,7 +72,7 @@ class MainWindow(wx.Frame):
 
         self.save_button = wx.Button(self.panel, label='Save')
         self.save_button.Disable()
-        self.Bind(wx.EVT_BUTTON, self.dump_data, self.save_button)
+        self.Bind(wx.EVT_BUTTON, self.dump_stocks, self.save_button)
 
         self.add_stock_row_button = wx.Button(self.panel, label='Add Row')
         self.add_stock_row_button.Disable()
@@ -106,28 +108,30 @@ class MainWindow(wx.Frame):
 
         self.save_button.Enable()
 
-    def load_data(self):
+    def load_stocks(self):
         """"""
 
-        loader = CJS()
         try:
-            data = loader.load('./data/stocks.csv')
+            data = load_data('./data/stocks.csv')
         except Exception as e:
-            logger.exception(f'Unable to load data from file: {e}')
+            self.SetStatusText('Failed to load data from file.')
+            logger.exception(f'data load failed: {e}')
         else:
-            logger.info('Successful data load.')
+            self.SetStatusText('Data loaded successfully.')
+            logger.info('data load successful.')
             return data
 
-    def dump_data(self, event):
+    def dump_stocks(self, event):
         """"""
 
-        dumper = CJS()
         try:
-            dumper.dump(self.data, './data/stocks.csv')
+            dump_data(self.data, './data/stocks.csv')
         except Exception as e:
-            logger.exception(f'Unable to dump data to file: {e}')
+            self.SetStatusText('Failed to dump data to file.')
+            logger.exception(f'data dump failed: {e}')
         else:
-            logger.info('Succesfully data dump.')
+            self.SetStatusText('Data dump successfully.')
+            logger.info('data dump successful.')
 
         if self.save_button:
             self.save_button.Disable()
@@ -142,11 +146,11 @@ class MainWindow(wx.Frame):
         )
         stock_list.AssociateModel(stock_list_model)
 
-        loader = CJS()
         try:
-            header_row = loader.load('./data/stock_list_headers.csv')[0]
+            header_row = load_data('./data/stock_list_headers.csv')[0]
         except Exception as e:
-            logger.exception(f'Unable to load header row from file: {e}')
+            self.SetStatusText('Unable to load header row.')
+            logger.exception(f'load header row failed: {e}')
 
         for idx, val in enumerate(header_row):
             stock_list.AppendTextColumn(val, idx, width=len(val)*8, mode=dv.DATAVIEW_CELL_EDITABLE)
@@ -164,9 +168,10 @@ class MainWindow(wx.Frame):
         if dialog.ShowModal() == wx.ID_OK:
             username = dialog.username_field.GetValue()
             password = dialog.password_field.GetValue()
+
             if (username, password) != ADMIN_ACCOUNT:
                 self.SetStatusText('Unable to login. Invalid credentials.')
-                logger.warning(f'Unsuccessful login attempted - {username}:{password}')
+                logger.warning(f'login failure: {username}:{password}')
                 return None
 
             self.login_button.Hide()
@@ -178,7 +183,7 @@ class MainWindow(wx.Frame):
             self.toolbar.AddControl(logout_button)
             self.toolbar.Realize()
             self.SetStatusText('Successfully logged in.')
-            logger.info(f'Successful login: {username}.')
+            logger.info(f'login successful: {username}.')
         return None
 
     def admin_logout(self, event):
@@ -187,7 +192,8 @@ class MainWindow(wx.Frame):
         try:
             self.dump_data(None)
         except Exception as e:
-            logger.exception(f'Unable to dump data during admin logout.')
+            self.SetStatusText('Failed to dump data during logout.')
+            logger.exception(f'dump data during admin logout: {e}')
 
         self.login_button.Show()
         self.save_button.Disable()
@@ -199,6 +205,7 @@ class MainWindow(wx.Frame):
             self.toolbar.DeleteToolByPos(2)
 
         self.SetStatusText('Successfully logged out.')
+        logger.info('logout successful.')
         return None
 
     def delete_stock_rows(self, event):
@@ -207,7 +214,8 @@ class MainWindow(wx.Frame):
         try:
             self.stock_list_model.delete_rows(rows)
         except Exception as e:
-            logger.exception(f'Unable to delete selected rows: {e}')
+            self.SetStatusText('Failed to delete rows.')
+            logger.exception(f'delete rows failure: {e}')
         self.save_button.Enable()
 
     def add_stock_row(self, event):
@@ -216,7 +224,8 @@ class MainWindow(wx.Frame):
         try:
             self.stock_list_model.add_row(value)
         except Exception as e:
-            logger.exception(f'Unable to add new row: {e}')
+            self.SetStatusText('Failed to add new row.')
+            logger.exception(f'add new row failure: {e}')
         self.save_button.Enable()
 
     def search(self, event):
