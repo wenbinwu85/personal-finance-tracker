@@ -2,6 +2,7 @@ import sys
 import wx
 import wx.adv
 from settings.app import *
+from helper.logger import logger
 
 
 class MyMenuBar(wx.MenuBar):
@@ -51,4 +52,6 @@ class MyMenuBar(wx.MenuBar):
 
 
     def quit(self, event):
+        self.frame.dump_data(event)
+        logger.info('Program exited by file->exit.')
         sys.exit()

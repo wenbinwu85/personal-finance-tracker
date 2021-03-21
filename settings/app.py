@@ -1,5 +1,5 @@
 APP_NAME = 'NiuB Finman'
-VERSION = '  Ver 0.0.2  alpha'
+VERSION = '  v0.0.2 alpha'
 EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'
 WEBSITE = 'https://github.com/wenbinwu85/', 'Github'

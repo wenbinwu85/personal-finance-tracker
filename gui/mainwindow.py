@@ -1,10 +1,10 @@
-import os
 import time
 import wx
 import wx.dataview as dv
 
 from settings.app import *
 from helper.cjs import CJS
+from helper.logger import logger
 from model.stocklist import StockListModel
 from gui.menubar import MyMenuBar
 from gui.logindialog import LoginDialog
@@ -18,7 +18,7 @@ class MainWindow(wx.Frame):
             self,
             parent=None,
             title=APP_NAME + VERSION,
-            size=(1200, 800),
+            size=(800, 600),
             style=wx.DEFAULT_FRAME_STYLE #  & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
             )
         self.panel = wx.Panel(self)
@@ -101,23 +101,26 @@ class MainWindow(wx.Frame):
         st = time.strftime("%Y-%b-%d   %I:%M:%S", t)
         self.SetStatusText(st, 2)
 
-    def enable_save_button(self, event):
-        """"""
-
-        self.save_button.Enable()
-
     def load_data(self):
         """"""
 
         loader = CJS()
-        return loader.load('./data/stocks.csv')
+        try:
+            return loader.load('./data/stocks.csv')
+        except Exception as e:
+            logger.exception(f'Unable to load data from file: {e}')
 
     def dump_data(self, event):
         """"""
 
         dumper = CJS()
-        dumper.dump(self.data, './data/stocks.csv')
-        self.save_button.Disable()
+        try:
+            dumper.dump(self.data, './data/stocks.csv')
+        except Exception as e:
+            logger.exception(f'Unable to dump data to file: {e}')
+
+        if self.save_button:
+            self.save_button.Disable()
 
     def generate_stock_list(self, data):
         """"""
@@ -130,7 +133,10 @@ class MainWindow(wx.Frame):
         stock_list.AssociateModel(stock_list_model)
 
         loader = CJS()
-        header_row = loader.load('./data/stock_list_headers.csv')[0]
+        try:
+            header_row = loader.load('./data/stock_list_headers.csv')[0]
+        except Exception as e:
+            logger.exception(f'Unable to load header row from file: {e}')
 
         for idx, val in enumerate(header_row):
             stock_list.AppendTextColumn(val, idx, width=len(val)*8, mode=dv.DATAVIEW_CELL_EDITABLE)
@@ -150,6 +156,7 @@ class MainWindow(wx.Frame):
             password = dialog.password_field.GetValue()
             if (username, password) != ADMIN_ACCOUNT:
                 self.SetStatusText('Unable to login. Invalid credentials.')
+                logger.warning(f'Unsuccessful login attempted - {username}:{password}')
                 return None
 
             self.login_button.Hide()
@@ -160,13 +167,17 @@ class MainWindow(wx.Frame):
             logout_button.Bind(wx.EVT_BUTTON, self.admin_logout)
             self.toolbar.AddControl(logout_button)
             self.toolbar.Realize()
-            self.SetStatusText('Successfully logged in. Administrator functions enabled.')
+            self.SetStatusText('Successfully logged in.')
+            logger.info(f'Successful login: {username}.')
         return None
 
     def admin_logout(self, event):
         """disable admin mode"""
 
-        self.dump_data(None)
+        try:
+            self.dump_data(None)
+        except Exception as e:
+            logger.exception(f'Unable to dump data during admin logout.')
 
         self.login_button.Show()
         self.save_button.Disable()
@@ -183,13 +194,19 @@ class MainWindow(wx.Frame):
     def delete_stock_rows(self, event):
         items = self.stock_list.GetSelections()
         rows = [self.stock_list_model.GetRow(item) for item in items]
-        self.stock_list_model.delete_rows(rows)
+        try:
+            self.stock_list_model.delete_rows(rows)
+        except Exception as e:
+            logger.exception(f'Unable to delete selected rows: {e}')
         self.save_button.Enable()
 
     def add_stock_row(self, event):
         col_count = self.stock_list.GetColumnCount()
         value = ['New position'] + ['' for i in range(col_count-1)]
-        self.stock_list_model.add_row(value)
+        try:
+            self.stock_list_model.add_row(value)
+        except Exception as e:
+            logger.exception(f'Unable to add new row: {e}')
         self.save_button.Enable()
 
     def search(self, event):
