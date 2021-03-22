@@ -1,9 +1,11 @@
+import os
 import logging as logger
 
 
 logger.basicConfig(
     level=logger.DEBUG,
-    filename='./settings/logging.log',
+    # filename='finman.log',
+    # filemode='w+',
     format='%(asctime)s : %(filename)s.%(funcName)s : %(levelname)s : %(message)s'
 
 )

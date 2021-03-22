@@ -52,6 +52,10 @@ class MyMenuBar(wx.MenuBar):
 
 
     def quit(self, event):
-        self.frame.dump_data(event)
+        try:
+            self.frame.dump_stocks(event)
+        except Exception as e:
+            logger.exception(f'Failed to dump data during program exit: {e}')
+
         logger.info('Program exited by file->exit.')
         sys.exit()

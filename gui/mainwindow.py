@@ -65,7 +65,8 @@ class MainWindow(wx.Frame):
         self.timer.Start(1000)
         self.add_time()
 
-        self.data = self.load_data()
+        self.data = self.load_stocks()
+
         self.stock_list_model, self.stock_list = self.generate_stock_list(self.data)
         self.Bind(dv.EVT_DATAVIEW_ITEM_EDITING_DONE, self.enable_save_button, self.stock_list)
         self.Bind(dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.enable_save_button, self.stock_list)
@@ -190,7 +191,7 @@ class MainWindow(wx.Frame):
         """disable admin mode"""
 
         try:
-            self.dump_data(None)
+            self.dump_stocks(None)
         except Exception as e:
             self.SetStatusText('Failed to dump data during logout.')
             logger.exception(f'dump data during admin logout: {e}')

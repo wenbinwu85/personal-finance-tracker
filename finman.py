@@ -9,7 +9,7 @@ try:
 except:
     pass
 #-------------------------------------------
-    
+
 
 class Finman(wx.App):
     """My app class"""
@@ -21,7 +21,11 @@ class Finman(wx.App):
         return True
 
     def OnExit(self):
-        self.frame.dump_data(None)
+        try:
+            self.frame.dump_stocks(None)
+        except Exception as e:
+            logger.exception(f'Failed to dump data during program exit: {e}')
+
         logger.info('Program exited by X button.')
         return super().OnExit()
 
