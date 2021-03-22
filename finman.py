@@ -22,7 +22,7 @@ class Finman(wx.App):
 
     def OnExit(self):
         try:
-            self.frame.dump_stocks(None)
+            self.frame.dump_stocks('exit')
         except Exception as e:
             logger.exception(f'Failed to dump data during program exit: {e}')
 

@@ -1,14 +1,11 @@
-import os
-import logging as logger
+import logging
 
-
-logger.basicConfig(
-    level=logger.DEBUG,
-    # filename='finman.log',
-    # filemode='w+',
-    format='%(asctime)s : %(filename)s.%(funcName)s : %(levelname)s : %(message)s'
-
-)
+logger = logging.getLogger('finman')
+logger.setLevel('DEBUG')
+# handler = logging.FileHandler('./finman.log')
+# formatter = logging.Formatter('%(asctime)s : %(filename)s.%(funcName)s : %(levelname)s : %(message)s')
+# handler.setFormatter(formatter)
+# logger.addHandler(handler)
 
 
 if __name__ == '__main__':

@@ -20,7 +20,7 @@ class MainWindow(wx.Frame):
             self,
             parent=None,
             title=APP_NAME + VERSION,
-            size=(800, 600),
+            size=(1200, 600),
             style=wx.DEFAULT_FRAME_STYLE #  & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
             )
         self.panel = wx.Panel(self)
@@ -95,7 +95,7 @@ class MainWindow(wx.Frame):
 
         self.CenterOnScreen()
         self.SetThemeEnabled(True)
-        self.SetMinSize(self.GetBestSize())
+        self.SetMinSize(self.GetMinSize())
 
     def add_time(self):
         """"""
@@ -131,7 +131,8 @@ class MainWindow(wx.Frame):
             self.SetStatusText('Failed to dump data to file.')
             logger.exception(f'data dump failed: {e}')
         else:
-            self.SetStatusText('Data dump successfully.')
+            if event != 'exit':
+                self.SetStatusText('Data dump successfully.')
             logger.info('data dump successful.')
 
         if self.save_button:
@@ -180,14 +181,20 @@ class MainWindow(wx.Frame):
             self.delete_stock_rows_button.Enable()
 
             logout_button = wx.Button(self.toolbar, label='Logout')
-            logout_button.Bind(wx.EVT_BUTTON, self.admin_logout)
+            logout_button.Bind(wx.EVT_BUTTON, self.logout)
             self.toolbar.AddControl(logout_button)
             self.toolbar.Realize()
+
+            menubar = self.GetMenuBar()
+            item = menubar.FindItemById(102)
+            item.SetItemLabel('Logout')
+            menubar.Bind(wx.EVT_MENU, menubar.logout, id=102)
+
             self.SetStatusText('Successfully logged in.')
             logger.info(f'login successful: {username}.')
         return None
 
-    def admin_logout(self, event):
+    def logout(self, event):
         """disable admin mode"""
 
         try:
@@ -205,6 +212,11 @@ class MainWindow(wx.Frame):
         for _ in range(count-2):
             self.toolbar.DeleteToolByPos(2)
 
+        menubar = self.GetMenuBar()
+        item = menubar.FindItemById(102)
+        item.SetItemLabel('Login')
+        menubar.Bind(wx.EVT_MENU, menubar.login, id=102)
+
         self.SetStatusText('Successfully logged out.')
         logger.info('logout successful.')
         return None
@@ -221,7 +233,7 @@ class MainWindow(wx.Frame):
 
     def add_stock_row(self, event):
         col_count = self.stock_list.GetColumnCount()
-        value = ['New position'] + ['' for i in range(col_count-1)]
+        value = ['New'] + ['' for i in range(col_count-1)]
         try:
             self.stock_list_model.add_row(value)
         except Exception as e:

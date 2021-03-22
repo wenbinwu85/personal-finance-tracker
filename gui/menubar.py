@@ -3,6 +3,7 @@ import wx
 import wx.adv
 from settings.app import *
 from functions.logger import logger
+from gui.logindialog import LoginDialog
 
 
 class MyMenuBar(wx.MenuBar):
@@ -22,7 +23,7 @@ class MyMenuBar(wx.MenuBar):
         about = help_menu.Append(wx.ID_ABOUT)
 
         self.Bind(wx.EVT_MENU, self.open_dialog, id=101)
-        self.Bind(wx.EVT_BUTTON, self.login, id=102)
+        self.Bind(wx.EVT_MENU, self.login, id=102)
         self.Bind(wx.EVT_MENU, self.quit, id=109)
         self.Bind(wx.EVT_MENU, self.about_dialog, about)
 
@@ -48,12 +49,24 @@ class MyMenuBar(wx.MenuBar):
         """"""
     
     def login(self, event):
+        """enbable admin mode"""
+
+        self.frame.login(event)
+        item = self.FindItemById(102)
+        item.SetItemLabel('Logout')
+        self.Bind(wx.EVT_MENU, self.logout, id=102)
+
+    def logout(self, event):
         """"""
 
+        self.frame.logout(event)
+        item = self.FindItemById(102)
+        item.SetItemLabel('Login')
+        self.Bind(wx.EVT_MENU, self.login, id=102)
 
     def quit(self, event):
         try:
-            self.frame.dump_stocks(event)
+            self.frame.dump_stocks('exit')
         except Exception as e:
             logger.exception(f'Failed to dump data during program exit: {e}')
 
