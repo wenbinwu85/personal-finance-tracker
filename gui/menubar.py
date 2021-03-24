@@ -1,9 +1,9 @@
+import os
 import sys
 import wx
 import wx.adv
 from settings.app import *
-from functions.logger import logger
-from gui.logindialog import LoginDialog
+from functions.startup import logger
 
 
 class MyMenuBar(wx.MenuBar):
@@ -44,9 +44,6 @@ class MyMenuBar(wx.MenuBar):
         info.SetWebSite(*WEBSITE)
         wx.adv.AboutBox(info)
         return None
-
-    def open_dialog(self, event):
-        """"""
     
     def login(self, event):
         """enbable admin mode"""
@@ -63,6 +60,25 @@ class MyMenuBar(wx.MenuBar):
         item = self.FindItemById(102)
         item.SetItemLabel('Login')
         self.Bind(wx.EVT_MENU, self.login, id=102)
+
+    def open_dialog(self, event):
+        """"""
+
+        wildcards = 'CSV file (*.csv)|*.csv|'
+
+        with wx.FileDialog(
+            self,
+            message='Choose data file',
+            defaultDir=os.getcwd(),
+            defaultFile='',
+            wildcard=wildcards,
+            style=wx.FD_OPEN | wx.FD_CHANGE_DIR | wx.FD_FILE_MUST_EXIST | wx.FD_PREVIEW
+            ) as dialog:
+
+            if dialog.ShowModal() == wx.ID_OK:
+                self.frame.reload_data(dialog.GetPath())
+                self.frame.SetStatusText(f'New data loaded form {dialog.GetPath()}.')
+                logger.info('New data load successful.')
 
     def quit(self, event):
         try:

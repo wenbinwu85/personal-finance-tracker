@@ -3,14 +3,14 @@ import wx
 import wx.dataview as dv
 
 from settings.app import *
-from functions.logger import logger
+from functions.startup import logger, user_settings, stock_list_headers, stocks_data, stocks_data_path
 from functions.funcs import load_data, dump_data
 from model.stocklist import StockListModel
 from gui.menubar import MyMenuBar
 from gui.logindialog import LoginDialog
 
 
-LOGIN_STATUS = False
+login_status = False
 
 class MainWindow(wx.Frame):
     """Main window GUI"""
@@ -65,8 +65,7 @@ class MainWindow(wx.Frame):
         self.timer.Start(1000)
         self.add_time()
 
-        self.data = self.load_stocks()
-
+        self.data = stocks_data
         self.stock_list_model, self.stock_list = self.generate_stock_list(self.data)
         self.Bind(dv.EVT_DATAVIEW_ITEM_EDITING_DONE, self.enable_save_button, self.stock_list)
         self.Bind(dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.enable_save_button, self.stock_list)
@@ -74,7 +73,6 @@ class MainWindow(wx.Frame):
         self.save_button = wx.Button(self.panel, label='Save')
         self.save_button.Disable()
         self.Bind(wx.EVT_BUTTON, self.dump_stocks, self.save_button)
-
         self.add_stock_row_button = wx.Button(self.panel, label='Add Row')
         self.add_stock_row_button.Disable()
         self.Bind(wx.EVT_BUTTON, self.add_stock_row, self.add_stock_row_button)
@@ -95,7 +93,7 @@ class MainWindow(wx.Frame):
 
         self.CenterOnScreen()
         self.SetThemeEnabled(True)
-        self.SetMinSize(self.GetMinSize())
+        self.SetMinSize(self.main_sizer.GetSize())
 
     def add_time(self):
         """"""
@@ -109,34 +107,47 @@ class MainWindow(wx.Frame):
 
         self.save_button.Enable()
 
-    def load_stocks(self):
-        """"""
-
-        try:
-            data = load_data('./data/stocks.csv')
-        except Exception as e:
-            self.SetStatusText('Failed to load data from file.')
-            logger.exception(f'data load failed: {e}')
-        else:
-            self.SetStatusText('Data loaded successfully.')
-            logger.info('data load successful.')
-            return data
-
     def dump_stocks(self, event):
         """"""
 
         try:
-            dump_data(self.data, './data/stocks.csv')
+            dump_data(self.data, stocks_data_path)
         except Exception as e:
             self.SetStatusText('Failed to dump data to file.')
             logger.exception(f'data dump failed: {e}')
         else:
             if event != 'exit':
-                self.SetStatusText('Data dump successfully.')
+                self.SetStatusText(f'Data dumped to {stocks_data_path}.')
             logger.info('data dump successful.')
 
         if self.save_button:
             self.save_button.Disable()
+
+    def reload_data(self, path):
+        """"""
+
+        self.stock_list.SelectAll()
+        items = self.stock_list.GetSelections()
+        rows = [self.stock_list_model.GetRow(item) for item in items]
+        try:
+            self.stock_list_model.delete_rows(rows)
+        except Exception as e:
+            self.SetStatusText('Failed to delete rows.')
+            logger.exception(f'delete rows failure: {e}')
+
+        self.data = load_data(path)
+        for i in self.data:
+            try:
+                self.stock_list_model.add_row(i)
+            except Exception as e:
+                self.SetStatusText('Failed to add new row.')
+                logger.exception(f'add new row failure: {e}')
+
+        user_settings['stocks_data_path'] = path
+        dump_data(data=user_settings, file=USER_SETTINGS_PATH)
+
+        global stocks_data_path
+        stocks_data_path = path
 
     def generate_stock_list(self, data):
         """"""
@@ -147,9 +158,10 @@ class MainWindow(wx.Frame):
             style = wx.BORDER_THEME | dv.DV_ROW_LINES | dv.DV_VERT_RULES | dv.DV_MULTIPLE
         )
         stock_list.AssociateModel(stock_list_model)
+        stock_list.EnableSystemTheme()
 
         try:
-            header_row = load_data('./data/stock_list_headers.csv')[0]
+            header_row = stock_list_headers[0]
         except Exception as e:
             self.SetStatusText('Unable to load header row.')
             logger.exception(f'load header row failed: {e}')
@@ -222,6 +234,8 @@ class MainWindow(wx.Frame):
         return None
 
     def delete_stock_rows(self, event):
+        """"""
+
         items = self.stock_list.GetSelections()
         rows = [self.stock_list_model.GetRow(item) for item in items]
         try:
@@ -232,6 +246,8 @@ class MainWindow(wx.Frame):
         self.save_button.Enable()
 
     def add_stock_row(self, event):
+        """"""
+
         col_count = self.stock_list.GetColumnCount()
         value = ['New'] + ['' for i in range(col_count-1)]
         try:

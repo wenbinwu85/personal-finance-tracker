@@ -1,6 +1,6 @@
 import wx
 from gui.mainwindow import MainWindow
-from functions.logger import logger
+from functions.startup import logger
 
 # ----- fix pixelated fonts in windows -----
 import ctypes
