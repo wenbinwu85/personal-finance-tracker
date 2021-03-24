@@ -19,7 +19,7 @@ class MainWindow(wx.Frame):
         wx.Frame.__init__(
             self,
             parent=None,
-            title=APP_NAME + VERSION,
+            title=APP_NAME+VERSION,
             size=(1200, 600),
             style=wx.DEFAULT_FRAME_STYLE #  & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
             )
@@ -112,6 +112,7 @@ class MainWindow(wx.Frame):
 
         try:
             dump_data(self.data, stocks_data_path)
+            print('dumped:', stocks_data_path)
         except Exception as e:
             self.SetStatusText('Failed to dump data to file.')
             logger.exception(f'data dump failed: {e}')
@@ -148,6 +149,8 @@ class MainWindow(wx.Frame):
 
         global stocks_data_path
         stocks_data_path = path
+        print(path)
+        print(stocks_data_path)
 
     def generate_stock_list(self, data):
         """"""
@@ -211,6 +214,7 @@ class MainWindow(wx.Frame):
 
         try:
             self.dump_stocks(None)
+            print('dumped on logout:', stocks_data_path)
         except Exception as e:
             self.SetStatusText('Failed to dump data during logout.')
             logger.exception(f'dump data during admin logout: {e}')
