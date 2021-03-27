@@ -80,14 +80,14 @@ class MainWindow(wx.Frame):
         self.delete_stock_rows_button.Disable()
         self.Bind(wx.EVT_BUTTON, self.delete_stock_rows, self.delete_stock_rows_button)
 
-        button_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        button_sizer = wx.StaticBoxSizer(wx.HORIZONTAL, self.panel, label='Admin Fucntions')
         button_sizer.Add(self.save_button, 0, wx.LEFT|wx.RIGHT, 5)
         button_sizer.Add(self.add_stock_row_button, 0, wx.LEFT|wx.RIGHT, 5)
         button_sizer.Add(self.delete_stock_rows_button, 0, wx.LEFT|wx.RIGHT, 5)
 
-        self.main_sizer = wx.BoxSizer(wx.VERTICAL)
-        self.main_sizer.Add(self.stock_list, 1, wx.EXPAND, 5)
-        self.main_sizer.Add(button_sizer, 0, wx.TOP|wx.BOTTOM, 5)
+        self.main_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Stock Positions')
+        self.main_sizer.Add(self.stock_list, 1, wx.EXPAND)
+        self.main_sizer.Add(button_sizer, 0, wx.TOP|wx.BOTTOM)
         self.main_sizer.Fit(self.panel)
         self.panel.SetSizer(self.main_sizer)
 

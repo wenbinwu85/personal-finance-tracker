@@ -1,6 +1,8 @@
 import wx
 from gui.mainwindow import MainWindow
 from functions.startup import logger
+from gui.logindialog import LoginDialog
+
 
 # ----- fix pixelated fonts in windows -----
 import ctypes
