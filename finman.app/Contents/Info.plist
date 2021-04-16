@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>MacOS/finman</string>
 	<key>CFBundleIconFile</key>
-	<string>ndowed</string>
+	<string>icon-windowed.icns</string>
 	<key>CFBundleIdentifier</key>
 	<string>finman</string>
 	<key>CFBundleInfoDictionaryVersion</key>

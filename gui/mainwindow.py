@@ -3,7 +3,8 @@ import wx
 import wx.dataview as dv
 
 from settings.app import *
-from functions.startup import logger, user_settings, stock_list_headers, stocks_data, stocks_data_path
+from functions.startup import logger, user_settings, stock_list_headers
+from functions.startup import stocks_data, stocks_data_path
 from functions.funcs import load_data, dump_data
 from model.stocklist import StockListModel
 from gui.menubar import MyMenuBar
@@ -20,7 +21,7 @@ class MainWindow(wx.Frame):
             self,
             parent=None,
             title=APP_NAME+VERSION,
-            size=(1200, 600),
+            size=(1280, 600),
             style=wx.DEFAULT_FRAME_STYLE #  & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
             )
         self.panel = wx.Panel(self)
