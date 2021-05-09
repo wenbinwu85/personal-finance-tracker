@@ -1,2 +1,2 @@
-# niu-b-finance-tracker
-personal financial tracker
+# ahben-financial-tracker
+my personal financial tracker :)
