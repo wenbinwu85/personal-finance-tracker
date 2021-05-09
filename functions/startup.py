@@ -1,12 +1,12 @@
 import logging
 from functions.cjs import CJS
-from settings.app import USER_SETTINGS_PATH
+from settings.app import USER_SETTINGS_PATH, APP_NAME
 
 
 class StartUpException(Exception):
     """"""
 
-logger = logging.getLogger('Niu-B Finman')
+logger = logging.getLogger(APP_NAME)
 logger.setLevel('DEBUG')
 # handler = logging.FileHandler('./finman.log')
 # formatter = logging.Formatter('%(asctime)s : %(filename)s.%(funcName)s : %(levelname)s : %(message)s')

@@ -1,2 +1,2 @@
-# niu-b-finance-manager
-personal financial manager
+# niu-b-finance-tracker
+personal financial tracker

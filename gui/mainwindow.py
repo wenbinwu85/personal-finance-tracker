@@ -17,12 +17,11 @@ class MainWindow(wx.Frame):
     """Main window GUI"""
 
     def __init__(self):
-        wx.Frame.__init__(
-            self,
+        super().__init__(
             parent=None,
             title=APP_NAME+VERSION,
-            size=(1280, 600),
-            style=wx.DEFAULT_FRAME_STYLE #  & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
+            size=(1400, 640),
+            style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
             )
         self.panel = wx.Panel(self)
 

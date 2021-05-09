@@ -14,17 +14,22 @@ class MyMenuBar(wx.MenuBar):
         self.frame = frame
 
         menu1 = wx.Menu()
-        menu1.Append(101, 'Open', 'Open a file')
-        menu1.Append(102, 'Login', 'User login')
+        menu1.Append(wx.ID_OPEN, '&Open', 'Open a file')
+        menu1.Append(102, '&Login', 'User login')
         menu1.AppendSeparator()
-        menu1.Append(109, 'Exit', 'Exit')
+
+        # qmi = wx.MenuItem(menu1, wx.ID_EXIT, '&Quit\tCtrl+Q')
+        # qmi.SetBitmap(wx.ArtProvider.GetBitmap('exit.png'))
+        # menu1.Append(qmi)
+
+        menu1.Append(wx.ID_EXIT, 'Quit', 'Quit Ahben Financial Tracker')
         window_menu = wx.Menu()
         help_menu = wx.Menu()
         about = help_menu.Append(wx.ID_ABOUT)
 
-        self.Bind(wx.EVT_MENU, self.open_dialog, id=101)
+        self.Bind(wx.EVT_MENU, self.open_dialog, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU, self.login, id=102)
-        self.Bind(wx.EVT_MENU, self.quit, id=109)
+        self.Bind(wx.EVT_MENU, self.quit, id=wx.ID_EXIT)
         self.Bind(wx.EVT_MENU, self.about_dialog, about)
 
         self.Append(menu1, 'File')
