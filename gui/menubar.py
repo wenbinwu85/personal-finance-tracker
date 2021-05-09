@@ -22,7 +22,7 @@ class MyMenuBar(wx.MenuBar):
         # qmi.SetBitmap(wx.ArtProvider.GetBitmap('exit.png'))
         # menu1.Append(qmi)
 
-        menu1.Append(wx.ID_EXIT, 'Quit', 'Quit Ahben Financial Tracker')
+        menu1.Append(wx.ID_EXIT, 'Quit', 'Quit '+APP_NAME)
         window_menu = wx.Menu()
         help_menu = wx.Menu()
         about = help_menu.Append(wx.ID_ABOUT)
@@ -87,9 +87,9 @@ class MyMenuBar(wx.MenuBar):
 
     def quit(self, event):
         try:
-            self.frame.dump_stocks('exit')
+            self.frame.dump_stocks('quit')
         except Exception as e:
             logger.exception(f'Failed to dump data during program exit: {e}')
 
-        logger.info('Program exited by file->exit.')
+        logger.info('Program exited by file->quit.')
         sys.exit()

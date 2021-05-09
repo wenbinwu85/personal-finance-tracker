@@ -12,6 +12,8 @@ from gui.logindialog import LoginDialog
 
 
 login_status = False
+stocklist_changed = False
+
 
 class MainWindow(wx.Frame):
     """Main window GUI"""
@@ -117,7 +119,7 @@ class MainWindow(wx.Frame):
             self.SetStatusText('Failed to dump data to file.')
             logger.exception(f'data dump failed: {e}')
         else:
-            if event != 'exit':
+            if event != 'quit':
                 self.SetStatusText(f'Data dumped to {stocks_data_path}.')
             logger.info('data dump successful.')
 
