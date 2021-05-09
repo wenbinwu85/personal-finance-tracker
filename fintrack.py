@@ -23,7 +23,7 @@ class FinTrack(wx.App):
 
     def OnExit(self):
         try:
-            self.frame.dump_stocks('exit')
+            self.frame.dump_stocks('quit')
         except Exception as e:
             logger.exception(f'Failed to dump data during program exit: {e}')
 

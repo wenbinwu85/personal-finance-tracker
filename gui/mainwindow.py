@@ -23,7 +23,7 @@ class MainWindow(wx.Frame):
             parent=None,
             title=APP_NAME+VERSION,
             size=(1400, 640),
-            style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
+            style=wx.DEFAULT_FRAME_STYLE # & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
             )
         self.panel = wx.Panel(self)
 
@@ -58,9 +58,9 @@ class MainWindow(wx.Frame):
         self.toolbar.Realize()
 
         self.CreateStatusBar()
-        statusbar = self.GetStatusBar()
-        statusbar.SetFieldsCount(3)
-        statusbar.SetStatusWidths([-2, 150, 140])
+        self.statusbar = self.GetStatusBar()
+        self.statusbar.SetFieldsCount(3)
+        self.statusbar.SetStatusWidths([-2, 150, 140])
         self.SetStatusText(STATUS_BAR_MESSAGE, 0)
 
         self.timer = wx.PyTimer(self.add_time)
