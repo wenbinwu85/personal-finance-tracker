@@ -193,14 +193,14 @@ class MainWindow(wx.Frame):
                 logger.warning(f'login failure: {username}:{password}')
                 return None
 
-            self.login_button.Hide()
-            self.add_stock_row_button.Enable()
-            self.delete_stock_rows_button.Enable()
-
+            self.toolbar.DeleteToolByPos(1)
             logout_button = wx.Button(self.toolbar, label='Logout')
             logout_button.Bind(wx.EVT_BUTTON, self.logout)
             self.toolbar.AddControl(logout_button)
             self.toolbar.Realize()
+
+            self.add_stock_row_button.Enable()
+            self.delete_stock_rows_button.Enable()
 
             menubar = self.GetMenuBar()
             item = menubar.FindItemById(102)
@@ -209,6 +209,9 @@ class MainWindow(wx.Frame):
 
             self.SetStatusText('Successfully logged in.')
             logger.info(f'login successful: {username}.')
+
+            global login_status
+            login_status = True
         return None
 
     def logout(self, event):
@@ -221,14 +224,16 @@ class MainWindow(wx.Frame):
             self.SetStatusText('Failed to dump data during logout.')
             logger.exception(f'dump data during admin logout: {e}')
 
-        self.login_button.Show()
+
+        self.toolbar.DeleteToolByPos(1)
+        self.login_button = wx.Button(self.toolbar, label='Login')
+        self.login_button.Bind(wx.EVT_BUTTON, self.login)
+        self.toolbar.AddControl(self.login_button)
+        self.toolbar.Realize()
+
         self.save_button.Disable()
         self.add_stock_row_button.Disable()
         self.delete_stock_rows_button.Disable()
-
-        count = self.toolbar.GetToolsCount()
-        for _ in range(count-2):
-            self.toolbar.DeleteToolByPos(2)
 
         menubar = self.GetMenuBar()
         item = menubar.FindItemById(102)
@@ -237,6 +242,9 @@ class MainWindow(wx.Frame):
 
         self.SetStatusText('Successfully logged out.')
         logger.info('logout successful.')
+
+        global login_status
+        login_status = False
         return None
 
     def delete_stock_rows(self, event):

@@ -1,5 +1,5 @@
 APP_NAME = 'Ahben Financial Tracker'
-VERSION = '  v0.0.3.2 alpha'
+VERSION = '  v0.0.3a'
 EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'
 WEBSITE = 'https://github.com/wenbinwu85/', 'Github'

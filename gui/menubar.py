@@ -22,11 +22,13 @@ class MyMenuBar(wx.MenuBar):
         # qmi.SetBitmap(wx.ArtProvider.GetBitmap('exit.png'))
         # menu1.Append(qmi)
 
-        menu1.Append(wx.ID_EXIT, 'Quit', 'Quit '+APP_NAME)
+        menu1.Append(wx.ID_EXIT, '&Quit', 'Quit '+APP_NAME)
 
         view_menu = wx.Menu()
         self.sb_toggle = view_menu.Append(wx.ID_ANY, 'Show Statusbar', 'Show Statusbar', kind=wx.ITEM_CHECK)
-        self.tb_toggle = view_menu.Append(wx.ID_ANY, 'Show toolbar', 'Show Toolbar', kind=wx.ITEM_CHECK)
+        self.tb_toggle = view_menu.Append(wx.ID_ANY, 'Show Toolbar', 'Show Toolbar', kind=wx.ITEM_CHECK)
+        
+        # check both items on application start
         view_menu.Check(self.sb_toggle.GetId(), True)
         view_menu.Check(self.tb_toggle.GetId(), True)
 
@@ -64,17 +66,13 @@ class MyMenuBar(wx.MenuBar):
         """enbable admin mode"""
 
         self.frame.login(event)
-        item = self.FindItemById(102)
-        item.SetItemLabel('Logout')
-        self.Bind(wx.EVT_MENU, self.logout, id=102)
+
 
     def logout(self, event):
         """"""
 
         self.frame.logout(event)
-        item = self.FindItemById(102)
-        item.SetItemLabel('Login')
-        self.Bind(wx.EVT_MENU, self.login, id=102)
+
 
     def open_dialog(self, event):
         """"""
