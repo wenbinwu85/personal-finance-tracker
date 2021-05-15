@@ -9,6 +9,7 @@ from functions.funcs import load_data, dump_data
 from model.stocklist import StockListModel
 from gui.menubar import MyMenuBar
 from gui.logindialog import LoginDialog
+from gui.toolbar import MyToolbar
 
 
 login_status = False
@@ -27,45 +28,11 @@ class MainWindow(wx.Frame):
             )
         self.panel = wx.Panel(self)
 
-        if wx.Platform == '__WXMSW__':
-            font = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL, False, 'Courier')
-        else:
-            font = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL, False, 'Monaco')
-        self.SetFont(font)
-
-        self.SetMenuBar(MyMenuBar(self))
-
-        self.toolbar = self.CreateToolBar(
-            style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT
+        self.toolbar = MyToolbar(
+            self, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT
             )
-        self.toolbar.SetToolBitmapSize((32, 32))
-
-        self.search_field = wx.SearchCtrl(
-            self.toolbar,
-            size=(300, -1),
-            value='',
-            style=wx.TE_PROCESS_ENTER
-        )
-        self.search_field.ShowCancelButton(True)
-        self.search_field.ShowSearchButton(True)
-        self.search_field.Bind(wx.EVT_TEXT, self.search)
-
-        self.login_button = wx.Button(self.toolbar, label='Login')
-        self.login_button.Bind(wx.EVT_BUTTON, self.login)
-
-        self.toolbar.AddControl(self.search_field)
-        self.toolbar.AddControl(self.login_button)
+        self.SetToolBar(self.toolbar)
         self.toolbar.Realize()
-
-        self.CreateStatusBar()
-        self.statusbar = self.GetStatusBar()
-        self.statusbar.SetFieldsCount(3)
-        self.statusbar.SetStatusWidths([-2, 150, 140])
-        self.SetStatusText(STATUS_BAR_MESSAGE, 0)
-
-        self.timer = wx.PyTimer(self.add_time)
-        self.timer.Start(1000)
-        self.add_time()
 
         self.data = stocks_data
         self.stock_list_model, self.stock_list = self.generate_stock_list(self.data)
@@ -82,7 +49,7 @@ class MainWindow(wx.Frame):
         self.delete_stock_rows_button.Disable()
         self.Bind(wx.EVT_BUTTON, self.delete_stock_rows, self.delete_stock_rows_button)
 
-        button_sizer = wx.StaticBoxSizer(wx.HORIZONTAL, self.panel, label='Admin Fucntions')
+        button_sizer = wx.StaticBoxSizer(wx.HORIZONTAL, self.panel, label='Admin Functions')
         button_sizer.Add(self.save_button, 0, wx.LEFT|wx.RIGHT, 5)
         button_sizer.Add(self.add_stock_row_button, 0, wx.LEFT|wx.RIGHT, 5)
         button_sizer.Add(self.delete_stock_rows_button, 0, wx.LEFT|wx.RIGHT, 5)
@@ -92,6 +59,18 @@ class MainWindow(wx.Frame):
         self.main_sizer.Add(button_sizer, 0, wx.TOP|wx.BOTTOM)
         self.main_sizer.Fit(self.panel)
         self.panel.SetSizer(self.main_sizer)
+
+        self.SetMenuBar(MyMenuBar(self))
+
+        self.CreateStatusBar()
+        self.statusbar = self.GetStatusBar()
+        self.statusbar.SetFieldsCount(3)
+        self.statusbar.SetStatusWidths([-2, 150, 140])
+        self.SetStatusText(STATUS_BAR_MESSAGE, 0)
+
+        self.timer = wx.PyTimer(self.add_time)
+        self.timer.Start(1000)
+        self.add_time()
 
         self.CenterOnScreen()
         self.SetThemeEnabled(True)
@@ -193,19 +172,20 @@ class MainWindow(wx.Frame):
                 logger.warning(f'login failure: {username}:{password}')
                 return None
 
-            self.toolbar.DeleteToolByPos(1)
-            logout_button = wx.Button(self.toolbar, label='Logout')
-            logout_button.Bind(wx.EVT_BUTTON, self.logout)
-            self.toolbar.AddControl(logout_button)
+            tool = self.toolbar.GetToolByPos(1)
+            button = tool.GetControl()
+            button.SetLabel('Logout')
+            button.Unbind(wx.EVT_BUTTON, id=button.GetId(), handler=self.login)
+            button.Bind(wx.EVT_BUTTON, self.logout)
             self.toolbar.Realize()
-
-            self.add_stock_row_button.Enable()
-            self.delete_stock_rows_button.Enable()
 
             menubar = self.GetMenuBar()
             item = menubar.FindItemById(102)
             item.SetItemLabel('Logout')
-            menubar.Bind(wx.EVT_MENU, menubar.logout, id=102)
+            menubar.Bind(wx.EVT_MENU, self.logout, id=102)
+
+            self.add_stock_row_button.Enable()
+            self.delete_stock_rows_button.Enable()
 
             self.SetStatusText('Successfully logged in.')
             logger.info(f'login successful: {username}.')
@@ -224,21 +204,21 @@ class MainWindow(wx.Frame):
             self.SetStatusText('Failed to dump data during logout.')
             logger.exception(f'dump data during admin logout: {e}')
 
-
-        self.toolbar.DeleteToolByPos(1)
-        self.login_button = wx.Button(self.toolbar, label='Login')
-        self.login_button.Bind(wx.EVT_BUTTON, self.login)
-        self.toolbar.AddControl(self.login_button)
+        tool = self.toolbar.GetToolByPos(1)
+        button = tool.GetControl()
+        button.SetLabel('Login')
+        button.Unbind(wx.EVT_BUTTON, id=button.GetId(), handler=self.logout)
+        button.Bind(wx.EVT_BUTTON, self.login)
         self.toolbar.Realize()
-
-        self.save_button.Disable()
-        self.add_stock_row_button.Disable()
-        self.delete_stock_rows_button.Disable()
 
         menubar = self.GetMenuBar()
         item = menubar.FindItemById(102)
         item.SetItemLabel('Login')
-        menubar.Bind(wx.EVT_MENU, menubar.login, id=102)
+        menubar.Bind(wx.EVT_MENU, self.login, id=102)
+
+        self.save_button.Disable()
+        self.add_stock_row_button.Disable()
+        self.delete_stock_rows_button.Disable()
 
         self.SetStatusText('Successfully logged out.')
         logger.info('logout successful.')
@@ -275,3 +255,4 @@ class MainWindow(wx.Frame):
         """"""
 
         filter = self.search_field.GetValue()
+        self.SetStatusText(f'Search...{filter}')

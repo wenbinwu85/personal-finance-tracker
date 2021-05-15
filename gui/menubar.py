@@ -17,12 +17,7 @@ class MyMenuBar(wx.MenuBar):
         menu1.Append(wx.ID_OPEN, '&Open', 'Open a file')
         menu1.Append(102, '&Login', 'User login')
         menu1.AppendSeparator()
-
-        # qmi = wx.MenuItem(menu1, wx.ID_EXIT, '&Quit\tCtrl+Q')
-        # qmi.SetBitmap(wx.ArtProvider.GetBitmap('exit.png'))
-        # menu1.Append(qmi)
-
-        menu1.Append(wx.ID_EXIT, '&Quit', 'Quit '+APP_NAME)
+        menu1.Append(103, '&Quit', 'Quit '+APP_NAME)
 
         view_menu = wx.Menu()
         self.sb_toggle = view_menu.Append(wx.ID_ANY, 'Show Statusbar', 'Show Statusbar', kind=wx.ITEM_CHECK)
@@ -37,8 +32,8 @@ class MyMenuBar(wx.MenuBar):
         about = help_menu.Append(wx.ID_ABOUT)
 
         self.Bind(wx.EVT_MENU, self.open_dialog, id=wx.ID_OPEN)
-        self.Bind(wx.EVT_MENU, self.login, id=102)
-        self.Bind(wx.EVT_MENU, self.quit, id=wx.ID_EXIT)
+        self.Bind(wx.EVT_MENU, self.frame.login, id=102)
+        self.Bind(wx.EVT_MENU, self.quit, id=103)
         self.Bind(wx.EVT_MENU, self.about_dialog, about)
         self.Bind(wx.EVT_MENU, self.statusbar_toggle, self.sb_toggle)
         self.Bind(wx.EVT_MENU, self.toolbar_toggle, self.tb_toggle)
@@ -61,18 +56,6 @@ class MyMenuBar(wx.MenuBar):
         info.SetWebSite(*WEBSITE)
         wx.adv.AboutBox(info)
         return None
-    
-    def login(self, event):
-        """enbable admin mode"""
-
-        self.frame.login(event)
-
-
-    def logout(self, event):
-        """"""
-
-        self.frame.logout(event)
-
 
     def open_dialog(self, event):
         """"""

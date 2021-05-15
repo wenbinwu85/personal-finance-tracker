@@ -3,13 +3,11 @@ import wx
 
 class LoginDialog(wx.Dialog):
     def __init__(self, *args, **kw):
-        super().__init__(*args, **kw)
-
-        if wx.Platform == '__WXMSW__':
-            font = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL, False, 'Courier')
-        else:
-            font = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL, False, 'Monaco')
-        self.SetFont(font)
+        super().__init__(
+            style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX | wx.MINIMIZE_BOX),
+            *args, 
+            **kw
+        )
 
         # ----- username -----
         username_sizer = wx.BoxSizer(wx.HORIZONTAL)

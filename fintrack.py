@@ -16,9 +16,16 @@ class FinTrack(wx.App):
     """Main app class"""
 
     def OnInit(self):
-        logger.info('Program started.')
         self.frame = MainWindow()
+
+        if wx.Platform == '__WXMSW__':
+            font = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL, False, 'Courier')
+        else:
+            font = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL, False, 'Monaco')
+        self.frame.SetFont(font)
+
         self.frame.Show()
+        logger.info('Program started.')
         return True
 
     def OnExit(self):
