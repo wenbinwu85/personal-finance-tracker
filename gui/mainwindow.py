@@ -49,12 +49,12 @@ class MainWindow(wx.Frame):
         self.delete_stock_rows_button.Disable()
         self.Bind(wx.EVT_BUTTON, self.delete_stock_rows, self.delete_stock_rows_button)
 
-        button_sizer = wx.StaticBoxSizer(wx.HORIZONTAL, self.panel, label='Admin Functions')
+        button_sizer = wx.StaticBoxSizer(wx.HORIZONTAL, self.panel, label='Manage Stock List')
         button_sizer.Add(self.save_button, 0, wx.LEFT|wx.RIGHT, 5)
         button_sizer.Add(self.add_stock_row_button, 0, wx.LEFT|wx.RIGHT, 5)
         button_sizer.Add(self.delete_stock_rows_button, 0, wx.LEFT|wx.RIGHT, 5)
 
-        self.main_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Stock Positions')
+        self.main_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label=f'Stock Positions: ')
         self.main_sizer.Add(self.stock_list, 1, wx.EXPAND)
         self.main_sizer.Add(button_sizer, 0, wx.TOP|wx.BOTTOM)
         self.main_sizer.Fit(self.panel)
@@ -105,8 +105,11 @@ class MainWindow(wx.Frame):
         if self.save_button:
             self.save_button.Disable()
 
-    def reload_data(self, path):
+    def reload_data(self, data_path):
         """"""
+
+        global stocks_data_path 
+        stocks_data_path = data_path
 
         self.stock_list.SelectAll()
         items = self.stock_list.GetSelections()
@@ -117,7 +120,7 @@ class MainWindow(wx.Frame):
             self.SetStatusText('Failed to delete rows.')
             logger.exception(f'delete rows failure: {e}')
 
-        self.data = load_data(path)
+        self.data = load_data(stocks_data_path)
         for i in self.data:
             try:
                 self.stock_list_model.add_row(i)
@@ -125,13 +128,10 @@ class MainWindow(wx.Frame):
                 self.SetStatusText('Failed to add new row.')
                 logger.exception(f'add new row failure: {e}')
 
-        user_settings['stocks_data_path'] = path
+        user_settings['stocks_data_path'] = stocks_data_path
         dump_data(data=user_settings, file=USER_SETTINGS_PATH)
-
-        global stocks_data_path
-        stocks_data_path = path
-        print(path)
-        print(stocks_data_path)
+        self.SetStatusText(f'New data loaded form {stocks_data_path}.')
+        self.Refresh()
 
     def generate_stock_list(self, data):
         """"""
@@ -227,18 +227,6 @@ class MainWindow(wx.Frame):
         login_status = False
         return None
 
-    def delete_stock_rows(self, event):
-        """"""
-
-        items = self.stock_list.GetSelections()
-        rows = [self.stock_list_model.GetRow(item) for item in items]
-        try:
-            self.stock_list_model.delete_rows(rows)
-        except Exception as e:
-            self.SetStatusText('Failed to delete rows.')
-            logger.exception(f'delete rows failure: {e}')
-        self.save_button.Enable()
-
     def add_stock_row(self, event):
         """"""
 
@@ -251,8 +239,14 @@ class MainWindow(wx.Frame):
             logger.exception(f'add new row failure: {e}')
         self.save_button.Enable()
 
-    def search(self, event):
+    def delete_stock_rows(self, event):
         """"""
 
-        filter = self.search_field.GetValue()
-        self.SetStatusText(f'Search...{filter}')
+        items = self.stock_list.GetSelections()
+        rows = [self.stock_list_model.GetRow(item) for item in items]
+        try:
+            self.stock_list_model.delete_rows(rows)
+        except Exception as e:
+            self.SetStatusText('Failed to delete rows.')
+            logger.exception(f'delete rows failure: {e}')
+        self.save_button.Enable()

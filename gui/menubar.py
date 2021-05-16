@@ -73,8 +73,7 @@ class MyMenuBar(wx.MenuBar):
 
             if dialog.ShowModal() == wx.ID_OK:
                 self.frame.reload_data(dialog.GetPath())
-                self.frame.SetStatusText(f'New data loaded form {dialog.GetPath()}.')
-                logger.info('New data load successful.')
+                logger.info('New stock data loaded successfully.')
 
     def statusbar_toggle(self, event):
         if self.sb_toggle.IsChecked():

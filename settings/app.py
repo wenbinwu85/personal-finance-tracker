@@ -1,4 +1,4 @@
-APP_NAME = 'Ahben Financial Tracker'
+APP_NAME = 'Ahben FinTrack'
 VERSION = '  v0.0.3a'
 EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'
