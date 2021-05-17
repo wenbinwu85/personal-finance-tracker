@@ -1,15 +1,13 @@
 import time
 import wx
-import wx.dataview as dv
 
 from settings.app import *
-from functions.startup import logger, user_settings, stock_list_headers
-from functions.startup import stocks_data, stocks_data_path
+from functions.startup import logger, user_settings, stocks_data_path
 from functions.funcs import load_data, dump_data
-from model.stocklist import StockListModel
 from gui.menubar import MyMenuBar
 from gui.logindialog import LoginDialog
 from gui.toolbar import MyToolbar
+from gui.stocklist import StockList
 
 
 login_status = False
@@ -34,31 +32,7 @@ class MainWindow(wx.Frame):
         self.SetToolBar(self.toolbar)
         self.toolbar.Realize()
 
-        self.data = stocks_data
-        self.stock_list_model, self.stock_list = self.generate_stock_list(self.data)
-        self.Bind(dv.EVT_DATAVIEW_ITEM_EDITING_DONE, self.enable_save_button, self.stock_list)
-        self.Bind(dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.enable_save_button, self.stock_list)
-
-        self.save_button = wx.Button(self.panel, label='Save')
-        self.save_button.Disable()
-        self.Bind(wx.EVT_BUTTON, self.dump_stocks, self.save_button)
-        self.add_stock_row_button = wx.Button(self.panel, label='Add Row')
-        self.add_stock_row_button.Disable()
-        self.Bind(wx.EVT_BUTTON, self.add_stock_row, self.add_stock_row_button)
-        self.delete_stock_rows_button = wx.Button(self.panel, label='Delete Row(s)')
-        self.delete_stock_rows_button.Disable()
-        self.Bind(wx.EVT_BUTTON, self.delete_stock_rows, self.delete_stock_rows_button)
-
-        button_sizer = wx.StaticBoxSizer(wx.HORIZONTAL, self.panel, label='Manage Stock List')
-        button_sizer.Add(self.save_button, 0, wx.LEFT|wx.RIGHT, 5)
-        button_sizer.Add(self.add_stock_row_button, 0, wx.LEFT|wx.RIGHT, 5)
-        button_sizer.Add(self.delete_stock_rows_button, 0, wx.LEFT|wx.RIGHT, 5)
-
-        self.main_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label=f'Stock Positions: ')
-        self.main_sizer.Add(self.stock_list, 1, wx.EXPAND)
-        self.main_sizer.Add(button_sizer, 0, wx.TOP|wx.BOTTOM)
-        self.main_sizer.Fit(self.panel)
-        self.panel.SetSizer(self.main_sizer)
+        self.stocks_list = StockList(self.panel)
 
         self.SetMenuBar(MyMenuBar(self))
 
@@ -74,7 +48,7 @@ class MainWindow(wx.Frame):
 
         self.CenterOnScreen()
         self.SetThemeEnabled(True)
-        self.SetMinSize(self.main_sizer.GetSize())
+        self.SetMinSize(self.stocks_list.stocks_sizer.GetSize())
 
     def add_time(self):
         """"""
@@ -82,11 +56,6 @@ class MainWindow(wx.Frame):
         t = time.localtime(time.time())
         st = time.strftime("%Y-%b-%d   %I:%M:%S", t)
         self.SetStatusText(st, 2)
-
-    def enable_save_button(self, event):
-        """"""
-
-        self.save_button.Enable()
 
     def dump_stocks(self, event):
         """"""
@@ -132,32 +101,6 @@ class MainWindow(wx.Frame):
         dump_data(data=user_settings, file=USER_SETTINGS_PATH)
         self.SetStatusText(f'New data loaded form {stocks_data_path}.')
         self.Refresh()
-
-    def generate_stock_list(self, data):
-        """"""
-
-        stock_list_model = StockListModel(data)
-        stock_list = dv.DataViewCtrl(
-            self.panel,
-            style = wx.BORDER_THEME | dv.DV_ROW_LINES | dv.DV_VERT_RULES | dv.DV_MULTIPLE
-        )
-        stock_list.AssociateModel(stock_list_model)
-        stock_list.EnableSystemTheme()
-
-        try:
-            header_row = stock_list_headers[0]
-        except Exception as e:
-            self.SetStatusText('Unable to load header row.')
-            logger.exception(f'load header row failed: {e}')
-
-        for idx, val in enumerate(header_row):
-            stock_list.AppendTextColumn(val, idx, width=len(val)*8, mode=dv.DATAVIEW_CELL_EDITABLE)
-
-        for col in stock_list.Columns:
-            col.Sortable = True
-            col.Reorderable = True
-
-        return stock_list_model, stock_list
 
     def login(self, event):
         """enbable admin mode"""
@@ -226,27 +169,3 @@ class MainWindow(wx.Frame):
         global login_status
         login_status = False
         return None
-
-    def add_stock_row(self, event):
-        """"""
-
-        col_count = self.stock_list.GetColumnCount()
-        value = ['New'] + ['' for i in range(col_count-1)]
-        try:
-            self.stock_list_model.add_row(value)
-        except Exception as e:
-            self.SetStatusText('Failed to add new row.')
-            logger.exception(f'add new row failure: {e}')
-        self.save_button.Enable()
-
-    def delete_stock_rows(self, event):
-        """"""
-
-        items = self.stock_list.GetSelections()
-        rows = [self.stock_list_model.GetRow(item) for item in items]
-        try:
-            self.stock_list_model.delete_rows(rows)
-        except Exception as e:
-            self.SetStatusText('Failed to delete rows.')
-            logger.exception(f'delete rows failure: {e}')
-        self.save_button.Enable()
