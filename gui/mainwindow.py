@@ -24,15 +24,12 @@ class MainWindow(wx.Frame):
             size=(1400, 640),
             style=wx.DEFAULT_FRAME_STYLE # & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
             )
-        self.panel = wx.Panel(self)
 
         self.toolbar = MyToolbar(
             self, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT
             )
         self.SetToolBar(self.toolbar)
         self.toolbar.Realize()
-
-        self.stocks_list = StockList(self.panel)
 
         self.SetMenuBar(MyMenuBar(self))
 
@@ -42,13 +39,37 @@ class MainWindow(wx.Frame):
         self.statusbar.SetStatusWidths([-2, 150, 140])
         self.SetStatusText(STATUS_BAR_MESSAGE, 0)
 
+        self.panel = wx.Panel(self)
+
+        self.tabs = wx.Notebook(self.panel, wx.ID_ANY)
+
+        self.summary_tab = wx.Panel(self.tabs, wx.ID_ANY)
+        self.tabs.AddPage(self.summary_tab, 'Summary')
+
+        self.net_worth_tab = wx.Panel(self.tabs, wx.ID_ANY)
+        self.tabs.AddPage(self.net_worth_tab, 'Net Worth')
+
+        self.stocks_tab = wx.Panel(self.tabs, wx.ID_ANY)
+        self.stocks_list = StockList(self.stocks_tab)
+        self.tabs.AddPage(self.stocks_tab, 'Stock Positions')
+
+        self.history_tab = wx.Panel(self.tabs, wx.ID_ANY)
+        self.tabs.AddPage(self.history_tab, 'History')
+
+        self.tabs.SetSize(self.tabs.GetBestSize())
+
+        self.main_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.main_sizer.Add(self.tabs, 1, wx.EXPAND, 0)
+        self.panel.SetSizer(self.main_sizer)
+
         self.timer = wx.PyTimer(self.add_time)
         self.timer.Start(1000)
         self.add_time()
 
-        self.CenterOnScreen()
         self.SetThemeEnabled(True)
-        self.SetMinSize(self.stocks_list.stocks_sizer.GetSize())
+        self.SetMinSize(self.tabs.GetSize())
+        self.Layout()
+        self.CenterOnScreen()
 
     def add_time(self):
         """"""

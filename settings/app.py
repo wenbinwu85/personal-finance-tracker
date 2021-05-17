@@ -1,5 +1,5 @@
 APP_NAME = 'Ahben FinTrack'
-VERSION = '  v0.0.3a'
+VERSION = '  v0.0.4a'
 EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'
 WEBSITE = 'https://github.com/wenbinwu85/', 'Github'

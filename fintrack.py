@@ -24,6 +24,7 @@ class FinTrack(wx.App):
             font = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL, False, 'Monaco')
         self.frame.SetFont(font)
 
+        self.SetTopWindow(self.frame)
         self.frame.Show()
         logger.info('Program started.')
         return True

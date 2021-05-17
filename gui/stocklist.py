@@ -33,7 +33,7 @@ class StockList():
         button_sizer.Add(self.add_stock_row_button, 0, wx.LEFT|wx.RIGHT, 5)
         button_sizer.Add(self.delete_stock_rows_button, 0, wx.LEFT|wx.RIGHT, 5)
 
-        self.stocks_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label=f'Stock Positions')
+        self.stocks_sizer = wx.BoxSizer(wx.VERTICAL)
         self.stocks_sizer.Add(self.stock_list, 1, wx.EXPAND)
         self.stocks_sizer.Add(button_sizer, 0, wx.TOP|wx.BOTTOM)
         self.stocks_sizer.Fit(self.panel)
