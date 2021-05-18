@@ -1,15 +1,17 @@
+#! /usr/bin/python3
+
 import wx
 from gui.mainwindow import MainWindow
 from functions.startup import logger
 
 
-# ----- fix pixelated fonts in windows -----
-import ctypes
-try:
-    ctypes.windll.shcore.SetProcessDpiAwareness(True)
-except:
-    pass
-#-------------------------------------------
+# fix pixelated fonts in fucking windows
+# if wx.Platform == '__WXMSW__':
+#     import ctypes
+#     try:
+#         ctypes.windll.shcore.SetProcessDpiAwareness(True)
+#     except AttributeError:
+#         pass
 
 
 class FinTrack(wx.App):
@@ -17,13 +19,6 @@ class FinTrack(wx.App):
 
     def OnInit(self):
         self.frame = MainWindow()
-
-        if wx.Platform == '__WXMSW__':
-            font = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL, False, 'Courier')
-        else:
-            font = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL, False, 'Monaco')
-        self.frame.SetFont(font)
-
         self.SetTopWindow(self.frame)
         self.frame.Show()
         logger.info('Program started.')

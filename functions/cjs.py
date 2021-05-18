@@ -8,8 +8,10 @@ from functools import singledispatchmethod
 class CJSException(Exception):
     """"""
 
+
 class DataLoadException(CJSException):
     """"""
+
 
 class DataDumpException(CJSException):
     """"""
