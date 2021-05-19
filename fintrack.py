@@ -1,10 +1,5 @@
 #! /usr/bin/python3
 
-import wx
-from gui.mainwindow import MainWindow
-from functions.startup import logger
-
-
 # fix pixelated fonts in fucking windows
 # if wx.Platform == '__WXMSW__':
 #     import ctypes
@@ -12,6 +7,10 @@ from functions.startup import logger
 #         ctypes.windll.shcore.SetProcessDpiAwareness(True)
 #     except AttributeError:
 #         pass
+
+import wx
+from gui.mainwindow import MainWindow
+from functions.startup import logger
 
 
 class FinTrack(wx.App):
@@ -29,8 +28,8 @@ class FinTrack(wx.App):
             self.frame.dump_stocks('quit')
         except Exception as e:
             logger.exception(f'Failed to dump data during program exit: {e}')
-
-        logger.info('Program exited by X button.')
+        else:
+            logger.info('Program exited by X button.')
         return super().OnExit()
 
 

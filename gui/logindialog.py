@@ -5,7 +5,7 @@ class LoginDialog(wx.Dialog):
     def __init__(self, *args, **kw):
         super().__init__(
             style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX | wx.MINIMIZE_BOX),
-            *args, 
+            *args,
             **kw
         )
 

@@ -2,7 +2,7 @@ import os
 import sys
 import wx
 import wx.adv
-from settings.app import *
+from settings.app import APP_NAME, VERSION, EMAIL, DEVELOPER, COPYRIGHT, LICENSE, WEBSITE
 from functions.startup import logger
 
 
@@ -17,12 +17,12 @@ class MyMenuBar(wx.MenuBar):
         menu1.Append(wx.ID_OPEN, '&Open', 'Open a file')
         menu1.Append(102, '&Login', 'User login')
         menu1.AppendSeparator()
-        menu1.Append(103, '&Quit', 'Quit '+APP_NAME)
+        menu1.Append(wx.ID_EXIT, '&Quit', f'Quit {APP_NAME}')
 
         view_menu = wx.Menu()
         self.sb_toggle = view_menu.Append(wx.ID_ANY, 'Show Statusbar', 'Show Statusbar', kind=wx.ITEM_CHECK)
         self.tb_toggle = view_menu.Append(wx.ID_ANY, 'Show Toolbar', 'Show Toolbar', kind=wx.ITEM_CHECK)
-        
+
         # check both items on application start
         view_menu.Check(self.sb_toggle.GetId(), True)
         view_menu.Check(self.tb_toggle.GetId(), True)
@@ -33,7 +33,7 @@ class MyMenuBar(wx.MenuBar):
 
         self.Bind(wx.EVT_MENU, self.open_dialog, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU, self.frame.login, id=102)
-        self.Bind(wx.EVT_MENU, self.quit, id=103)
+        self.Bind(wx.EVT_MENU, self.quit, id=wx.ID_EXIT)
         self.Bind(wx.EVT_MENU, self.about_dialog, about)
         self.Bind(wx.EVT_MENU, self.statusbar_toggle, self.sb_toggle)
         self.Bind(wx.EVT_MENU, self.toolbar_toggle, self.tb_toggle)
@@ -42,7 +42,7 @@ class MyMenuBar(wx.MenuBar):
         self.Append(view_menu, 'View')
         self.Append(window_menu, 'Window')
         self.Append(help_menu, 'Help')
-    
+
     def about_dialog(self, event):
         """About dialog box """
 
@@ -69,7 +69,7 @@ class MyMenuBar(wx.MenuBar):
             defaultFile='',
             wildcard=wildcards,
             style=wx.FD_OPEN | wx.FD_CHANGE_DIR | wx.FD_FILE_MUST_EXIST | wx.FD_PREVIEW
-            ) as dialog:
+        ) as dialog:
 
             if dialog.ShowModal() == wx.ID_OK:
                 self.frame.reload_data(dialog.GetPath())
@@ -92,6 +92,6 @@ class MyMenuBar(wx.MenuBar):
             self.frame.dump_stocks('quit')
         except Exception as e:
             logger.exception(f'Failed to dump data during program exit: {e}')
-
-        logger.info('Program exited by file->quit.')
+        else:
+            logger.info('Program exited by file->quit.')
         sys.exit()

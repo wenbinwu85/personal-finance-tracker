@@ -1,7 +1,7 @@
 import time
 import wx
 
-from settings.app import *
+from settings.app import APP_NAME, VERSION, STATUS_BAR_MESSAGE
 from functions.startup import logger, user_settings, stocks_data_path
 from functions.funcs import load_data, dump_data
 from gui.menubar import MyMenuBar
@@ -22,11 +22,12 @@ class MainWindow(wx.Frame):
             parent=None,
             title=APP_NAME+VERSION,
             size=(1400, 640),
-            style=wx.DEFAULT_FRAME_STYLE # & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
+            style=wx.DEFAULT_FRAME_STYLE  # & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
             )
 
         self.toolbar = MyToolbar(
-            self, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT
+            self,
+            style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT
             )
         self.SetToolBar(self.toolbar)
         self.toolbar.Realize()
@@ -92,8 +93,8 @@ class MainWindow(wx.Frame):
                 self.SetStatusText(f'Data dumped to {stocks_data_path}.')
             logger.info('data dump successful.')
 
-        if self.save_button:
-            self.save_button.Disable()
+        if self.stocks_list.save_button:
+            self.stocks_list.save_button.Disable()
 
     def reload_data(self, data_path):
         """"""
