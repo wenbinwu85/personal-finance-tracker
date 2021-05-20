@@ -1,6 +1,2 @@
-class StartUpException(Exception):
-    """"""
-
-
-class ShutDownException(Exception):
+class StockListWidgetException(Exception):
     """"""

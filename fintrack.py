@@ -10,7 +10,7 @@
 
 import wx
 from gui.mainwindow import MainWindow
-from functions.startup import logger
+from functions.funcs import logger
 
 
 class FinTrack(wx.App):

@@ -2,12 +2,12 @@ import time
 import wx
 
 from settings.app import APP_NAME, VERSION, STATUS_BAR_MESSAGE
-from functions.startup import logger, user_settings, stocks_data_path
-from functions.funcs import load_data, dump_data
+from settings.user import user_settings, stock_data_path
+from functions.funcs import logger, load_data, dump_data
 from gui.menubar import MyMenuBar
-from gui.logindialog import LoginDialog
 from gui.toolbar import MyToolbar
-from gui.stocklist import StockList
+from gui.logindialog import LoginDialog
+from gui.widgets.stocklist import StockList
 
 
 login_status = False
