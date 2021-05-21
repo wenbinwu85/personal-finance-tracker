@@ -24,12 +24,6 @@ class FinTrack(wx.App):
         return True
 
     def OnExit(self):
-        try:
-            self.frame.dump_stocks('quit')
-        except Exception as e:
-            logger.exception(f'Failed to dump data during program exit: {e}')
-        else:
-            logger.info('Program exited by X button.')
         return super().OnExit()
 
 

@@ -7,8 +7,13 @@ from model.stocklist import StockListModel
 
 
 class StockList():
-    def __init__(self, panel, *args, **kwargs):
+    """"""
+
+    def __init__(self, panel, name, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.name = name
+        self.stock_data_path = stock_data_path
 
         self.panel = panel
 
@@ -34,7 +39,6 @@ class StockList():
 
         button_sizer = wx.StaticBoxSizer(wx.HORIZONTAL, self.panel, label='Manage Stocks')
         button_sizer.Add(self.open_button, 0, wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER, 5)
-        button_sizer.AddSpacer(10)
         button_sizer.Add(self.save_button, 0, wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER, 5)
         button_sizer.Add(self.add_row_button, 0, wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER, 5)
         button_sizer.Add(self.delete_row_button, 0, wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER, 5)
@@ -47,6 +51,7 @@ class StockList():
 
     def generate_stock_list(self):
         """"""
+
         try:
             self.header_row = load_data(stock_header_path)[0]
         except Exception as e:
@@ -85,15 +90,15 @@ class StockList():
     def load_stocks(self, event):
         """"""
 
-
     def enable_save_button(self, event):
         """"""
         self.save_button.Enable()
 
     def add_stock_row(self, event):
         """"""
+
         col_count = self.stock_list.GetColumnCount()
-        value = ['New Stock'] + ['' for i in range(col_count - 1)]
+        value = ['New'] + ['' for i in range(col_count - 1)]
         try:
             self.stock_list_model.add_row(value)
         except Exception as e:
@@ -106,8 +111,9 @@ class StockList():
 
     def delete_stock_rows(self, event):
         """"""
-        items = self.stock_list.GetSelections()
-        rows = [self.stock_list_model.GetRow(item) for item in items]
+
+        selected = self.stock_list.GetSelections()
+        rows = [self.stock_list_model.GetRow(item) for item in selected]
         try:
             self.stock_list_model.delete_rows(rows)
         except Exception as e:
@@ -120,8 +126,9 @@ class StockList():
 
     def dump_stocks(self, event):
         """"""
+
         try:
-            dump_data(self.stock_data, stock_data_path)
+            dump_data(self.stock_data, self.stock_data_path)
         except Exception as e:
             error_msg = f'data dump failed: {e}'
             logger.exception(error_msg)
@@ -129,3 +136,16 @@ class StockList():
         else:
             logger.info('Data dumped successfully.')
             self.save_button.Disable()
+
+    def management(self, enable=False):
+        """"""
+
+        if enable:
+            self.open_button.Enable()
+            self.add_row_button.Enable()
+            self.delete_row_button.Enable()
+        else:
+            self.open_button.Disable()
+            self.save_button.Disable()
+            self.add_row_button.Disable()
+            self.delete_row_button.Disable()

@@ -1,5 +1,6 @@
 import wx.dataview as dv
 
+
 class StockListModel(dv.DataViewIndexListModel):
     def __init__(self, data):
         dv.DataViewIndexListModel.__init__(self, len(data))
@@ -36,7 +37,7 @@ class StockListModel(dv.DataViewIndexListModel):
         return len(self.data)
 
     def Compare(self, item1, item2, col, ascending):
-        if not ascending: # swap sort order?
+        if not ascending:  # swap sort order?
             item2, item1 = item1, item2
         row1 = self.GetRow(item1)
         row2 = self.GetRow(item2)

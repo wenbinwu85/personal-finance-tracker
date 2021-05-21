@@ -14,7 +14,7 @@ try:
     stock_header_path = user_settings['stock_header_path']
     stock_data_path = user_settings['stock_data_path']
 except KeyError as e:
-    error_msg = f'User data is corrupted:{e}'
+    error_msg = f'User setting missing:\n{e}'
     logger.exception(error_msg)
     raise
 else:

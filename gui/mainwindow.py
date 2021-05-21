@@ -1,12 +1,12 @@
 import time
 import wx
 
-from settings.app import APP_NAME, VERSION, STATUS_BAR_MESSAGE
-from settings.user import user_settings, stock_data_path
-from functions.funcs import logger, load_data, dump_data
+from settings.app import APP_NAME, VERSION, STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
+from functions.funcs import logger
 from gui.menubar import MyMenuBar
 from gui.toolbar import MyToolbar
 from gui.logindialog import LoginDialog
+from gui.widgets. dashboard import Dashboard
 from gui.widgets.stocklist import StockList
 
 
@@ -20,15 +20,15 @@ class MainWindow(wx.Frame):
     def __init__(self):
         super().__init__(
             parent=None,
-            title=APP_NAME+VERSION,
+            title=APP_NAME + VERSION,
             size=(1400, 640),
             style=wx.DEFAULT_FRAME_STYLE  # & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
-            )
+        )
 
         self.toolbar = MyToolbar(
             self,
             style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT
-            )
+        )
         self.SetToolBar(self.toolbar)
         self.toolbar.Realize()
 
@@ -43,28 +43,22 @@ class MainWindow(wx.Frame):
         self.panel = wx.Panel(self)
 
         self.tabs = wx.Notebook(self.panel, wx.ID_ANY)
-
         self.summary_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.tabs.AddPage(self.summary_tab, 'Summary')
-
+        self.dashboard = Dashboard(self.summary_tab, 'Dashboard')
+        self.tabs.AddPage(self.summary_tab, self.dashboard.name)
         self.net_worth_tab = wx.Panel(self.tabs, wx.ID_ANY)
         self.tabs.AddPage(self.net_worth_tab, 'Net Worth')
-
         self.stocks_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.stocks_list = StockList(self.stocks_tab)
-        self.tabs.AddPage(self.stocks_tab, 'Stock Positions')
-
-        self.history_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.tabs.AddPage(self.history_tab, 'History')
-
+        self.stocks_list = StockList(self.stocks_tab, 'Stock Positions')
+        self.tabs.AddPage(self.stocks_tab, self.stocks_list.name)
         self.tabs.SetSize(self.tabs.GetBestSize())
 
-        self.main_sizer = wx.BoxSizer(wx.VERTICAL)
-        self.main_sizer.Add(self.tabs, 1, wx.EXPAND, 0)
-        self.panel.SetSizer(self.main_sizer)
+        main_sizer = wx.BoxSizer(wx.VERTICAL) 
+        main_sizer.Add(self.tabs, 1, wx.EXPAND)
+        self.panel.SetSizer(main_sizer)
 
-        self.timer = wx.PyTimer(self.add_time)
-        self.timer.Start(1000)
+        timer = wx.PyTimer(self.add_time)
+        timer.Start(1000)
         self.add_time()
 
         self.SetThemeEnabled(True)
@@ -78,51 +72,6 @@ class MainWindow(wx.Frame):
         t = time.localtime(time.time())
         st = time.strftime("%Y-%b-%d   %I:%M:%S", t)
         self.SetStatusText(st, 2)
-
-    def dump_stocks(self, event):
-        """"""
-
-        try:
-            dump_data(self.data, stocks_data_path)
-            print('dumped:', stocks_data_path)
-        except Exception as e:
-            self.SetStatusText('Failed to dump data to file.')
-            logger.exception(f'data dump failed: {e}')
-        else:
-            if event != 'quit':
-                self.SetStatusText(f'Data dumped to {stocks_data_path}.')
-            logger.info('data dump successful.')
-
-        if self.stocks_list.save_button:
-            self.stocks_list.save_button.Disable()
-
-    def reload_data(self, data_path):
-        """"""
-
-        global stocks_data_path 
-        stocks_data_path = data_path
-
-        self.stock_list.SelectAll()
-        items = self.stock_list.GetSelections()
-        rows = [self.stock_list_model.GetRow(item) for item in items]
-        try:
-            self.stock_list_model.delete_rows(rows)
-        except Exception as e:
-            self.SetStatusText('Failed to delete rows.')
-            logger.exception(f'delete rows failure: {e}')
-
-        self.data = load_data(stocks_data_path)
-        for i in self.data:
-            try:
-                self.stock_list_model.add_row(i)
-            except Exception as e:
-                self.SetStatusText('Failed to add new row.')
-                logger.exception(f'add new row failure: {e}')
-
-        user_settings['stocks_data_path'] = stocks_data_path
-        dump_data(data=user_settings, file=USER_SETTINGS_PATH)
-        self.SetStatusText(f'New data loaded form {stocks_data_path}.')
-        self.Refresh()
 
     def login(self, event):
         """enbable admin mode"""
@@ -149,10 +98,8 @@ class MainWindow(wx.Frame):
             item.SetItemLabel('Logout')
             menubar.Bind(wx.EVT_MENU, self.logout, id=102)
 
-            self.add_stock_row_button.Enable()
-            self.delete_stock_rows_button.Enable()
+            self.stocks_list.management(enable=True)
 
-            self.SetStatusText('Successfully logged in.')
             logger.info(f'login successful: {username}.')
 
             global login_status
@@ -161,13 +108,6 @@ class MainWindow(wx.Frame):
 
     def logout(self, event):
         """disable admin mode"""
-
-        try:
-            self.dump_stocks(None)
-            print('dumped on logout:', stocks_data_path)
-        except Exception as e:
-            self.SetStatusText('Failed to dump data during logout.')
-            logger.exception(f'dump data during admin logout: {e}')
 
         tool = self.toolbar.GetToolByPos(1)
         button = tool.GetControl()
@@ -181,11 +121,9 @@ class MainWindow(wx.Frame):
         item.SetItemLabel('Login')
         menubar.Bind(wx.EVT_MENU, self.login, id=102)
 
-        self.save_button.Disable()
-        self.add_stock_row_button.Disable()
-        self.delete_stock_rows_button.Disable()
+        self.stocks_list.management(enable=False)
+        self.stocks_list.dump_stocks(wx.EVT_BUTTON)
 
-        self.SetStatusText('Successfully logged out.')
         logger.info('logout successful.')
 
         global login_status

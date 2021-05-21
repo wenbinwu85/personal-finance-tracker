@@ -7,14 +7,14 @@ from functions.funcs import logger
 
 
 class MyMenuBar(wx.MenuBar):
-    """menu bar """
+    """Menubar"""
 
     def __init__(self, frame):
         super().__init__()
         self.frame = frame
 
         menu1 = wx.Menu()
-        menu1.Append(wx.ID_OPEN, '&Open', 'Open a file')
+        # menu1.Append(wx.ID_OPEN, '&Open', 'Open a file')
         menu1.Append(102, '&Login', 'User login')
         menu1.AppendSeparator()
         menu1.Append(wx.ID_EXIT, '&Quit', f'Quit {APP_NAME}')
@@ -31,7 +31,7 @@ class MyMenuBar(wx.MenuBar):
         help_menu = wx.Menu()
         about = help_menu.Append(wx.ID_ABOUT)
 
-        self.Bind(wx.EVT_MENU, self.open_dialog, id=wx.ID_OPEN)
+        # self.Bind(wx.EVT_MENU, self.open_dialog, id=wx.ID_OPEN)
         self.Bind(wx.EVT_MENU, self.frame.login, id=102)
         self.Bind(wx.EVT_MENU, self.quit, id=wx.ID_EXIT)
         self.Bind(wx.EVT_MENU, self.about_dialog, about)
@@ -44,36 +44,36 @@ class MyMenuBar(wx.MenuBar):
         self.Append(help_menu, 'Help')
 
     def about_dialog(self, event):
-        """About dialog box """
+        """About info box"""
 
         info = wx.adv.AboutDialogInfo()
         info.SetName(APP_NAME)
         info.SetVersion(VERSION)
         info.SetDescription(EMAIL)
         info.AddDeveloper(DEVELOPER)
-        info.SetCopyright(COPYRIGHT)  
+        info.SetCopyright(COPYRIGHT)
         info.SetLicense(LICENSE)
         info.SetWebSite(*WEBSITE)
-        wx.adv.AboutBox(info)
+        wx.adv.GenericAboutBox(info)
         return None
 
-    def open_dialog(self, event):
-        """"""
+    # def open_dialog(self, event):
+    #     """Open dialog"""
 
-        wildcards = 'CSV file (*.csv)|*.csv|'
+    #     wildcards = 'CSV file (*.csv)|*.csv|'
 
-        with wx.FileDialog(
-            self,
-            message='Choose data file',
-            defaultDir=os.getcwd(),
-            defaultFile='',
-            wildcard=wildcards,
-            style=wx.FD_OPEN | wx.FD_CHANGE_DIR | wx.FD_FILE_MUST_EXIST | wx.FD_PREVIEW
-        ) as dialog:
+    #     with wx.FileDialog(
+    #         self,
+    #         message='Choose data file',
+    #         defaultDir=os.getcwd(),
+    #         defaultFile='',
+    #         wildcard=wildcards,
+    #         style=wx.FD_OPEN | wx.FD_CHANGE_DIR | wx.FD_FILE_MUST_EXIST | wx.FD_PREVIEW
+    #     ) as dialog:
 
-            if dialog.ShowModal() == wx.ID_OK:
-                self.frame.reload_data(dialog.GetPath())
-                logger.info('New stock data loaded successfully.')
+    #         if dialog.ShowModal() == wx.ID_OK:
+    #             self.frame.reload_data(dialog.GetPath())
+    #             logger.info('New stock data loaded successfully.')
 
     def statusbar_toggle(self, event):
         if self.sb_toggle.IsChecked():
@@ -88,10 +88,10 @@ class MyMenuBar(wx.MenuBar):
             self.frame.toolbar.Hide()
 
     def quit(self, event):
-        try:
-            self.frame.dump_stocks('quit')
-        except Exception as e:
-            logger.exception(f'Failed to dump data during program exit: {e}')
-        else:
-            logger.info('Program exited by file->quit.')
+        # try:
+        #     self.frame.dump_stocks('quit')
+        # except Exception as e:
+        #     logger.exception(f'Failed to dump data during program exit: {e}')
+        # else:
+        #     logger.info('Program exited by file->quit.')
         sys.exit()
