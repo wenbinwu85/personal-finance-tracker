@@ -1,12 +1,14 @@
 import time
 import wx
-
+# import wx.lib.agw.aui as aui
+import wx.aui
 from settings.app import APP_NAME, VERSION, STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
 from functions.funcs import logger
 from gui.menubar import MyMenuBar
 from gui.toolbar import MyToolbar
 from gui.logindialog import LoginDialog
-from gui.widgets. dashboard import Dashboard
+from gui.widgets.dashboard import Dashboard
+from gui.widgets.assetsdebts import AssetsDebts
 from gui.widgets.stocklist import StockList
 
 
@@ -42,12 +44,22 @@ class MainWindow(wx.Frame):
 
         self.panel = wx.Panel(self)
 
-        self.tabs = wx.Notebook(self.panel, wx.ID_ANY)
-        self.summary_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.dashboard = Dashboard(self.summary_tab, 'Dashboard')
-        self.tabs.AddPage(self.summary_tab, self.dashboard.name)
-        self.net_worth_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.tabs.AddPage(self.net_worth_tab, 'Net Worth')
+        self.tabs = wx.aui.AuiNotebook(
+            self.panel,
+            wx.ID_ANY,
+            # agwStyle=aui.AUI_NB_TAB_SPLIT | aui.AUI_NB_TAB_MOVE | aui.AUI_NB_TAB_EXTERNAL_MOVE
+            #     | aui.AUI_NB_SCROLL_BUTTONS | aui.AUI_NB_CLOSE_ON_ACTIVE_TAB | aui.AUI_NB_SMART_TABS
+            #     | aui.AUI_NB_ORDER_BY_ACCESS
+        )
+
+        self.dashboard_tab = wx.Panel(self.tabs, wx.ID_ANY)
+        self.dashboard = Dashboard(self.dashboard_tab, 'Dashboard')
+        self.tabs.AddPage(self.dashboard_tab, self.dashboard.name)
+
+        self.assets_debts_tab = wx.Panel(self.tabs, wx.ID_ANY)
+        self.assets_debts = AssetsDebts(self.assets_debts_tab, wx.ID_ANY)
+        self.tabs.AddPage(self.assets_debts_tab, 'Assets & Debts')
+
         self.stocks_tab = wx.Panel(self.tabs, wx.ID_ANY)
         self.stocks_list = StockList(self.stocks_tab, 'Stock Positions')
         self.tabs.AddPage(self.stocks_tab, self.stocks_list.name)

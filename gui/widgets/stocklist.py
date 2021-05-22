@@ -14,7 +14,6 @@ class StockList():
 
         self.name = name
         self.stock_data_path = stock_data_path
-
         self.panel = panel
 
         self.stock_list_model, self.stock_list = self.generate_stock_list()
