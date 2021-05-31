@@ -36,7 +36,7 @@ class StockList():
         self.delete_row_button.Bind(wx.EVT_BUTTON, self.delete_stock_rows)
         self.delete_row_button.Disable()
 
-        button_sizer = wx.StaticBoxSizer(wx.HORIZONTAL, self.panel, label='Manage Stocks')
+        button_sizer = wx.BoxSizer(wx.HORIZONTAL)
         button_sizer.Add(self.open_button, 0, wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER, 5)
         button_sizer.Add(self.save_button, 0, wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER, 5)
         button_sizer.Add(self.add_row_button, 0, wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER, 5)
