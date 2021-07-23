@@ -1,6 +1,6 @@
 import wx
 import wx.dataview as dv
-from settings.settings import stock_header_path, stock_data_path
+from settings import stock_header_path, stock_data_path
 from functions.funcs import logger, load_data, dump_data
 from functions.exceptions import StockListWidgetException
 from model.stocklist import StockListModel

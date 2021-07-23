@@ -2,7 +2,7 @@ import time
 import wx
 # import wx.lib.agw.aui as aui
 # import wx.aui
-from settings.settings import APP_NAME, VERSION, STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
+from settings import STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
 from functions.funcs import logger
 from gui.menubar import MyMenuBar
 from gui.toolbar import MyToolbar
@@ -19,11 +19,11 @@ stocklist_changed = False
 class MainWindow(wx.Frame):
     """Main window GUI"""
 
-    def __init__(self):
+    def __init__(self, title, size):
         super().__init__(
             parent=None,
-            title=APP_NAME + VERSION,
-            size=(1400, 640),
+            title=title,
+            size=size,
             style=wx.DEFAULT_FRAME_STYLE  # & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
         )
 

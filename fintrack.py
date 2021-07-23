@@ -1,3 +1,5 @@
+#! /usr/bin/python3
+
 # fix pixelated fonts in fucking windows
 # if wx.Platform == '__WXMSW__':
 #     import ctypes
@@ -7,19 +9,16 @@
 #         pass
 
 import wx
-import os
+from settings import APP_NAME, VERSION
 from gui.mainwindow import MainWindow
 from functions.funcs import logger
-
-
-appdir = os.path.abspath(os.path.dirname(__file__))
 
 
 class FinTrack(wx.App):
     """Main app class"""
 
     def OnInit(self):
-        self.frame = MainWindow()
+        self.frame = MainWindow(title=APP_NAME+VERSION, size=(1400, 640))
         self.SetTopWindow(self.frame)
         self.frame.Show()
         logger.info('Program started.')

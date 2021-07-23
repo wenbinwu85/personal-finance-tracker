@@ -1,9 +1,7 @@
 import os
-from fintrack import appdir
 from functions.funcs import logger, load_data
 
-##### app settings #####
-APP_NAME = 'FinTrack'
+APP_NAME = 'Ahben FinTrack'
 VERSION = '  v0.0.5.1a'
 EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'
@@ -15,10 +13,11 @@ ADMIN_ACCOUNT = ('ahben', 'ahben')  # hardcoded admin account
 
 STATUS_BAR_MESSAGE = 'Welcome Ahben!'
 
-USER_SETTINGS_PATH = os.path.join(appdir, 'settings', 'user.json')
+APP_DIR = os.path.abspath(os.path.dirname(__file__))
+USER_SETTINGS_PATH = os.path.join(APP_DIR, 'user.json')
+DATA_PATH = os.path.join(APP_DIR, 'data')
 
 
-##### user settings #####
 try:
     user_settings = load_data(USER_SETTINGS_PATH)
 except Exception as e:
