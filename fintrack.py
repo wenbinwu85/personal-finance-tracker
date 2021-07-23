@@ -1,5 +1,3 @@
-#! /usr/bin/python3
-
 # fix pixelated fonts in fucking windows
 # if wx.Platform == '__WXMSW__':
 #     import ctypes
@@ -9,8 +7,12 @@
 #         pass
 
 import wx
+import os
 from gui.mainwindow import MainWindow
 from functions.funcs import logger
+
+
+appdir = os.path.abspath(os.path.dirname(__file__))
 
 
 class FinTrack(wx.App):

@@ -2,7 +2,7 @@ import time
 import wx
 # import wx.lib.agw.aui as aui
 # import wx.aui
-from settings.app import APP_NAME, VERSION, STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
+from settings.settings import APP_NAME, VERSION, STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
 from functions.funcs import logger
 from gui.menubar import MyMenuBar
 from gui.toolbar import MyToolbar
