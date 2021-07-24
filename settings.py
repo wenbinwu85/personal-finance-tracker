@@ -16,6 +16,8 @@ STATUS_BAR_MESSAGE = 'Welcome Ahben!'
 APP_DIR = os.path.abspath(os.path.dirname(__file__))
 USER_SETTINGS_PATH = os.path.join(APP_DIR, 'user.json')
 DATA_PATH = os.path.join(APP_DIR, 'data')
+STOCKS_LIST_HEADER_PATH = os.path.join(DATA_PATH, 'stock_list_headers')
+STOCKS_DATA_PATh = os.path.join(DATA_PATH, 'stocks.csv')
 
 
 try:
