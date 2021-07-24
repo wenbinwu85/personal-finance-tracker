@@ -18,7 +18,7 @@ class FinTrack(wx.App):
     """Main app class"""
 
     def OnInit(self):
-        self.frame = MainWindow(title=APP_NAME+VERSION, size=(1400, 640))
+        self.frame = MainWindow(title=APP_NAME+VERSION, size=(1400, 720))
         self.SetTopWindow(self.frame)
         self.frame.Show()
         logger.info('Program started.')

@@ -1,9 +1,7 @@
-import os
 import sys
 import wx
 import wx.adv
 from settings import APP_NAME, VERSION, EMAIL, DEVELOPER, COPYRIGHT, LICENSE, WEBSITE
-from functions.funcs import logger
 
 
 class MyMenuBar(wx.MenuBar):
