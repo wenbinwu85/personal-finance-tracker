@@ -24,7 +24,7 @@ class MainWindow(wx.Frame):
             parent=None,
             title=title,
             size=size,
-            style=wx.DEFAULT_FRAME_STYLE  # & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
+            style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
         )
 
         self.toolbar = MyToolbar(
@@ -65,7 +65,17 @@ class MainWindow(wx.Frame):
         self.tabs.AddPage(self.stocks_tab, self.stocks_list.name)
         self.tabs.SetSize(self.tabs.GetBestSize())
 
-        main_sizer = wx.BoxSizer(wx.VERTICAL) 
+        self.graphs_tab = wx.Panel(self.tabs, wx.ID_ANY)
+        self.graphs_list = StockList(self.graphs_tab, 'Investment Graphs')
+        self.tabs.AddPage(self.graphs_tab, self.graphs_list.name)
+        self.tabs.SetSize(self.tabs.GetBestSize())
+
+        self.history_tab = wx.Panel(self.tabs, wx.ID_ANY)
+        self.history_list = StockList(self.history_tab, 'History')
+        self.tabs.AddPage(self.history_tab, self.history_list.name)
+        self.tabs.SetSize(self.tabs.GetBestSize())
+
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
         main_sizer.Add(self.tabs, 1, wx.EXPAND)
         self.panel.SetSizer(main_sizer)
 
