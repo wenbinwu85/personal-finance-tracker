@@ -2,7 +2,7 @@ import os
 from functions.funcs import logger, load_data
 
 APP_NAME = 'Ahben FinTrack'
-VERSION = '  v0.0.5.1a'
+VERSION = '  v0.0.5.2a'
 EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'
 WEBSITE = 'https://github.com/wenbinwu85/', 'Github'
