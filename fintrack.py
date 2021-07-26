@@ -29,5 +29,5 @@ class FinTrack(wx.App):
 
 
 if __name__ == '__main__':
-    app = FinTrack()
+    app = FinTrack(False)
     app.MainLoop()

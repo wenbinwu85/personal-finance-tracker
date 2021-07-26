@@ -1,6 +1,7 @@
 import sys
 import wx
 import wx.adv
+import wx.lib.inspection
 from settings import APP_NAME, VERSION, EMAIL, DEVELOPER, COPYRIGHT, LICENSE, WEBSITE
 
 
@@ -27,6 +28,7 @@ class MyMenuBar(wx.MenuBar):
 
         window_menu = wx.Menu()
         help_menu = wx.Menu()
+        inspector = help_menu.Append(901, 'Widget Inspector', 'Widget Inspector')
         about = help_menu.Append(wx.ID_ABOUT)
 
         # self.Bind(wx.EVT_MENU, self.open_dialog, id=wx.ID_OPEN)
@@ -35,6 +37,7 @@ class MyMenuBar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.about_dialog, about)
         self.Bind(wx.EVT_MENU, self.statusbar_toggle, self.sb_toggle)
         self.Bind(wx.EVT_MENU, self.toolbar_toggle, self.tb_toggle)
+        self.Bind(wx.EVT_MENU, self.widget_inspector, inspector)
 
         self.Append(menu1, 'File')
         self.Append(view_menu, 'View')
@@ -84,6 +87,10 @@ class MyMenuBar(wx.MenuBar):
             self.frame.toolbar.Show()
         else:
             self.frame.toolbar.Hide()
+
+    def widget_inspector(self, event):
+        wx.lib.inspection.InspectionTool().Show()
+        return None
 
     def quit(self, event):
         # try:

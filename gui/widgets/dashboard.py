@@ -31,7 +31,7 @@ class Dashboard():
         da_ratio_label.SetForegroundColour('coral')
         net_worth_label.SetToolTip(f'Debt to Asset Ratio: {da_ratio}%')
 
-        net_worth_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Personal Net Worth')
+        net_worth_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Personal Summary')
         net_worth_sizer.AddMany((net_worth_label, net_worth))
         net_worth_sizer.AddMany((assets_label, assets))
         net_worth_sizer.AddMany((debts_label, debts))
@@ -39,7 +39,7 @@ class Dashboard():
 
         ##### passive income #####
         dividend_label = wx.StaticText(self.panel, wx.ID_ANY, label=f'Annual Dividend Yield', name='dividend')
-        dividend = led_num_ctrl(self.panel, str(1357.9), 'forest green')
+        dividend = led_num_ctrl(self.panel, str(1357.89), 'forest green')
         dividend_monthly = round(float(dividend.GetValue()) / 12, 4)
         dividend_label.SetToolTip(f'Total dividend received annually, average ${dividend_monthly} per month.')
         dividend_monthly_label = wx.StaticText(self.panel, wx.ID_ANY, label=f'Monthly Average: ${dividend_monthly}')

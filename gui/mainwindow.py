@@ -16,6 +16,10 @@ login_status = False
 stocklist_changed = False
 
 
+# class MainPanel(wx.Panel):
+#     def __init__(self, parent):
+#         super().__init__(parent)
+
 class MainWindow(wx.Frame):
     """Main window GUI"""
 
@@ -26,6 +30,9 @@ class MainWindow(wx.Frame):
             size=size,
             style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
         )
+
+        icon = wx.Icon('logo.png', wx.BITMAP_TYPE_ANY)
+        self.SetIcon(icon)
 
         self.toolbar = MyToolbar(
             self,
@@ -63,17 +70,14 @@ class MainWindow(wx.Frame):
         self.stocks_tab = wx.Panel(self.tabs, wx.ID_ANY)
         self.stocks_list = StockList(self.stocks_tab, 'Stock Positions')
         self.tabs.AddPage(self.stocks_tab, self.stocks_list.name)
-        self.tabs.SetSize(self.tabs.GetBestSize())
 
         self.graphs_tab = wx.Panel(self.tabs, wx.ID_ANY)
         self.graphs_list = StockList(self.graphs_tab, 'Investment Graphs')
         self.tabs.AddPage(self.graphs_tab, self.graphs_list.name)
-        self.tabs.SetSize(self.tabs.GetBestSize())
 
         self.history_tab = wx.Panel(self.tabs, wx.ID_ANY)
         self.history_list = StockList(self.history_tab, 'History')
         self.tabs.AddPage(self.history_tab, self.history_list.name)
-        self.tabs.SetSize(self.tabs.GetBestSize())
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         main_sizer.Add(self.tabs, 1, wx.EXPAND)
@@ -84,7 +88,7 @@ class MainWindow(wx.Frame):
         self.add_time()
 
         self.SetThemeEnabled(True)
-        self.SetMinSize(self.tabs.GetSize())
+        self.SetMinSize(self.tabs.GetBestSize())
         self.Layout()
         self.CenterOnScreen()
 
