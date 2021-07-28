@@ -1,7 +1,3 @@
 # ahben-financial-tracker
-Version 0.0.5-pre
-
-This is my personal financial tracker :)
-used to be a spreedsheet, now it's a desktop app with a wxPython-based GUI.
-
-
+This is my personal financial tracker app :)
+I used to track my finance with a spreadsheet, now it's a Python desktop app with a wxPython-based GUI.

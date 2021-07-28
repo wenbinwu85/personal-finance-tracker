@@ -1,4 +1,3 @@
-import sys
 import wx
 import wx.adv
 import wx.lib.inspection
@@ -99,4 +98,4 @@ class MyMenuBar(wx.MenuBar):
         #     logger.exception(f'Failed to dump data during program exit: {e}')
         # else:
         #     logger.info('Program exited by file->quit.')
-        sys.exit()
+        self.frame.Close()

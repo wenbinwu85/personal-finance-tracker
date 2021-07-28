@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 
-# fix pixelated fonts in fucking windows
+# fix DPI problems in fucking windows
 # if wx.Platform == '__WXMSW__':
 #     import ctypes
 #     try:
@@ -9,7 +9,6 @@
 #         pass
 
 import wx
-from settings import APP_NAME, VERSION
 from gui.mainwindow import MainWindow
 from functions.funcs import logger
 
@@ -18,7 +17,7 @@ class FinTrack(wx.App):
     """Main app class"""
 
     def OnInit(self):
-        self.frame = MainWindow(title=APP_NAME+VERSION, size=(1400, 720))
+        self.frame = MainWindow()
         self.SetTopWindow(self.frame)
         self.frame.Show()
         logger.info('Program started.')
