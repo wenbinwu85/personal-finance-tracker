@@ -27,7 +27,7 @@ class MainWindow(wx.Frame):
         super().__init__(
             parent=None,
             title=APP_NAME+VERSION,
-            size=(1400, 650),
+            size=(1700, 650),
             style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
         )
 

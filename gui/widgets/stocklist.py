@@ -78,7 +78,7 @@ class StockList():
         stock_list.EnableSystemTheme()
 
         for idx, val in enumerate(self.header_row):
-            stock_list.AppendTextColumn(val, idx, width=len(val) * 8, mode=dv.DATAVIEW_CELL_EDITABLE)
+            stock_list.AppendTextColumn(val, idx, width=len(val) * 10, mode=dv.DATAVIEW_CELL_EDITABLE)
 
         for col in stock_list.Columns:
             col.Sortable = True

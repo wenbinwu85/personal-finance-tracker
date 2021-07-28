@@ -1,5 +1,8 @@
+import os
 import wx
-
+import wx.dataview as dv
+from settings import DATA_PATH
+from functions.funcs import load_data
 
 class AssetsDebts():
     """"""
@@ -10,24 +13,46 @@ class AssetsDebts():
         self.name = name
         self.panel = panel
 
-        self.splitter = wx.SplitterWindow(
-            self.panel, wx.ID_ANY, style=wx.SP_LIVE_UPDATE | wx.SP_THIN_SASH | wx.SP_ARROW_KEYS
-        )
-        left_pane = wx.Panel(self.splitter)
-        right_pane = wx.Panel(self.splitter)
-        self.assets_sizer = wx.StaticBoxSizer(wx.VERTICAL, left_pane, 'Assets')
-        self.debts_sizer = wx.StaticBoxSizer(wx.VERTICAL, right_pane, 'Debts')
+        dvlc = dv.DataViewListCtrl(self.panel, size=(520, 580))
+        dvlc.AppendTextColumn('Item', width=120)
+        dvlc.AppendTextColumn('Value', width=100, mode=dv.DATAVIEW_CELL_EDITABLE)
+        dvlc.AppendTextColumn('Type', width=100, mode=dv.DATAVIEW_CELL_EDITABLE | dv.DATAVIEW_COL_SORTABLE)
+        dvlc.AppendTextColumn('Note', width=200, mode=dv.DATAVIEW_CELL_EDITABLE)
 
-        left_label = wx.StaticText(left_pane, -1, label='left side panel')
-        right_label = wx.StaticText(right_pane, -1, label='right side panel')
+        data = load_data(os.path.join(DATA_PATH, 'assets_debts.csv'))
+        for item in data:
+            dvlc.AppendItem(item)
 
-        self.assets_sizer.Add(left_label)
-        self.debts_sizer.Add(right_label)
-        left_pane.SetSizer(self.assets_sizer)
-        right_pane.SetSizer(self.debts_sizer)
-        self.splitter.SplitVertically(left_pane, right_pane)
-        self.splitter.SetMinimumPaneSize(700)
+        asset_debt_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Assets & Debts')
+        asset_debt_sizer.Add(dvlc, 0, wx.EXPAND)
 
-        widget_sizer = wx.BoxSizer(wx.VERTICAL)
-        widget_sizer.Add(self.splitter, 1, wx.EXPAND, 0)
+        dvlc2 = dv.DataViewListCtrl(self.panel, size=(650, 580))
+        dvlc2.AppendTextColumn('Item', width=120)
+        dvlc2.AppendTextColumn('Amount', width=75, mode=dv.DATAVIEW_CELL_EDITABLE)
+        dvlc2.AppendTextColumn('Time', width=75, mode=dv.DATAVIEW_CELL_EDITABLE)
+        dvlc2.AppendTextColumn('Date', width=75, mode=dv.DATAVIEW_CELL_EDITABLE)
+        dvlc2.AppendTextColumn('Type', width=60, mode=dv.DATAVIEW_CELL_EDITABLE | dv.DATAVIEW_COL_SORTABLE)
+        dvlc2.AppendTextColumn('Payment Plan', width=225, mode=dv.DATAVIEW_CELL_EDITABLE)
+
+        data = load_data(os.path.join(DATA_PATH, 'budget.csv'))
+        for item in data:
+            dvlc2.AppendItem(item)
+
+        budget_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Budget Plan')
+        budget_sizer.Add(dvlc2, 0, wx.EXPAND)
+
+        dvlc3 = dv.DataViewListCtrl(self.panel, size=(350, 580))
+        dvlc3.AppendTextColumn('Account', width=150, mode=dv.DATAVIEW_CELL_EDITABLE)
+        dvlc3.AppendTextColumn('Type', width=75, mode=dv.DATAVIEW_CELL_EDITABLE)
+        dvlc3.AppendTextColumn('Status', width=75, mode=dv.DATAVIEW_CELL_EDITABLE)
+
+        data = load_data(os.path.join(DATA_PATH, 'accounts.csv'))
+        for item in data:
+            dvlc3.AppendItem(item)
+
+        accounts_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Financial Accounts')
+        accounts_sizer.Add(dvlc3, 0, wx.EXPAND)
+
+        widget_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        widget_sizer.AddMany((asset_debt_sizer, budget_sizer, accounts_sizer))
         self.panel.SetSizer(widget_sizer)
