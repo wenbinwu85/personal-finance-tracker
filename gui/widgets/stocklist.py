@@ -3,7 +3,7 @@ import wx.dataview as dv
 from settings import stock_header_path, stock_data_path
 from functions.funcs import logger, load_data, dump_data
 from functions.exceptions import StockListWidgetException
-from model.stocklist import StockListModel
+from model.stocklist import DVIListModel
 
 
 class StockList():
@@ -69,7 +69,7 @@ class StockList():
         else:
             logger.info(f'Stock data loaded from {stock_data_path}.')
 
-        stock_list_model = StockListModel(self.stock_data)
+        stock_list_model = DVIListModel(self.stock_data)
         stock_list = dv.DataViewCtrl(
             self.panel,
             style=wx.BORDER_THEME | dv.DV_ROW_LINES | dv.DV_VERT_RULES | dv.DV_MULTIPLE

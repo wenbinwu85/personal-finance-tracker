@@ -2,11 +2,11 @@ import os
 from functions.funcs import logger, load_data
 
 APP_NAME = 'Ahben FinTrack'
-VERSION = '  v0.0.5.1a'
+VERSION = '  v0.0.5.2a'
 EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'
 WEBSITE = 'https://github.com/wenbinwu85/', 'Github'
-LICENSE = 'Free for ahben.'
+LICENSE = ''
 COPYRIGHT = f'\t(c) 2021 {DEVELOPER}, all rights reserved\t'
 
 ADMIN_ACCOUNT = ('ahben', 'ahben')  # hardcoded admin account

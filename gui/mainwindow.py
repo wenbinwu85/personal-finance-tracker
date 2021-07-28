@@ -2,7 +2,7 @@ import time
 import wx
 # import wx.lib.agw.aui as aui
 # import wx.aui
-from settings import STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
+from settings import APP_NAME, VERSION, STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
 from functions.funcs import logger
 from gui.menubar import MyMenuBar
 from gui.toolbar import MyToolbar
@@ -16,16 +16,23 @@ login_status = False
 stocklist_changed = False
 
 
+# class MainPanel(wx.Panel):
+#     def __init__(self, parent):
+#         super().__init__(parent)
+
 class MainWindow(wx.Frame):
     """Main window GUI"""
 
-    def __init__(self, title, size):
+    def __init__(self):
         super().__init__(
             parent=None,
-            title=title,
-            size=size,
-            style=wx.DEFAULT_FRAME_STYLE  # & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
+            title=APP_NAME+VERSION,
+            size=(1400, 650),
+            style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
         )
+
+        icon = wx.Icon('logo.png', wx.BITMAP_TYPE_ANY)
+        self.SetIcon(icon)
 
         self.toolbar = MyToolbar(
             self,
@@ -63,10 +70,18 @@ class MainWindow(wx.Frame):
         self.stocks_tab = wx.Panel(self.tabs, wx.ID_ANY)
         self.stocks_list = StockList(self.stocks_tab, 'Stock Positions')
         self.tabs.AddPage(self.stocks_tab, self.stocks_list.name)
-        self.tabs.SetSize(self.tabs.GetBestSize())
 
-        main_sizer = wx.BoxSizer(wx.VERTICAL) 
+        self.graphs_tab = wx.Panel(self.tabs, wx.ID_ANY)
+        self.graphs_list = StockList(self.graphs_tab, 'Investment Graphs')
+        self.tabs.AddPage(self.graphs_tab, self.graphs_list.name)
+
+        self.history_tab = wx.Panel(self.tabs, wx.ID_ANY)
+        self.history_list = StockList(self.history_tab, 'History')
+        self.tabs.AddPage(self.history_tab, self.history_list.name)
+
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
         main_sizer.Add(self.tabs, 1, wx.EXPAND)
+        main_sizer.Fit(self.panel)
         self.panel.SetSizer(main_sizer)
 
         timer = wx.PyTimer(self.add_time)
@@ -74,7 +89,7 @@ class MainWindow(wx.Frame):
         self.add_time()
 
         self.SetThemeEnabled(True)
-        self.SetMinSize(self.tabs.GetSize())
+        self.SetMinSize(self.tabs.GetBestSize())
         self.Layout()
         self.CenterOnScreen()
 

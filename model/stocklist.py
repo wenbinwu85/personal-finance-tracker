@@ -1,7 +1,7 @@
 import wx.dataview as dv
 
 
-class StockListModel(dv.DataViewIndexListModel):
+class DVIListModel(dv.DataViewIndexListModel):
     def __init__(self, data):
         dv.DataViewIndexListModel.__init__(self, len(data))
         self.data = data
