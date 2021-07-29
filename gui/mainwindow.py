@@ -1,14 +1,14 @@
 import time
 import wx
+import wx.aui as aui
 # import wx.lib.agw.aui as aui
-# import wx.aui
-from settings import APP_NAME, VERSION, STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
+from settings import APP_NAME, STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
 from functions.funcs import logger
 from gui.menubar import MyMenuBar
 from gui.toolbar import MyToolbar
 from gui.logindialog import LoginDialog
 from gui.widgets.dashboard import Dashboard
-from gui.widgets.assetsdebts import AssetsDebts
+from gui.widgets.financials import Financials
 from gui.widgets.stocklist import StockList
 
 
@@ -16,18 +16,14 @@ login_status = False
 stocklist_changed = False
 
 
-# class MainPanel(wx.Panel):
-#     def __init__(self, parent):
-#         super().__init__(parent)
-
 class MainWindow(wx.Frame):
     """Main window GUI"""
 
     def __init__(self):
         super().__init__(
             parent=None,
-            title=APP_NAME+VERSION,
-            size=(1700, 650),
+            title=APP_NAME,
+            size=(1560, 800),
             style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
         )
 
@@ -36,7 +32,7 @@ class MainWindow(wx.Frame):
 
         self.toolbar = MyToolbar(
             self,
-            style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT
+            style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT | wx.TB_DOCKABLE
         )
         self.SetToolBar(self.toolbar)
         self.toolbar.Realize()
@@ -51,12 +47,10 @@ class MainWindow(wx.Frame):
 
         self.panel = wx.Panel(self)
 
-        self.tabs = wx.Notebook(
+        self.tabs = aui.AuiNotebook(
             self.panel,
             wx.ID_ANY,
-            # agwStyle=aui.AUI_NB_TAB_SPLIT | aui.AUI_NB_TAB_MOVE | aui.AUI_NB_TAB_EXTERNAL_MOVE
-            #     | aui.AUI_NB_SCROLL_BUTTONS | aui.AUI_NB_CLOSE_ON_ACTIVE_TAB | aui.AUI_NB_SMART_TABS
-            #     | aui.AUI_NB_ORDER_BY_ACCESS
+            style=aui.AUI_NB_CLOSE_BUTTON | aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_TAB_MOVE | aui.AUI_NB_TAB_SPLIT
         )
 
         self.dashboard_tab = wx.Panel(self.tabs, wx.ID_ANY)
@@ -64,8 +58,8 @@ class MainWindow(wx.Frame):
         self.tabs.AddPage(self.dashboard_tab, self.dashboard.name)
 
         self.assets_debts_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.assets_debts = AssetsDebts(self.assets_debts_tab, wx.ID_ANY)
-        self.tabs.AddPage(self.assets_debts_tab, 'Assets & Debts')
+        self.assets_debts = Financials(self.assets_debts_tab, wx.ID_ANY)
+        self.tabs.AddPage(self.assets_debts_tab, 'Financials')
 
         self.stocks_tab = wx.Panel(self.tabs, wx.ID_ANY)
         self.stocks_list = StockList(self.stocks_tab, 'Stock Positions')

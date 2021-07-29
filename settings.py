@@ -1,8 +1,7 @@
 import os
-from functions.funcs import logger, load_data
 
-APP_NAME = 'Ahben FinTrack'
-VERSION = '  v0.0.5.2a'
+APP_NAME = 'Personal FinTrack'
+VERSION = '  v0.0.5.3a'
 EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'
 WEBSITE = 'https://github.com/wenbinwu85/', 'Github'
@@ -11,30 +10,13 @@ COPYRIGHT = f'\t(c) 2021 {DEVELOPER}, all rights reserved\t'
 
 ADMIN_ACCOUNT = ('ahben', 'ahben')  # hardcoded admin account
 
-STATUS_BAR_MESSAGE = 'Welcome Ahben!'
+STATUS_BAR_MESSAGE = VERSION
 
 APP_DIR = os.path.abspath(os.path.dirname(__file__))
-USER_SETTINGS_PATH = os.path.join(APP_DIR, 'user.json')
 DATA_PATH = os.path.join(APP_DIR, 'data')
-STOCKS_LIST_HEADER_PATH = os.path.join(DATA_PATH, 'stock_list_headers')
-STOCKS_DATA_PATh = os.path.join(DATA_PATH, 'stocks.csv')
-
-
-try:
-    user_settings = load_data(USER_SETTINGS_PATH)
-except Exception as e:
-    error_msg = f'Failed to load user settings from {USER_SETTINGS_PATH}:\n{e}'
-    logger.exception(error_msg)
-    raise
-else:
-    logger.info(f'User settings loaded from {USER_SETTINGS_PATH}.')
-
-try:
-    stock_header_path = user_settings.get('stock_header_path')
-    stock_data_path = user_settings.get('stock_data_path')
-except KeyError as e:
-    error_msg = f'User setting missing:\n{e}'
-    logger.exception(error_msg)
-    raise
-else:
-    logger.info('User settings loaded')
+METRICS_DATA_PATH = os.path.join(DATA_PATH, 'metrics.csv')
+ASSETS_DEBTS_DATA_PATH = os.path.join(DATA_PATH, 'assets_debts.csv')
+BUDGET_PLAN_DATA_PATH = os.path.join(DATA_PATH, 'budget.csv')
+ACCOUNTS_DATA_PATH = os.path.join(DATA_PATH, 'accounts.csv')
+STOCKSLIST_HEADER_PATH = os.path.join(DATA_PATH, 'stocklist_headers.csv')
+STOCKLIST_DATA_PATH = os.path.join(DATA_PATH, 'stocklist.csv')

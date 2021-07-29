@@ -1,2 +1,0 @@
-
-class FinTrack(wx.App):

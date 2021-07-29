@@ -1,7 +1,7 @@
 import wx
 import wx.dataview as dv
-from settings import stock_header_path, stock_data_path
-from functions.funcs import logger, load_data, dump_data
+from settings import STOCKSLIST_HEADER_PATH, STOCKLIST_DATA_PATH
+from functions.funcs import logger, load_data_from, dump_data
 from functions.exceptions import StockListWidgetException
 from model.stocklist import DVIListModel
 
@@ -13,7 +13,6 @@ class StockList():
         super().__init__(*args, **kwargs)
 
         self.name = name
-        self.stock_data_path = stock_data_path
         self.panel = panel
 
         self.stock_list_model, self.stock_list = self.generate_stock_list()
@@ -44,7 +43,7 @@ class StockList():
 
         stocks_sizer = wx.BoxSizer(wx.VERTICAL)
         stocks_sizer.Add(self.stock_list, 1, wx.EXPAND)
-        stocks_sizer.Add(button_sizer, 0)
+        stocks_sizer.Add(button_sizer, 0, wx.BOTTOM, border=5)
         stocks_sizer.Fit(self.panel)
         self.panel.SetSizer(stocks_sizer)
 
@@ -52,22 +51,22 @@ class StockList():
         """"""
 
         try:
-            self.header_row = load_data(stock_header_path)[0]
+            self.header_row = load_data_from(STOCKSLIST_HEADER_PATH)[0]
         except Exception as e:
-            error_msg = f'Failed to load stock list header from {stock_header_path}:\n{e}'
+            error_msg = f'Failed to load stock list header from {STOCKSLIST_HEADER_PATH}:\n{e}'
             logger.exception(error_msg)
             raise StockListWidgetException(error_msg)
         else:
-            logger.info(f'Stock list headers loaded from {stock_header_path}.')
+            logger.info(f'Stock list headers loaded from {STOCKSLIST_HEADER_PATH}.')
 
         try:
-            self.stock_data = load_data(stock_data_path)
+            self.stock_data = load_data_from(STOCKLIST_DATA_PATH)
         except Exception as e:
-            error_msg = f'Failed to load stock data from {stock_data_path}:\n{e}'
+            error_msg = f'Failed to load stock data from {STOCKLIST_DATA_PATH}:\n{e}'
             logger.exception(error_msg)
             raise StockListWidgetException(error_msg)
         else:
-            logger.info(f'Stock data loaded from {stock_data_path}.')
+            logger.info(f'Stock data loaded from {STOCKLIST_DATA_PATH}.')
 
         stock_list_model = DVIListModel(self.stock_data)
         stock_list = dv.DataViewCtrl(
@@ -127,7 +126,7 @@ class StockList():
         """"""
 
         try:
-            dump_data(self.stock_data, self.stock_data_path)
+            dump_data(self.stock_data, STOCKLIST_DATA_PATH)
         except Exception as e:
             error_msg = f'data dump failed: {e}'
             logger.exception(error_msg)

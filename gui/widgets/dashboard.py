@@ -1,10 +1,9 @@
-import os
 import wx
 import wx.dataview as dv
 import wx.lib.gizmos as gizmos
 from wx.lib import plot
-from functions.funcs import load_data
-from settings import DATA_PATH
+from functions.funcs import load_data_from
+from settings import METRICS_DATA_PATH
 
 
 def led_num_ctrl(parent, value, color, size=(200, 50)):
@@ -32,6 +31,7 @@ class Dashboard():
         net_worth = led_num_ctrl(self.panel, str(float(assets.GetValue()) - float(debts.GetValue())), 'lime green')
         da_ratio = abs(round(float(debts.GetValue()) / float(assets.GetValue()), 4))
         tooltip = wx.ToolTip(f'Debt to Asset Ratio: {da_ratio}%')
+
         net_worth_label.SetToolTip(tooltip)
         net_worth_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Personal Summary')
         net_worth_sizer.AddMany((net_worth_label, net_worth))
@@ -44,6 +44,7 @@ class Dashboard():
         dividend_monthly = round(float(dividend.GetValue()) / 12, 4)
         tooltip = wx.ToolTip(f'Average dividend per month: ${dividend_monthly}.\nTotal Dividend Received: ${1123.45}')
         dividend_label.SetToolTip(tooltip)
+
         passive_income_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Passive Income')
         passive_income_sizer.AddMany((dividend_label, dividend))
 
@@ -54,15 +55,16 @@ class Dashboard():
         transunion = led_num_ctrl(self.panel, str(805), 'sky blue')
         experian_label = wx.StaticText(self.panel, wx.ID_ANY, label=f'Experian', name='experian')
         experian = led_num_ctrl(self.panel, str(799), 'sky blue')
+
         credit_score_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Credit Scores')
         credit_score_sizer.AddMany((equifax_label, equifax))
         credit_score_sizer.AddMany((transunion_label, transunion))
         credit_score_sizer.AddMany((experian_label, experian))
 
         summary_sizer = wx.BoxSizer(wx.VERTICAL)
-        summary_sizer.Add(net_worth_sizer, 0, wx.BOTTOM, 8)
-        summary_sizer.Add(passive_income_sizer, 0, wx.BOTTOM, 8)
-        summary_sizer.Add(credit_score_sizer, 0)
+        summary_sizer.Add(net_worth_sizer, 0, wx.BOTTOM, 10)
+        summary_sizer.Add(passive_income_sizer, 0, wx.BOTTOM, 10)
+        summary_sizer.Add(credit_score_sizer, wx.BOTTOM, 10)
 
         ##### Monthly Metrics #####
         dvlc = dv.DataViewListCtrl(self.panel, size=(1000, 295))
@@ -78,19 +80,19 @@ class Dashboard():
         dvlc.AppendTextColumn('Debts', width=60, mode=dv.DATAVIEW_CELL_EDITABLE)
         dvlc.AppendTextColumn('Net Worth', width=100, mode=dv.DATAVIEW_CELL_EDITABLE)
 
-        data = load_data(os.path.join(DATA_PATH, 'metrics.csv'))
-        for item in data:
+        for item in load_data_from(METRICS_DATA_PATH):
             dvlc.AppendItem(item)
 
         dvlc_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Monthly Metrics')
         dvlc_sizer.Add(dvlc, 0, wx.EXPAND)
 
+        ##### metrics graph #####
         x_data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
         y_data = [2, 4, 6, 4, 2, 5, 6, 7, 1, 7, 4, 5]
         xy_data = list(zip(x_data, y_data))
         line = plot.PolySpline(xy_data, colour=wx.Colour('black'), width=2)
         graphics = plot.PlotGraphics([line])
-        canvas = plot.PlotCanvas(self.panel, 0, size=(1000, 215))
+        canvas = plot.PlotCanvas(self.panel, 0, size=(1000, 210))
         canvas.axesPen = wx.Pen(wx.BLUE, 1, wx.PENSTYLE_LONG_DASH)
         canvas.enableAntiAliasing = True
         canvas.enableAxesLabels = True
@@ -102,14 +104,16 @@ class Dashboard():
         canvas.enableTitle = True
         canvas.SetBackgroundColour('dark grey')
         canvas.Draw(graphics)
+
         canvas_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Metrics Graph')
         canvas_sizer.Add(canvas, 0, wx.EXPAND)
 
         metrics_sizer = wx.BoxSizer(wx.VERTICAL)
-        metrics_sizer.AddMany((dvlc_sizer, canvas_sizer))
+        metrics_sizer.Add(dvlc_sizer, 0, wx.BOTTOM, 10)
+        metrics_sizer.Add(canvas_sizer, 0, wx.BOTTOM, 10)
 
         dashboard_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        dashboard_sizer.Add(summary_sizer, 0, wx.EXPAND)
-        dashboard_sizer.Add(metrics_sizer, 0, wx.EXPAND)
+        dashboard_sizer.Add(summary_sizer)
+        dashboard_sizer.Add(metrics_sizer)
         dashboard_sizer.Fit(self.panel)
         self.panel.SetSizer(dashboard_sizer)
