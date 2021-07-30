@@ -44,8 +44,8 @@ class StockList():
         stocks_sizer = wx.BoxSizer(wx.VERTICAL)
         stocks_sizer.Add(self.stock_list, 1, wx.EXPAND)
         stocks_sizer.Add(button_sizer, 0, wx.BOTTOM, border=5)
-        stocks_sizer.Fit(self.panel)
-        self.panel.SetSizer(stocks_sizer)
+
+        self.panel.SetSizerAndFit(stocks_sizer)
 
     def generate_stock_list(self):
         """"""
@@ -71,6 +71,7 @@ class StockList():
         stock_list_model = DVIListModel(self.stock_data)
         stock_list = dv.DataViewCtrl(
             self.panel,
+            size=(1650, 800),
             style=wx.BORDER_THEME | dv.DV_ROW_LINES | dv.DV_VERT_RULES | dv.DV_MULTIPLE
         )
         stock_list.AssociateModel(stock_list_model)

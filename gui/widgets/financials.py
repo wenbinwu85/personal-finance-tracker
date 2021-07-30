@@ -55,4 +55,5 @@ class Financials():
 
         widget_sizer = wx.BoxSizer(wx.HORIZONTAL)
         widget_sizer.AddMany((asset_debt_sizer, budget_sizer, accounts_sizer))
-        self.panel.SetSizer(widget_sizer)
+
+        self.panel.SetSizerAndFit(widget_sizer)

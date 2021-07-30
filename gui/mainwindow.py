@@ -23,7 +23,6 @@ class MainWindow(wx.Frame):
         super().__init__(
             parent=None,
             title=APP_NAME,
-            size=(1560, 800),
             style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
         )
 
@@ -50,41 +49,40 @@ class MainWindow(wx.Frame):
         self.tabs = aui.AuiNotebook(
             self.panel,
             wx.ID_ANY,
-            style=aui.AUI_NB_CLOSE_BUTTON | aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_TAB_MOVE | aui.AUI_NB_TAB_SPLIT
+            style=aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_TAB_MOVE | aui.AUI_NB_TAB_SPLIT
         )
 
         self.dashboard_tab = wx.Panel(self.tabs, wx.ID_ANY)
         self.dashboard = Dashboard(self.dashboard_tab, 'Dashboard')
         self.tabs.AddPage(self.dashboard_tab, self.dashboard.name)
 
-        self.assets_debts_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.assets_debts = Financials(self.assets_debts_tab, wx.ID_ANY)
-        self.tabs.AddPage(self.assets_debts_tab, 'Financials')
+        self.financials_tab = wx.Panel(self.tabs, wx.ID_ANY)
+        self.financials = Financials(self.financials_tab, wx.ID_ANY)
+        self.tabs.AddPage(self.financials_tab, 'Financials')
 
-        self.stocks_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.stocks_list = StockList(self.stocks_tab, 'Stock Positions')
-        self.tabs.AddPage(self.stocks_tab, self.stocks_list.name)
+        self.stocklist_tab = wx.Panel(self.tabs, wx.ID_ANY)
+        self.stockslist = StockList(self.stocklist_tab, 'Stock Positions')
+        self.tabs.AddPage(self.stocklist_tab, self.stockslist.name)
 
-        self.graphs_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.graphs_list = StockList(self.graphs_tab, 'Investment Graphs')
-        self.tabs.AddPage(self.graphs_tab, self.graphs_list.name)
+        # self.graphs_tab = wx.Panel(self.tabs, wx.ID_ANY)
+        # self.graphs_list = StockList(self.graphs_tab, 'Investment Graphs')
+        # self.tabs.AddPage(self.graphs_tab, self.graphs_list.name)
 
-        self.history_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.history_list = StockList(self.history_tab, 'History')
-        self.tabs.AddPage(self.history_tab, self.history_list.name)
+        # self.history_tab = wx.Panel(self.tabs, wx.ID_ANY)
+        # self.history_list = StockList(self.history_tab, 'History')
+        # self.tabs.AddPage(self.history_tab, self.history_list.name)
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)
-        main_sizer.Add(self.tabs, 1, wx.EXPAND)
-        main_sizer.Fit(self.panel)
-        self.panel.SetSizer(main_sizer)
+        main_sizer.Add(self.tabs)
 
         timer = wx.PyTimer(self.add_time)
         timer.Start(1000)
-        self.add_time()
 
+        self.panel.SetSizerAndFit(main_sizer)
+        self.add_time()
+        
         self.SetThemeEnabled(True)
-        self.SetMinSize(self.tabs.GetBestSize())
-        self.Layout()
+        self.SetSize(self.GetBestSize())
         self.CenterOnScreen()
 
     def add_time(self):
@@ -119,7 +117,7 @@ class MainWindow(wx.Frame):
             item.SetItemLabel('Logout')
             menubar.Bind(wx.EVT_MENU, self.logout, id=102)
 
-            self.stocks_list.management(enable=True)
+            self.stockslist.management(enable=True)
 
             logger.info(f'login successful: {username}.')
 
@@ -142,8 +140,8 @@ class MainWindow(wx.Frame):
         item.SetItemLabel('Login')
         menubar.Bind(wx.EVT_MENU, self.login, id=102)
 
-        self.stocks_list.management(enable=False)
-        self.stocks_list.dump_stocks(wx.EVT_BUTTON)
+        self.stockslist.management(enable=False)
+        self.stockslist.dump_stocks(wx.EVT_BUTTON)
 
         logger.info('logout successful.')
 
