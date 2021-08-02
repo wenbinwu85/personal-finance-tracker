@@ -52,25 +52,13 @@ class MainWindow(wx.Frame):
             style=aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_TAB_MOVE | aui.AUI_NB_TAB_SPLIT
         )
 
-        self.dashboard_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.dashboard = Dashboard(self.dashboard_tab, 'Dashboard')
-        self.tabs.AddPage(self.dashboard_tab, self.dashboard.name)
-
-        self.financials_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.financials = Financials(self.financials_tab, wx.ID_ANY)
-        self.tabs.AddPage(self.financials_tab, 'Financials')
-
-        self.stocklist_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.stockslist = StockList(self.stocklist_tab, 'Stock Positions')
-        self.tabs.AddPage(self.stocklist_tab, self.stockslist.name)
-
-        # self.graphs_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        # self.graphs_list = StockList(self.graphs_tab, 'Investment Graphs')
-        # self.tabs.AddPage(self.graphs_tab, self.graphs_list.name)
-
-        # self.history_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        # self.history_list = StockList(self.history_tab, 'History')
-        # self.tabs.AddPage(self.history_tab, self.history_list.name)
+        self.dashboard = Dashboard('Dashboard', self.tabs)
+        self.tabs.AddPage(self.dashboard, self.dashboard.name)
+        self.financials = Financials('Financials', self.tabs)
+        self.tabs.AddPage(self.financials, self.financials.name)
+        self.stockslist = StockList('Stock Positions', self.tabs)
+        self.tabs.AddPage(self.stockslist, self.stockslist.name)
+        self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.tab_change, self.tabs)
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         main_sizer.Add(self.tabs)
@@ -82,7 +70,7 @@ class MainWindow(wx.Frame):
         self.add_time()
         
         self.SetThemeEnabled(True)
-        self.SetSize(self.GetBestSize())
+        self.SetClientSize(self.dashboard.GetBestSize())
         self.CenterOnScreen()
 
     def add_time(self):
@@ -91,6 +79,15 @@ class MainWindow(wx.Frame):
         t = time.localtime(time.time())
         st = time.strftime("%Y-%b-%d   %I:%M:%S", t)
         self.SetStatusText(st, 2)
+
+    def tab_change(self, event):
+        """Resizes the main window frame to fit notbook page content"""
+
+        tab = self.tabs.GetCurrentPage()
+        tab.SetInitialSize(tab.GetMinSize())
+        frame = tab.GetTopLevelParent()
+        frame.SetClientSize(tab.GetSize())
+        frame.SendSizeEvent()
 
     def login(self, event):
         """enbable admin mode"""

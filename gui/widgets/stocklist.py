@@ -6,32 +6,31 @@ from functions.exceptions import StockListWidgetException
 from model.stocklist import DVIListModel
 
 
-class StockList():
+class StockList(wx.Panel):
     """"""
 
-    def __init__(self, panel, name, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, name, parent, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
 
         self.name = name
-        self.panel = panel
 
         self.stock_list_model, self.stock_list = self.generate_stock_list()
         self.stock_list.Bind(dv.EVT_DATAVIEW_ITEM_EDITING_DONE, self.enable_save_button)
         self.stock_list.Bind(dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.enable_save_button)
 
-        self.open_button = wx.Button(self.panel, label='Open')
+        self.open_button = wx.Button(self, label='Open')
         self.open_button.Bind(wx.EVT_BUTTON, self.load_stocks)
         self.open_button.Disable()
 
-        self.save_button = wx.Button(self.panel, label='Save')
+        self.save_button = wx.Button(self, label='Save')
         self.save_button.Bind(wx.EVT_BUTTON, self.dump_stocks)
         self.save_button.Disable()
 
-        self.add_row_button = wx.Button(self.panel, label='Add Row')
+        self.add_row_button = wx.Button(self, label='Add Row')
         self.add_row_button.Bind(wx.EVT_BUTTON, self.add_stock_row)
         self.add_row_button.Disable()
 
-        self.delete_row_button = wx.Button(self.panel, label='Delete Row(s)')
+        self.delete_row_button = wx.Button(self, label='Delete Row(s)')
         self.delete_row_button.Bind(wx.EVT_BUTTON, self.delete_stock_rows)
         self.delete_row_button.Disable()
 
@@ -45,7 +44,7 @@ class StockList():
         stocks_sizer.Add(self.stock_list, 1, wx.EXPAND)
         stocks_sizer.Add(button_sizer, 0, wx.BOTTOM, border=5)
 
-        self.panel.SetSizerAndFit(stocks_sizer)
+        self.SetSizerAndFit(stocks_sizer)
 
     def generate_stock_list(self):
         """"""
@@ -70,7 +69,7 @@ class StockList():
 
         stock_list_model = DVIListModel(self.stock_data)
         stock_list = dv.DataViewCtrl(
-            self.panel,
+            self,
             size=(1650, 800),
             style=wx.BORDER_THEME | dv.DV_ROW_LINES | dv.DV_VERT_RULES | dv.DV_MULTIPLE
         )

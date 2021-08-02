@@ -20,56 +20,55 @@ def led_num_ctrl(parent, value, color, size=(200, 50)):
     return led
 
 
-class Dashboard():
+class Dashboard(wx.Panel):
     """"""
 
-    def __init__(self, panel, name, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, name, parent, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
 
         self.name = name
-        self.panel = panel
 
         ##### personal net worth #####
-        assets_label = wx.StaticText(self.panel, label='Assets')
-        assets_led = led_num_ctrl(self.panel, str(12345.67), 'forest green')
-        debts_label = wx.StaticText(self.panel, label='Debts')
-        debts_led = led_num_ctrl(self.panel, str(-1234.56), 'firebrick')
+        assets_label = wx.StaticText(self, label='Assets')
+        assets_led = led_num_ctrl(self, str(12345.67), 'forest green')
+        debts_label = wx.StaticText(self, label='Debts')
+        debts_led = led_num_ctrl(self, str(-1234.56), 'firebrick')
         net_worth = str(float(assets_led.GetValue()) - float(debts_led.GetValue()))
-        net_worth_label = wx.StaticText(self.panel, label='Net Worth')
-        net_worth_led = led_num_ctrl(self.panel, net_worth, 'lime green')
+        net_worth_label = wx.StaticText(self, label='Net Worth')
+        net_worth_led = led_num_ctrl(self, net_worth, 'lime green')
         da_ratio = abs(round(float(debts_led.GetValue()) / float(assets_led.GetValue()), 4))
         tooltip = wx.ToolTip(f'Debt to Asset Ratio: {da_ratio}%')
         net_worth_label.SetToolTip(tooltip)
-        net_worth_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Personal Summary')
+        net_worth_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Personal Summary')
         net_worth_sizer.AddMany((net_worth_label, net_worth_led))
         net_worth_sizer.AddMany((assets_label, assets_led))
         net_worth_sizer.AddMany((debts_label, debts_led))
 
         ##### passive income #####
-        yield_label = wx.StaticText(self.panel, label='Annual Dividend Yield %')
-        yield_led = led_num_ctrl(self.panel, '8.56', 'forest green')
-        dividend_label = wx.StaticText(self.panel, label='Annual Dividend Yield')
-        dividend_led = led_num_ctrl(self.panel, str(1357.89), 'forest green')
+        yield_label = wx.StaticText(self, label='Annual Dividend Yield %')
+        yield_led = led_num_ctrl(self, '8.56', 'forest green')
+        dividend_label = wx.StaticText(self, label='Annual Dividend Yield')
+        dividend_led = led_num_ctrl(self, str(1357.89), 'forest green')
         monthly_div = round(float(dividend_led.GetValue()) / 12, 2)
-        monthly_div_label = wx.StaticText(self.panel, label='Monthly Dividend Yield')
-        monthly_div_led = led_num_ctrl(self.panel, str(monthly_div), 'forest green')
+        monthly_div_label = wx.StaticText(self, label='Monthly Dividend Yield')
+        monthly_div_led = led_num_ctrl(self, str(monthly_div), 'forest green')
         total_div = 6543.21
-        total_div_label = wx.StaticText(self.panel, label='Total Dividend Received')
-        total_div_led = led_num_ctrl(self.panel, str(total_div), 'forest green')
-        dividend_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Passive Income')
+        total_div_label = wx.StaticText(self, label='Total Dividend Received')
+        total_div_led = led_num_ctrl(self, str(total_div), 'forest green')
+        dividend_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Passive Income')
         dividend_sizer.AddMany((yield_label, yield_led))
         dividend_sizer.AddMany((dividend_label, dividend_led))
         dividend_sizer.AddMany((monthly_div_label, monthly_div_led))
         dividend_sizer.AddMany((total_div_label, total_div_led))
 
         ##### credit scores #####
-        equifax_label = wx.StaticText(self.panel, label='Equifax')
-        equifax = led_num_ctrl(self.panel, str(800), 'sky blue')
-        transunion_label = wx.StaticText(self.panel, label='Transunion')
-        transunion = led_num_ctrl(self.panel, str(805), 'sky blue')
-        experian_label = wx.StaticText(self.panel, label='Experian')
-        experian = led_num_ctrl(self.panel, str(799), 'sky blue')
-        credit_score_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Credit Scores')
+        equifax_label = wx.StaticText(self, label='Equifax')
+        equifax = led_num_ctrl(self, str(800), 'sky blue')
+        transunion_label = wx.StaticText(self, label='Transunion')
+        transunion = led_num_ctrl(self, str(805), 'sky blue')
+        experian_label = wx.StaticText(self, label='Experian')
+        experian = led_num_ctrl(self, str(799), 'sky blue')
+        credit_score_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Credit Scores')
         credit_score_sizer.AddMany((equifax_label, equifax))
         credit_score_sizer.AddMany((transunion_label, transunion))
         credit_score_sizer.AddMany((experian_label, experian))
@@ -78,9 +77,10 @@ class Dashboard():
         summary_sizer.Add(net_worth_sizer, 0, wx.BOTTOM, 10)
         summary_sizer.Add(dividend_sizer, 0, wx.BOTTOM, 10)
         summary_sizer.Add(credit_score_sizer, 0, wx.BOTTOM, 10)
+        summary_sizer.SetMinSize((-1, 820))
 
         ##### Monthly Metrics #####
-        dvlc = dv.DataViewListCtrl(self.panel, size=(1000, 295))
+        dvlc = dv.DataViewListCtrl(self, size=(1000, 295))
         dvlc.AppendTextColumn('Month', width=75)
         dvlc.AppendTextColumn('Tsp', width=80, mode=dv.DATAVIEW_CELL_EDITABLE)
         dvlc.AppendTextColumn('Stonk', width=80, mode=dv.DATAVIEW_CELL_EDITABLE)
@@ -96,7 +96,7 @@ class Dashboard():
         for item in load_data_from(METRICS_DATA_PATH):
             dvlc.AppendItem(item)
 
-        dvlc_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Monthly Metrics')
+        dvlc_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Monthly Metrics')
         dvlc_sizer.Add(dvlc, 0, wx.EXPAND)
 
         ##### metrics graph #####
@@ -105,7 +105,7 @@ class Dashboard():
         xy_data = list(zip(x_data, y_data))
         line = plot.PolySpline(xy_data, colour=wx.Colour('black'), width=2)
         graphics = plot.PlotGraphics([line])
-        canvas = plot.PlotCanvas(self.panel, 0, size=(1000, 210))
+        canvas = plot.PlotCanvas(self, 0, size=(1000, 210))
         canvas.axesPen = wx.Pen(wx.BLUE, 1, wx.PENSTYLE_LONG_DASH)
         canvas.enableAntiAliasing = True
         canvas.enableAxesLabels = True
@@ -117,7 +117,7 @@ class Dashboard():
         canvas.enableTitle = True
         canvas.SetBackgroundColour('dark grey')
         canvas.Draw(graphics)
-        canvas_sizer = wx.StaticBoxSizer(wx.VERTICAL, self.panel, label='Metrics Graph')
+        canvas_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Metrics Graph')
         canvas_sizer.Add(canvas, 0, wx.EXPAND)
 
         metrics_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -128,4 +128,4 @@ class Dashboard():
         dashboard_sizer.Add(summary_sizer, 0, wx.EXPAND)
         dashboard_sizer.Add(metrics_sizer, 0, wx.EXPAND)
 
-        self.panel.SetSizerAndFit(dashboard_sizer)
+        self.SetSizerAndFit(dashboard_sizer)
