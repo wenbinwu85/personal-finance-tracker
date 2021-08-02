@@ -1,7 +1,6 @@
 import time
 import wx
-import wx.aui as aui
-# import wx.lib.agw.aui as aui
+import wx.aui as aui  # import wx.lib.agw.aui as aui
 from settings import APP_NAME, STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
 from functions.funcs import logger
 from gui.menubar import MyMenuBar
@@ -25,6 +24,7 @@ class MainWindow(wx.Frame):
             title=APP_NAME,
             style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
         )
+        self.panel = wx.Panel(self)
 
         icon = wx.Icon('logo.png', wx.BITMAP_TYPE_ANY)
         self.SetIcon(icon)
@@ -44,8 +44,6 @@ class MainWindow(wx.Frame):
         self.statusbar.SetStatusWidths([-2, 150, 140])
         self.SetStatusText(STATUS_BAR_MESSAGE, 0)
 
-        self.panel = wx.Panel(self)
-
         self.tabs = aui.AuiNotebook(
             self.panel,
             wx.ID_ANY,
@@ -53,10 +51,10 @@ class MainWindow(wx.Frame):
         )
 
         self.dashboard = Dashboard('Dashboard', self.tabs)
-        self.tabs.AddPage(self.dashboard, self.dashboard.name)
         self.financials = Financials('Financials', self.tabs)
+        self.stockslist = StockList('Stocks', self.tabs)
+        self.tabs.AddPage(self.dashboard, self.dashboard.name)
         self.tabs.AddPage(self.financials, self.financials.name)
-        self.stockslist = StockList('Stock Positions', self.tabs)
         self.tabs.AddPage(self.stockslist, self.stockslist.name)
         self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.tab_change, self.tabs)
 
@@ -68,7 +66,6 @@ class MainWindow(wx.Frame):
 
         self.panel.SetSizerAndFit(main_sizer)
         self.add_time()
-        
         self.SetThemeEnabled(True)
         self.SetClientSize(self.dashboard.GetBestSize())
         self.CenterOnScreen()

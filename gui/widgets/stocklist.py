@@ -70,7 +70,7 @@ class StockList(wx.Panel):
         stock_list_model = DVIListModel(self.stock_data)
         stock_list = dv.DataViewCtrl(
             self,
-            size=(1650, 800),
+            size=(1650, 600),
             style=wx.BORDER_THEME | dv.DV_ROW_LINES | dv.DV_VERT_RULES | dv.DV_MULTIPLE
         )
         stock_list.AssociateModel(stock_list_model)

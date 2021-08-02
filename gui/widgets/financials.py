@@ -13,9 +13,9 @@ class Financials(wx.Panel):
         self.name = name
 
         ##### assets and debts #####
-        dvlc = dv.DataViewListCtrl(self, size=(520, 800))
+        dvlc = dv.DataViewListCtrl(self, size=(510, 600))
         dvlc.AppendTextColumn('Item', width=120)
-        dvlc.AppendTextColumn('Value', width=100, mode=dv.DATAVIEW_CELL_EDITABLE)
+        dvlc.AppendTextColumn('Value', width=90, mode=dv.DATAVIEW_CELL_EDITABLE)
         dvlc.AppendTextColumn('Type', width=100, mode=dv.DATAVIEW_CELL_EDITABLE | dv.DATAVIEW_COL_SORTABLE)
         dvlc.AppendTextColumn('Note', width=200, mode=dv.DATAVIEW_CELL_EDITABLE)
 
@@ -26,11 +26,11 @@ class Financials(wx.Panel):
         asset_debt_sizer.Add(dvlc, 0, wx.EXPAND)
 
         ##### budget plan #####
-        dvlc2 = dv.DataViewListCtrl(self, size=(630, 800))
+        dvlc2 = dv.DataViewListCtrl(self, size=(610, 600))
         dvlc2.AppendTextColumn('Item', width=120)
-        dvlc2.AppendTextColumn('Amount', width=75, mode=dv.DATAVIEW_CELL_EDITABLE)
+        dvlc2.AppendTextColumn('Amount', width=65, mode=dv.DATAVIEW_CELL_EDITABLE)
         dvlc2.AppendTextColumn('Time', width=70, mode=dv.DATAVIEW_CELL_EDITABLE)
-        dvlc2.AppendTextColumn('Date', width=75, mode=dv.DATAVIEW_CELL_EDITABLE)
+        dvlc2.AppendTextColumn('Date', width=65, mode=dv.DATAVIEW_CELL_EDITABLE)
         dvlc2.AppendTextColumn('Type', width=60, mode=dv.DATAVIEW_CELL_EDITABLE | dv.DATAVIEW_COL_SORTABLE)
         dvlc2.AppendTextColumn('Payment Plan', width=225, mode=dv.DATAVIEW_CELL_EDITABLE)
 
@@ -41,7 +41,7 @@ class Financials(wx.Panel):
         budget_sizer.Add(dvlc2, 0, wx.EXPAND)
 
         ##### financial account #####
-        dvlc3 = dv.DataViewListCtrl(self, size=(340, 800))
+        dvlc3 = dv.DataViewListCtrl(self, size=(340, 600))
         dvlc3.AppendTextColumn('Account', width=150, mode=dv.DATAVIEW_CELL_EDITABLE)
         dvlc3.AppendTextColumn('Type', width=75, mode=dv.DATAVIEW_CELL_EDITABLE)
         dvlc3.AppendTextColumn('Status', width=75, mode=dv.DATAVIEW_CELL_EDITABLE)
