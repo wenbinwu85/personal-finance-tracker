@@ -37,6 +37,6 @@ class LoginDialog(wx.Dialog):
         main_sizer.Add(username_sizer, 0, wx.ALL | wx.CENTER, 5)
         main_sizer.Add(password_sizer, 0, wx.ALL | wx.CENTER, 5)
         main_sizer.Add(button_sizer, 0, wx.ALL | wx.CENTER, 5)
-        main_sizer.Fit(self)
-        self.SetSizer(main_sizer)
+
+        self.SetSizerAndFit(main_sizer)
         self.CenterOnParent()

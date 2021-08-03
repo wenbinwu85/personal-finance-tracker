@@ -19,7 +19,7 @@ class FinTrack(wx.App):
     def OnInit(self):
         self.frame = MainWindow()
         self.SetTopWindow(self.frame)
-        self.frame.Show()
+        self.frame.ShowWithEffect(True)
         logger.info('Program started.')
         return True
 

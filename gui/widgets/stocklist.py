@@ -1,38 +1,36 @@
 import wx
 import wx.dataview as dv
-from settings import stock_header_path, stock_data_path
-from functions.funcs import logger, load_data, dump_data
+from settings import STOCKLIST_DATA_PATH
+from functions.funcs import logger, load_data_from, dump_data
 from functions.exceptions import StockListWidgetException
 from model.stocklist import DVIListModel
 
 
-class StockList():
+class StockList(wx.Panel):
     """"""
 
-    def __init__(self, panel, name, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, name, parent, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
 
         self.name = name
-        self.stock_data_path = stock_data_path
-        self.panel = panel
 
         self.stock_list_model, self.stock_list = self.generate_stock_list()
         self.stock_list.Bind(dv.EVT_DATAVIEW_ITEM_EDITING_DONE, self.enable_save_button)
         self.stock_list.Bind(dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.enable_save_button)
 
-        self.open_button = wx.Button(self.panel, label='Open')
+        self.open_button = wx.Button(self, label='Open')
         self.open_button.Bind(wx.EVT_BUTTON, self.load_stocks)
         self.open_button.Disable()
 
-        self.save_button = wx.Button(self.panel, label='Save')
+        self.save_button = wx.Button(self, label='Save')
         self.save_button.Bind(wx.EVT_BUTTON, self.dump_stocks)
         self.save_button.Disable()
 
-        self.add_row_button = wx.Button(self.panel, label='Add Row')
+        self.add_row_button = wx.Button(self, label='Add Row')
         self.add_row_button.Bind(wx.EVT_BUTTON, self.add_stock_row)
         self.add_row_button.Disable()
 
-        self.delete_row_button = wx.Button(self.panel, label='Delete Row(s)')
+        self.delete_row_button = wx.Button(self, label='Delete Row(s)')
         self.delete_row_button.Bind(wx.EVT_BUTTON, self.delete_stock_rows)
         self.delete_row_button.Disable()
 
@@ -42,43 +40,36 @@ class StockList():
         button_sizer.Add(self.add_row_button, 0, wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER, 5)
         button_sizer.Add(self.delete_row_button, 0, wx.LEFT | wx.RIGHT | wx.ALIGN_CENTER, 5)
 
-        stocks_sizer = wx.BoxSizer(wx.VERTICAL)
-        stocks_sizer.Add(self.stock_list, 1, wx.EXPAND)
-        stocks_sizer.Add(button_sizer, 0)
-        stocks_sizer.Fit(self.panel)
-        self.panel.SetSizer(stocks_sizer)
+        stocklist_sizer = wx.BoxSizer(wx.VERTICAL)
+        stocklist_sizer.Add(self.stock_list, 1, wx.EXPAND)
+        stocklist_sizer.Add(button_sizer, 0, wx.BOTTOM, border=5)
+
+        self.SetSizerAndFit(stocklist_sizer)
 
     def generate_stock_list(self):
         """"""
 
-        try:
-            self.header_row = load_data(stock_header_path)[0]
-        except Exception as e:
-            error_msg = f'Failed to load stock list header from {stock_header_path}:\n{e}'
-            logger.exception(error_msg)
-            raise StockListWidgetException(error_msg)
-        else:
-            logger.info(f'Stock list headers loaded from {stock_header_path}.')
-
-        try:
-            self.stock_data = load_data(stock_data_path)
-        except Exception as e:
-            error_msg = f'Failed to load stock data from {stock_data_path}:\n{e}'
-            logger.exception(error_msg)
-            raise StockListWidgetException(error_msg)
-        else:
-            logger.info(f'Stock data loaded from {stock_data_path}.')
-
-        stock_list_model = DVIListModel(self.stock_data)
         stock_list = dv.DataViewCtrl(
-            self.panel,
+            self,
+            size=(1300, 600),
             style=wx.BORDER_THEME | dv.DV_ROW_LINES | dv.DV_VERT_RULES | dv.DV_MULTIPLE
         )
+        self.stock_data = load_data_from(STOCKLIST_DATA_PATH)
+        stock_list_model = DVIListModel(self.stock_data)
         stock_list.AssociateModel(stock_list_model)
-        stock_list.EnableSystemTheme()
 
-        for idx, val in enumerate(self.header_row):
-            stock_list.AppendTextColumn(val, idx, width=len(val) * 8, mode=dv.DATAVIEW_CELL_EDITABLE)
+        headers = [
+            'Symbol', 'Shares', 'Cost Avg', 'Price', 'Cost Basis',
+            'Market Value', 'Gain / Lost', 'Gain / Lost %', 'Yield %', 'Annual Dividend',
+            'Dividend Received', 'Y2C %', 'Sector', 'Account %', 'Account'
+        ]
+        for idx, val in enumerate(headers):
+            stock_list.AppendTextColumn(
+                val,
+                idx,
+                width=wx.COL_WIDTH_AUTOSIZE,
+                mode=dv.DATAVIEW_CELL_EDITABLE
+            )
 
         for col in stock_list.Columns:
             col.Sortable = True
@@ -127,7 +118,7 @@ class StockList():
         """"""
 
         try:
-            dump_data(self.stock_data, self.stock_data_path)
+            dump_data(self.stock_data, STOCKLIST_DATA_PATH)
         except Exception as e:
             error_msg = f'data dump failed: {e}'
             logger.exception(error_msg)

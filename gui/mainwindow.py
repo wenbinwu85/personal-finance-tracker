@@ -1,14 +1,13 @@
 import time
 import wx
-# import wx.lib.agw.aui as aui
-# import wx.aui
-from settings import APP_NAME, VERSION, STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
+import wx.aui as aui  # import wx.lib.agw.aui as aui
+from settings import APP_NAME, STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
 from functions.funcs import logger
 from gui.menubar import MyMenuBar
 from gui.toolbar import MyToolbar
 from gui.logindialog import LoginDialog
 from gui.widgets.dashboard import Dashboard
-from gui.widgets.assetsdebts import AssetsDebts
+from gui.widgets.financials import Financials
 from gui.widgets.stocklist import StockList
 
 
@@ -16,27 +15,23 @@ login_status = False
 stocklist_changed = False
 
 
-# class MainPanel(wx.Panel):
-#     def __init__(self, parent):
-#         super().__init__(parent)
-
 class MainWindow(wx.Frame):
     """Main window GUI"""
 
     def __init__(self):
         super().__init__(
             parent=None,
-            title=APP_NAME+VERSION,
-            size=(1400, 650),
+            title=APP_NAME,
             style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
         )
+        self.panel = wx.Panel(self)
 
         icon = wx.Icon('logo.png', wx.BITMAP_TYPE_ANY)
         self.SetIcon(icon)
 
         self.toolbar = MyToolbar(
             self,
-            style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT
+            style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT | wx.TB_DOCKABLE
         )
         self.SetToolBar(self.toolbar)
         self.toolbar.Realize()
@@ -49,49 +44,31 @@ class MainWindow(wx.Frame):
         self.statusbar.SetStatusWidths([-2, 150, 140])
         self.SetStatusText(STATUS_BAR_MESSAGE, 0)
 
-        self.panel = wx.Panel(self)
-
-        self.tabs = wx.Notebook(
+        self.tabs = aui.AuiNotebook(
             self.panel,
             wx.ID_ANY,
-            # agwStyle=aui.AUI_NB_TAB_SPLIT | aui.AUI_NB_TAB_MOVE | aui.AUI_NB_TAB_EXTERNAL_MOVE
-            #     | aui.AUI_NB_SCROLL_BUTTONS | aui.AUI_NB_CLOSE_ON_ACTIVE_TAB | aui.AUI_NB_SMART_TABS
-            #     | aui.AUI_NB_ORDER_BY_ACCESS
+            style=aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_TAB_MOVE | aui.AUI_NB_TAB_SPLIT
         )
 
-        self.dashboard_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.dashboard = Dashboard(self.dashboard_tab, 'Dashboard')
-        self.tabs.AddPage(self.dashboard_tab, self.dashboard.name)
-
-        self.assets_debts_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.assets_debts = AssetsDebts(self.assets_debts_tab, wx.ID_ANY)
-        self.tabs.AddPage(self.assets_debts_tab, 'Assets & Debts')
-
-        self.stocks_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.stocks_list = StockList(self.stocks_tab, 'Stock Positions')
-        self.tabs.AddPage(self.stocks_tab, self.stocks_list.name)
-
-        self.graphs_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.graphs_list = StockList(self.graphs_tab, 'Investment Graphs')
-        self.tabs.AddPage(self.graphs_tab, self.graphs_list.name)
-
-        self.history_tab = wx.Panel(self.tabs, wx.ID_ANY)
-        self.history_list = StockList(self.history_tab, 'History')
-        self.tabs.AddPage(self.history_tab, self.history_list.name)
+        self.dashboard = Dashboard('Dashboard', self.tabs)
+        self.financials = Financials('Financials', self.tabs)
+        self.stocklist = StockList('Stocks', self.tabs)
+        self.tabs.AddPage(self.dashboard, self.dashboard.name)
+        self.tabs.AddPage(self.financials, self.financials.name)
+        self.tabs.AddPage(self.stocklist, self.stocklist.name)
+        self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.tab_change, self.tabs)
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)
-        main_sizer.Add(self.tabs, 1, wx.EXPAND)
-        main_sizer.Fit(self.panel)
-        self.panel.SetSizer(main_sizer)
+        main_sizer.Add(self.tabs)
 
         timer = wx.PyTimer(self.add_time)
         timer.Start(1000)
-        self.add_time()
 
+        self.panel.SetSizerAndFit(main_sizer)
+        self.add_time()
         self.SetThemeEnabled(True)
-        self.SetMinSize(self.tabs.GetBestSize())
-        self.Layout()
-        self.CenterOnScreen()
+        self.SetClientSize(self.dashboard.GetBestSize())
+        self.SetPosition((75, 75))
 
     def add_time(self):
         """"""
@@ -99,6 +76,15 @@ class MainWindow(wx.Frame):
         t = time.localtime(time.time())
         st = time.strftime("%Y-%b-%d   %I:%M:%S", t)
         self.SetStatusText(st, 2)
+
+    def tab_change(self, event):
+        """Resizes the main window frame to fit notbook page content"""
+
+        tab = self.tabs.GetCurrentPage()
+        tab.SetInitialSize(tab.GetMinSize())
+        frame = tab.GetTopLevelParent()
+        frame.SetClientSize(tab.GetSize())
+        frame.SendSizeEvent()
 
     def login(self, event):
         """enbable admin mode"""
@@ -125,7 +111,7 @@ class MainWindow(wx.Frame):
             item.SetItemLabel('Logout')
             menubar.Bind(wx.EVT_MENU, self.logout, id=102)
 
-            self.stocks_list.management(enable=True)
+            self.stocklist.management(enable=True)
 
             logger.info(f'login successful: {username}.')
 
@@ -148,8 +134,8 @@ class MainWindow(wx.Frame):
         item.SetItemLabel('Login')
         menubar.Bind(wx.EVT_MENU, self.login, id=102)
 
-        self.stocks_list.management(enable=False)
-        self.stocks_list.dump_stocks(wx.EVT_BUTTON)
+        self.stocklist.management(enable=False)
+        self.stocklist.dump_stocks(wx.EVT_BUTTON)
 
         logger.info('logout successful.')
 
