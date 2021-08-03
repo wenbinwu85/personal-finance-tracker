@@ -1,4 +1,4 @@
-# ahben-financial-tracker
+# personal-finance-tracker
 This is my personal finance tracker :) <br>
 I track my finance with a spreadsheet, and I am trying to turn it into a Python desktop app with a wxPython based GUI. <br>
 Currently at this stage it can only read data from CSV files, and I plan to add editing/saving functionalities and other features. <br>
