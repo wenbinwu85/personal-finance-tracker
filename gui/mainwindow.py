@@ -52,10 +52,10 @@ class MainWindow(wx.Frame):
 
         self.dashboard = Dashboard('Dashboard', self.tabs)
         self.financials = Financials('Financials', self.tabs)
-        self.stockslist = StockList('Stocks', self.tabs)
+        self.stocklist = StockList('Stocks', self.tabs)
         self.tabs.AddPage(self.dashboard, self.dashboard.name)
         self.tabs.AddPage(self.financials, self.financials.name)
-        self.tabs.AddPage(self.stockslist, self.stockslist.name)
+        self.tabs.AddPage(self.stocklist, self.stocklist.name)
         self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.tab_change, self.tabs)
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -68,7 +68,7 @@ class MainWindow(wx.Frame):
         self.add_time()
         self.SetThemeEnabled(True)
         self.SetClientSize(self.dashboard.GetBestSize())
-        self.CenterOnScreen()
+        self.SetPosition((75, 75))
 
     def add_time(self):
         """"""
@@ -111,7 +111,7 @@ class MainWindow(wx.Frame):
             item.SetItemLabel('Logout')
             menubar.Bind(wx.EVT_MENU, self.logout, id=102)
 
-            self.stockslist.management(enable=True)
+            self.stocklist.management(enable=True)
 
             logger.info(f'login successful: {username}.')
 
@@ -134,8 +134,8 @@ class MainWindow(wx.Frame):
         item.SetItemLabel('Login')
         menubar.Bind(wx.EVT_MENU, self.login, id=102)
 
-        self.stockslist.management(enable=False)
-        self.stockslist.dump_stocks(wx.EVT_BUTTON)
+        self.stocklist.management(enable=False)
+        self.stocklist.dump_stocks(wx.EVT_BUTTON)
 
         logger.info('logout successful.')
 
