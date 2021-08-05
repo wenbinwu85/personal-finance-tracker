@@ -49,6 +49,8 @@ class Dashboard(wx.Panel):
         for (text, value) in load_data_from(CREDIT_SCORES_DATA_PATH):
             label, led = led_num_ctrl(self, text, value, 'sky blue', (100, 50))
             credit_score_sizer.AddMany((label, led))
+        avg_label, avg_led = led_num_ctrl(self, 'Average(2020)', '711', 'sky blue', (100, 50))
+        credit_score_sizer.AddMany((avg_label, avg_led))
 
         self.pie = PieCtrl(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(230, 225))
         self.pie.SetHeight(30)

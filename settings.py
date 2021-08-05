@@ -1,7 +1,7 @@
 import os
 
 APP_NAME = 'Personal FinTrack'
-VERSION = '  v0.0.5.5a'
+VERSION = '  v0.0.5.6a'
 EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'
 WEBSITE = 'https://github.com/wenbinwu85/', 'Github'
