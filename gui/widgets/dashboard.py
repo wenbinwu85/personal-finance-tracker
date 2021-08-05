@@ -5,7 +5,8 @@ import wx.lib.gizmos as gizmos
 from wx.lib.agw.piectrl import PieCtrl, PiePart
 from wx.lib.agw.pycollapsiblepane import PyCollapsiblePane
 from functions.funcs import load_data_from
-from settings import METRICS_DATA_PATH, PERSONAL_SUMMARY_DATA_PATH, PASSIVE_INCOME_DATA_PATH, CREDIT_SCORES_DATA_PATH
+from settings import METRICS_DATA_PATH, PERSONAL_SUMMARY_DATA_PATH
+from settings import PASSIVE_INCOME_DATA_PATH, CREDIT_SCORES_DATA_PATH
 
 
 def led_num_ctrl(parent, label, value, color, size=(200, 50)):
@@ -49,7 +50,7 @@ class Dashboard(wx.Panel):
             label, led = led_num_ctrl(self, text, value, 'sky blue', (100, 50))
             credit_score_sizer.AddMany((label, led))
 
-        self.pie = PieCtrl(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(225, 225))
+        self.pie = PieCtrl(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(230, 225))
         self.pie.SetHeight(30)
         self.pie.SetBackColour('dark grey')
         self.pie.SetShowEdges(False)
@@ -66,9 +67,13 @@ class Dashboard(wx.Panel):
         self.pie._series.append(pie_part3)
         self.pie._series.append(pie_part4)
 
-        self.hslider = wx.Slider(self, wx.ID_ANY, 180, 0, 360, size=(225, -1), style=wx.SL_LABELS | wx.SL_TOP)
+        self.hslider = wx.Slider(
+            self, wx.ID_ANY, 180, 0, 360, size=(225, -1), style=wx.SL_LABELS | wx.SL_TOP
+        )
         self.hslider.Bind(wx.EVT_SLIDER, self.hslider_handler)
-        self.vslider = wx.Slider(self, wx.ID_ANY, 40, 20, 60, size=wx.DefaultSize, style=wx.SL_VERTICAL | wx.SL_LABELS)
+        self.vslider = wx.Slider(
+            self, wx.ID_ANY, 40, 20, 60, size=wx.DefaultSize, style=wx.SL_VERTICAL | wx.SL_LABELS
+        )
         self.vslider.Bind(wx.EVT_SLIDER, self.vslider_handler)
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         hsizer.Add(self.pie, 0, wx.EXPAND)
@@ -85,36 +90,27 @@ class Dashboard(wx.Panel):
         summary_sizer.Add(pie_sizer, 0, wx.BOTTOM | wx.EXPAND, 10)
 
         ##### Monthly Metrics #####
-        cpane = PyCollapsiblePane(self, label='Monthly Metrics', style=wx.CP_DEFAULT_STYLE)
-        cpane.SetAutoLayout(True)
-        cpane.Expand()
-        pane = cpane.GetPane()
-
-        dvlc = dv.DataViewListCtrl(pane, size=(840, 325))
-        dvlc.AppendTextColumn('Month', width=wx.COL_WIDTH_AUTOSIZE)
-        dvlc.AppendTextColumn('401K', width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
-        dvlc.AppendTextColumn('Trad IRA', width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
-        dvlc.AppendTextColumn('Roth IRA', width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
-        dvlc.AppendTextColumn('Webull', width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
-        dvlc.AppendTextColumn('Coinbase', width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
-        dvlc.AppendTextColumn('Dividend', width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
-        dvlc.AppendTextColumn('Invested', width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
-        dvlc.AppendTextColumn('Cash', width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
-        dvlc.AppendTextColumn('Debts', width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
-        dvlc.AppendTextColumn('Net Worth', width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
-
+        self.cpane = PyCollapsiblePane(self, label='Monthly Metrics', style=wx.CP_DEFAULT_STYLE)
+        self.cpane.SetAutoLayout(True)
+        # self.cpane.Expand()
+        self.cpane.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self.collapse_pane_change)
+        metrics_columns = [
+            'Month', 'TSP', 'Schwab', 'Roth IRA', 'Webull',
+            'Coinbase', 'Dividend', 'Invested', 'Cash', 'Debts', 'Net Worth'
+        ]
+        dvlc = dv.DataViewListCtrl(self.cpane.GetPane(), size=(860, 325))
+        for i in metrics_columns:
+            dvlc.AppendTextColumn(i, width=wx.COL_WIDTH_AUTOSIZE)
         for item in load_data_from(METRICS_DATA_PATH):
             dvlc.AppendItem(item)
 
-        # dvlc_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Monthly Metrics')
-        # dvlc_sizer.Add(dvlc, 0, wx.EXPAND)
+        self.dashboard_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.dashboard_sizer.Add(summary_sizer, 0, wx.EXPAND)
+        self.dashboard_sizer.Add(self.cpane, 0, wx.EXPAND)
 
-        dashboard_sizer = wx.BoxSizer(wx.VERTICAL)
-        dashboard_sizer.Add(summary_sizer, 0, wx.EXPAND)
-        dashboard_sizer.Add(cpane, 0, wx.EXPAND)
-
-        self.SetSizerAndFit(dashboard_sizer)
-        dashboard_sizer.Layout()
+        self.SetSizerAndFit(self.dashboard_sizer)
+        self.dashboard_sizer.Layout()
+        self.SetMinSize((self.GetMinWidth(), self.GetMinHeight()+30))
 
         self.hslider_handler(wx.EVT_SLIDER)
         self.vslider_handler(wx.EVT_SLIDER)
@@ -124,3 +120,20 @@ class Dashboard(wx.Panel):
 
     def hslider_handler(self, event):
         self.pie.SetRotationAngle(float(self.hslider.GetValue()) / 180.0 * pi)
+
+    def collapse_pane_change(self, event):
+        if self.cpane.IsExpanded():
+            self.SetSizerAndFit(self.dashboard_sizer)
+            self.dashboard_sizer.Layout()
+            frame = self.GetTopLevelParent()
+            frame.SetClientSize(self.GetSize())
+            frame.SendSizeEvent()
+            frame.CenterOnScreen()
+        else:
+            self.SetSizerAndFit(self.dashboard_sizer)
+            self.dashboard_sizer.Layout()
+            self.SetMinSize((self.GetMinWidth(), self.GetMinHeight()+30))
+            frame = self.GetTopLevelParent()
+            frame.SetClientSize(self.GetMinSize())
+            frame.SendSizeEvent()
+            frame.CenterOnScreen()
