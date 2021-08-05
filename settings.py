@@ -6,7 +6,7 @@ EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'
 WEBSITE = 'https://github.com/wenbinwu85/', 'Github'
 LICENSE = ''
-COPYRIGHT = f'\t(c) 2021 {DEVELOPER}, all rights reserved\t'
+COPYRIGHT = f'\t(c) 2021 {DEVELOPER}\t'
 
 ADMIN_ACCOUNT = ('ahben', 'ahben')  # hardcoded admin account
 

@@ -68,7 +68,7 @@ class MainWindow(wx.Frame):
         self.add_time()
         self.SetThemeEnabled(True)
         self.SetClientSize(self.dashboard.GetBestSize())
-        self.SetPosition((75, 75))
+        self.CenterOnScreen()
 
     def add_time(self):
         """"""
@@ -81,10 +81,10 @@ class MainWindow(wx.Frame):
         """Resizes the main window frame to fit notbook page content"""
 
         tab = self.tabs.GetCurrentPage()
-        tab.SetInitialSize(tab.GetMinSize())
         frame = tab.GetTopLevelParent()
-        frame.SetClientSize(tab.GetSize())
+        frame.SetClientSize(tab.GetMinSize())
         frame.SendSizeEvent()
+        frame.CenterOnScreen()
 
     def login(self, event):
         """enbable admin mode"""
