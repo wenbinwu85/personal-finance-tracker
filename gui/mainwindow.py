@@ -57,6 +57,7 @@ class MainWindow(wx.Frame):
         self.tabs.AddPage(self.financials, self.financials.name)
         self.tabs.AddPage(self.stocklist, self.stocklist.name)
         self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.tab_change, self.tabs)
+        self.tabs.SetSelection(1)
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         main_sizer.Add(self.tabs)
@@ -66,7 +67,6 @@ class MainWindow(wx.Frame):
 
         self.panel.SetSizerAndFit(main_sizer)
         self.add_time()
-        self.SetThemeEnabled(True)
         self.SetClientSize(self.dashboard.GetBestSize())
         self.CenterOnScreen()
 

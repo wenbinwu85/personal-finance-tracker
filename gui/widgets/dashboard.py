@@ -9,7 +9,7 @@ from settings import METRICS_DATA_PATH, PERSONAL_SUMMARY_DATA_PATH
 from settings import PASSIVE_INCOME_DATA_PATH, CREDIT_SCORES_DATA_PATH
 
 
-def led_num_ctrl(parent, label, value, color, size=(200, 50)):
+def make_led_num_ctrl(parent, label, value, color, size=(200, 50)):
     label = wx.StaticText(parent, label=label)
     led = gizmos.LEDNumberCtrl(
         parent,
@@ -35,21 +35,21 @@ class Dashboard(wx.Panel):
         ##### personal net worth #####
         net_worth_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Personal Summary')
         for (text, value, color) in load_data_from(PERSONAL_SUMMARY_DATA_PATH):
-            label, led = led_num_ctrl(self, text, value, color)
+            label, led = make_led_num_ctrl(self, text, value, color)
             net_worth_sizer.AddMany((label, led))
 
         ##### passive income #####
         dividend_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Passive Income')
         for (text, value) in load_data_from(PASSIVE_INCOME_DATA_PATH):
-            label, led = led_num_ctrl(self, text, value, 'forest green')
+            label, led = make_led_num_ctrl(self, text, value, 'forest green')
             dividend_sizer.AddMany((label, led))
 
         ##### credit scores #####
         credit_score_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Credit Scores')
         for (text, value) in load_data_from(CREDIT_SCORES_DATA_PATH):
-            label, led = led_num_ctrl(self, text, value, 'sky blue', (100, 50))
+            label, led = make_led_num_ctrl(self, text, value, 'sky blue', (100, 50))
             credit_score_sizer.AddMany((label, led))
-        avg_label, avg_led = led_num_ctrl(self, 'Average(2020)', '711', 'sky blue', (100, 50))
+        avg_label, avg_led = make_led_num_ctrl(self, 'Average(2020)', '711', 'sky blue', (100, 50))
         credit_score_sizer.AddMany((avg_label, avg_led))
 
         self.pie = PieCtrl(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(230, 225))
