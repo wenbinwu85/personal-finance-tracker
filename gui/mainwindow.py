@@ -57,7 +57,7 @@ class MainWindow(wx.Frame):
         self.tabs.AddPage(self.financials, self.financials.name)
         self.tabs.AddPage(self.stocklist, self.stocklist.name)
         self.Bind(aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.tab_change, self.tabs)
-        self.tabs.SetSelection(1)
+        # self.tabs.SetSelection(1)
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         main_sizer.Add(self.tabs)
