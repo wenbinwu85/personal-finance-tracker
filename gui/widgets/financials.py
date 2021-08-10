@@ -23,7 +23,7 @@ class Financials(wx.Panel):
 
         ##### assets and debts #####
         columns = ['Item', 'Value', 'Type', 'Note']
-        self.dvlc = make_dvlc(self, columns, (500, 600))
+        self.dvlc = make_dvlc(self, columns, (500, 640))
         self.dvlc.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.dvlc_context_menu)
 
         for item in load_data_from(ASSETS_DEBTS_DATA_PATH):
@@ -38,7 +38,7 @@ class Financials(wx.Panel):
 
         ##### budget plan #####
         columns = ['Item', 'Amount', 'Time', 'Date', 'Type', 'Payback Plan']
-        self.dvlc2 = make_dvlc(self, columns, (600, 600))
+        self.dvlc2 = make_dvlc(self, columns, (600, 640))
         self.dvlc2.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.dvlc2_context_menu)
 
         for item in load_data_from(BUDGET_PLAN_DATA_PATH):
@@ -53,7 +53,7 @@ class Financials(wx.Panel):
 
         ##### financial account #####
         columns = ['Account', 'Type', 'Status']
-        self.dvlc3 = make_dvlc(self, columns, (340, 600))
+        self.dvlc3 = make_dvlc(self, columns, (340, 640))
         self.dvlc3.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.dvlc3_context_menu)
 
         for item in load_data_from(ACCOUNTS_DATA_PATH):

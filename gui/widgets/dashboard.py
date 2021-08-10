@@ -36,24 +36,28 @@ class Dashboard(wx.Panel):
         net_worth_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Personal Summary')
         for (text, value, color) in load_data_from(PERSONAL_SUMMARY_DATA_PATH):
             label, led = make_led_num_ctrl(self, text, value, color)
-            net_worth_sizer.AddMany((label, led))
+            net_worth_sizer.Add(label)
+            net_worth_sizer.Add(led, 0, wx.BOTTOM, 10)
 
         ##### passive income #####
         dividend_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Passive Income')
         for (text, value) in load_data_from(PASSIVE_INCOME_DATA_PATH):
-            label, led = make_led_num_ctrl(self, text, value, 'forest green')
-            dividend_sizer.AddMany((label, led))
+            label, led = make_led_num_ctrl(self, text, value, 'forest green', size=(175, 50))
+            dividend_sizer.Add(label)
+            dividend_sizer.Add(led, 0, wx.BOTTOM, 10)
 
         ##### credit scores #####
         credit_score_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Credit Scores')
         for (text, value) in load_data_from(CREDIT_SCORES_DATA_PATH):
             label, led = make_led_num_ctrl(self, text, value, 'sky blue', (100, 50))
-            credit_score_sizer.AddMany((label, led))
+            credit_score_sizer.Add(label)
+            credit_score_sizer.Add(led, 0, wx.BOTTOM, 10)
         avg_label, avg_led = make_led_num_ctrl(self, 'Average(2020)', '711', 'sky blue', (100, 50))
-        credit_score_sizer.AddMany((avg_label, avg_led))
+        credit_score_sizer.Add(avg_label)
+        credit_score_sizer.Add(avg_led, 0, wx.BOTTOM, 10)
 
-        self.pie = PieCtrl(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(230, 225))
-        self.pie.SetHeight(30)
+        self.pie = PieCtrl(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(260, 260))
+        self.pie.SetHeight(25)
         self.pie.SetBackColour('dark grey')
         self.pie.SetShowEdges(False)
         pie_legend = self.pie.GetLegend()
@@ -70,7 +74,7 @@ class Dashboard(wx.Panel):
         self.pie._series.append(pie_part4)
 
         self.hslider = wx.Slider(
-            self, wx.ID_ANY, 180, 0, 360, size=(225, -1), style=wx.SL_LABELS | wx.SL_TOP
+            self, wx.ID_ANY, 180, 0, 360, size=(260, -1), style=wx.SL_LABELS | wx.SL_TOP
         )
         self.hslider.Bind(wx.EVT_SLIDER, self.hslider_handler)
         self.vslider = wx.Slider(
