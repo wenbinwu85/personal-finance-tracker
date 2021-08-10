@@ -90,10 +90,10 @@ class Dashboard(wx.Panel):
         pie_sizer.Add(self.hslider, 1)
 
         summary_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        summary_sizer.Add(net_worth_sizer, 0, wx.BOTTOM, 10)
-        summary_sizer.Add(dividend_sizer, 0, wx.BOTTOM, 10)
-        summary_sizer.Add(credit_score_sizer, 0, wx.BOTTOM, 10)
-        summary_sizer.Add(pie_sizer, 0, wx.BOTTOM | wx.EXPAND, 10)
+        summary_sizer.Add(net_worth_sizer, 0, wx.BOTTOM)
+        summary_sizer.Add(dividend_sizer, 0, wx.BOTTOM)
+        summary_sizer.Add(credit_score_sizer, 0, wx.BOTTOM)
+        summary_sizer.Add(pie_sizer, 0, wx.BOTTOM | wx.EXPAND)
 
         ##### Monthly Metrics #####
         self.cpane = PyCollapsiblePane(self, label='Monthly Metrics', style=wx.CP_DEFAULT_STYLE)
