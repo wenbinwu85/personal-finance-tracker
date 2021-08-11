@@ -5,7 +5,7 @@ from settings import APP_NAME, STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
 from functions.funcs import logger
 from gui.menubar import MyMenuBar
 from gui.toolbar import MyToolbar
-from gui.logindialog import LoginDialog
+from gui.widgets.logindialog import LoginDialog
 from gui.widgets.dashboard import Dashboard
 from gui.widgets.financials import Financials
 from gui.widgets.stocklist import StockList
@@ -31,7 +31,7 @@ class MainWindow(wx.Frame):
 
         self.toolbar = MyToolbar(
             self,
-            style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT | wx.TB_DOCKABLE
+            style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT
         )
         self.SetToolBar(self.toolbar)
         self.toolbar.Realize()
@@ -47,7 +47,7 @@ class MainWindow(wx.Frame):
         self.tabs = aui.AuiNotebook(
             self.panel,
             wx.ID_ANY,
-            style=aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_TAB_MOVE | aui.AUI_NB_TAB_SPLIT
+            style=aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_TAB_MOVE  # | aui.AUI_NB_TAB_SPLIT
         )
 
         self.dashboard = Dashboard('Dashboard', self.tabs)

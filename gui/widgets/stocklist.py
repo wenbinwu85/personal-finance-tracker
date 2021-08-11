@@ -51,7 +51,7 @@ class StockList(wx.Panel):
 
         stock_list = dv.DataViewCtrl(
             self,
-            size=(1300, 600),
+            size=(1300, 640),
             style=wx.BORDER_THEME | dv.DV_ROW_LINES | dv.DV_VERT_RULES | dv.DV_MULTIPLE
         )
         self.stock_data = load_data_from(STOCKLIST_DATA_PATH)
