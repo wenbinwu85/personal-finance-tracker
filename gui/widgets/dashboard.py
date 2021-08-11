@@ -7,7 +7,7 @@ from wx.lib.agw.pycollapsiblepane import PyCollapsiblePane
 from functions.funcs import load_data_from, dump_data
 from gui.widgets.creditscoresupdatedialog import CreditScoresUpdateDialog
 from settings import METRICS_DATA_PATH, PERSONAL_SUMMARY_DATA_PATH
-from settings import PASSIVE_INCOME_DATA_PATH, CREDIT_SCORES_DATA_PATH
+from settings import PASSIVE_INCOME_DATA_PATH, CREDIT_SCORES_DATA_PATH, STOCKLIST_DATA_PATH
 
 
 def make_led_num_ctrl(parent, label, value, color, size=(200, 50)):
@@ -41,11 +41,12 @@ class Dashboard(wx.Panel):
             net_worth_sizer.Add(led, 0, wx.BOTTOM, 10)
 
         ##### passive income #####
-        dividend_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Passive Income')
+        self.dividend_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Passive Income')
         for (text, value) in load_data_from(PASSIVE_INCOME_DATA_PATH):
             label, led = make_led_num_ctrl(self, text, value, 'forest green', size=(175, 50))
-            dividend_sizer.Add(label)
-            dividend_sizer.Add(led, 0, wx.BOTTOM, 10)
+            self.dividend_sizer.Add(label)
+            self.dividend_sizer.Add(led, 0, wx.BOTTOM, 10)
+        self.update_passive_income()
 
         ##### credit scores #####
         self.credit_score_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Credit Scores')
@@ -92,7 +93,7 @@ class Dashboard(wx.Panel):
 
         summary_sizer = wx.BoxSizer(wx.HORIZONTAL)
         summary_sizer.Add(net_worth_sizer, 0, wx.BOTTOM)
-        summary_sizer.Add(dividend_sizer, 0, wx.BOTTOM)
+        summary_sizer.Add(self.dividend_sizer, 0, wx.BOTTOM)
         summary_sizer.Add(self.credit_score_sizer, 0, wx.BOTTOM)
         summary_sizer.Add(pie_sizer, 0, wx.BOTTOM | wx.EXPAND)
 
@@ -105,9 +106,9 @@ class Dashboard(wx.Panel):
             'Month', 'TSP', 'Schwab', 'Roth IRA', 'Webull',
             'Coinbase', 'Dividend', 'Invested', 'Cash', 'Debts', 'Net Worth'
         ]
-        dvlc = dv.DataViewListCtrl(self.cpane.GetPane(), size=(860, 325))
+        dvlc = dv.DataViewListCtrl(self.cpane.GetPane(), size=(860, 280), style=dv.DV_ROW_LINES)
         for i in metrics_columns:
-            dvlc.AppendTextColumn(i, width=wx.COL_WIDTH_AUTOSIZE)
+            dvlc.AppendTextColumn(i, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
         for item in load_data_from(METRICS_DATA_PATH):
             dvlc.AppendItem(item)
 
@@ -184,3 +185,17 @@ class Dashboard(wx.Panel):
             ]
             dump_data(new_data, CREDIT_SCORES_DATA_PATH)
         return None
+
+    def update_passive_income(self):
+        annual_dividend = 0
+        total_dividend = 0
+        market_value = 0
+        for stock in load_data_from(STOCKLIST_DATA_PATH):
+            market_value += float(stock[5])
+            annual_dividend += float(stock[9])
+            total_dividend += float(stock[10])
+        children = self.dividend_sizer.GetChildren()
+        children[1].GetWindow().SetValue(str(round(annual_dividend / market_value * 100, 4)))
+        children[3].GetWindow().SetValue(str(round(annual_dividend, 2)))
+        children[5].GetWindow().SetValue(str(round(annual_dividend / 12, 2)))
+        children[7].GetWindow().SetValue(str(round(total_dividend, 2)))
