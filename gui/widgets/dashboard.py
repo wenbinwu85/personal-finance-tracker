@@ -152,7 +152,7 @@ class Dashboard(wx.Panel):
         context_menu.Append(item1)
 
         self.Bind(wx.EVT_MENU, self.credit_scores_update_dialog, id=self.context_menu_id1)
-    
+
         self.PopupMenu(context_menu)
         context_menu.Destroy()
 
