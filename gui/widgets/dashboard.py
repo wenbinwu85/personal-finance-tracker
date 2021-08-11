@@ -4,7 +4,8 @@ import wx.dataview as dv
 import wx.lib.gizmos as gizmos
 from wx.lib.agw.piectrl import PieCtrl, PiePart
 from wx.lib.agw.pycollapsiblepane import PyCollapsiblePane
-from functions.funcs import load_data_from
+from functions.funcs import load_data_from, dump_data
+from gui.widgets.creditscoresupdatedialog import CreditScoresUpdateDialog
 from settings import METRICS_DATA_PATH, PERSONAL_SUMMARY_DATA_PATH
 from settings import PASSIVE_INCOME_DATA_PATH, CREDIT_SCORES_DATA_PATH
 
@@ -47,14 +48,14 @@ class Dashboard(wx.Panel):
             dividend_sizer.Add(led, 0, wx.BOTTOM, 10)
 
         ##### credit scores #####
-        credit_score_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Credit Scores')
+        self.credit_score_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Credit Scores')
         for (text, value) in load_data_from(CREDIT_SCORES_DATA_PATH):
             label, led = make_led_num_ctrl(self, text, value, 'sky blue', (100, 50))
-            credit_score_sizer.Add(label)
-            credit_score_sizer.Add(led, 0, wx.BOTTOM, 10)
-        avg_label, avg_led = make_led_num_ctrl(self, 'Average(2020)', '711', 'sky blue', (100, 50))
-        credit_score_sizer.Add(avg_label)
-        credit_score_sizer.Add(avg_led, 0, wx.BOTTOM, 10)
+            self.credit_score_sizer.Add(label)
+            self.credit_score_sizer.Add(led, 0, wx.BOTTOM, 10)
+        for child in self.credit_score_sizer.GetChildren():
+            ctrl = child.GetWindow()
+            ctrl.Bind(wx.EVT_CONTEXT_MENU, self.credit_scores_context_menu)
 
         self.pie = PieCtrl(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(260, 260))
         self.pie.SetHeight(25)
@@ -92,7 +93,7 @@ class Dashboard(wx.Panel):
         summary_sizer = wx.BoxSizer(wx.HORIZONTAL)
         summary_sizer.Add(net_worth_sizer, 0, wx.BOTTOM)
         summary_sizer.Add(dividend_sizer, 0, wx.BOTTOM)
-        summary_sizer.Add(credit_score_sizer, 0, wx.BOTTOM)
+        summary_sizer.Add(self.credit_score_sizer, 0, wx.BOTTOM)
         summary_sizer.Add(pie_sizer, 0, wx.BOTTOM | wx.EXPAND)
 
         ##### Monthly Metrics #####
@@ -143,3 +144,43 @@ class Dashboard(wx.Panel):
             frame.SetClientSize(self.GetMinSize())
             frame.SendSizeEvent()
             frame.CenterOnScreen()
+
+    def credit_scores_context_menu(self, event):
+        self.context_menu_id1 = wx.NewIdRef()
+        context_menu = wx.Menu()
+        item1 = wx.MenuItem(context_menu, self.context_menu_id1, 'Update Credit Scores')
+        context_menu.Append(item1)
+
+        self.Bind(wx.EVT_MENU, self.credit_scores_update_dialog, id=self.context_menu_id1)
+    
+        self.PopupMenu(context_menu)
+        context_menu.Destroy()
+
+    def credit_scores_update_dialog(self, event):
+        dialog = CreditScoresUpdateDialog(self, title='Update Credit Scores')
+        children = self.credit_score_sizer.GetChildren()
+
+        dialog.equifax_field.SetValue(children[1].GetWindow().GetValue())
+        dialog.transunion_field.SetValue(children[3].GetWindow().GetValue())
+        dialog.experian_field.SetValue(children[5].GetWindow().GetValue())
+        dialog.avg_field.SetValue(children[7].GetWindow().GetValue())
+
+        if dialog.ShowModal() == wx.ID_OK:
+            data = {
+                1: dialog.equifax_field.GetValue(),
+                3: dialog.transunion_field.GetValue(),
+                5: dialog.experian_field.GetValue(),
+                7: dialog.avg_field.GetValue()
+            }
+            for key, val in data.items():
+                ctrl = children[key].GetWindow()
+                ctrl.SetValue(val)
+
+            new_data = [
+                ['Equifax', data[1]],
+                ['Transunion', data[3]],
+                ['Experian', data[5]],
+                ['Average', data[7]]
+            ]
+            dump_data(new_data, CREDIT_SCORES_DATA_PATH)
+        return None

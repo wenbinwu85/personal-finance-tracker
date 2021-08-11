@@ -5,7 +5,7 @@ from settings import APP_NAME, STATUS_BAR_MESSAGE, ADMIN_ACCOUNT
 from functions.funcs import logger
 from gui.menubar import MyMenuBar
 from gui.toolbar import MyToolbar
-from gui.logindialog import LoginDialog
+from gui.widgets.logindialog import LoginDialog
 from gui.widgets.dashboard import Dashboard
 from gui.widgets.financials import Financials
 from gui.widgets.stocklist import StockList
