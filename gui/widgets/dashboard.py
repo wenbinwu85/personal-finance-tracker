@@ -88,7 +88,7 @@ class Dashboard(wx.Panel):
         hsizer.Add(self.pie, 0, wx.EXPAND)
         hsizer.Add(self.vslider, 1, wx.EXPAND | wx.GROW)
 
-        pie_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Wealth Distribution')
+        pie_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Investment Distribution')
         pie_sizer.Add(hsizer)
         pie_sizer.Add(self.hslider, 1)
 
