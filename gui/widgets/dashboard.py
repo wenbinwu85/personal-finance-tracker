@@ -106,11 +106,12 @@ class Dashboard(wx.Panel):
             'Month', 'TSP', 'Schwab', 'Roth IRA', 'Webull',
             'Coinbase', 'Dividend', 'Invested', 'Cash', 'Debts', 'Net Worth'
         ]
-        dvlc = dv.DataViewListCtrl(self.cpane.GetPane(), size=(860, 280), style=dv.DV_ROW_LINES)
+        self.metrics_dvlc = dv.DataViewListCtrl(self.cpane.GetPane(), size=(860, 280), style=dv.DV_ROW_LINES)
+        self.metrics_dvlc.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.metrics_context_menu)
         for i in metrics_columns:
-            dvlc.AppendTextColumn(i, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
+            self.metrics_dvlc.AppendTextColumn(i, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
         for item in load_data_from(METRICS_DATA_PATH):
-            dvlc.AppendItem(item)
+            self.metrics_dvlc.AppendItem(item)
 
         self.dashboard_sizer = wx.BoxSizer(wx.VERTICAL)
         self.dashboard_sizer.Add(summary_sizer, 0, wx.EXPAND)
@@ -199,3 +200,21 @@ class Dashboard(wx.Panel):
         children[3].GetWindow().SetValue(str(round(annual_dividend, 2)))
         children[5].GetWindow().SetValue(str(round(annual_dividend / 12, 2)))
         children[7].GetWindow().SetValue(str(round(total_dividend, 2)))
+
+    def metrics_context_menu(self, event):
+        context_menu = wx.Menu()
+        item9 = wx.MenuItem(context_menu, wx.NewIdRef(), 'Save Assets and Debts Data')
+        context_menu.Append(item9)
+
+        self.Bind(wx.EVT_MENU, self.save_metrics_data, id=item9.GetId())
+
+        self.PopupMenu(context_menu)
+        context_menu.Destroy()
+
+    def save_metrics_data(self, event):
+        data = []
+        col_count = self.metrics_dvlc.GetColumnCount()
+        row_count = self.metrics_dvlc.GetItemCount()
+        for i in range(row_count):
+            data.append([self.metrics_dvlc.GetTextValue(i, j) for j in range(col_count)])
+        dump_data(data, METRICS_DATA_PATH)
