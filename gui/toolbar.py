@@ -17,12 +17,8 @@ class MyToolbar(wx.ToolBar):
         self.search_field.ShowSearchButton(True)
         self.search_field.Bind(wx.EVT_TEXT, self.search)
 
-        self.login_button = wx.Button(self, label='Login')
-        self.login_button.Bind(wx.EVT_BUTTON, self.frame.login)
-
         self.AddControl(self.search_field)  # by pos: 0
-        self.AddControl(self.login_button)  # by pos: 1
-        self.SetToolBitmapSize((32, 32))
+        # self.SetToolBitmapSize((32, 32))
 
     def search(self, event):
         """"""

@@ -1,7 +1,9 @@
 import wx
 import wx.adv
 import wx.lib.inspection
-from settings import APP_NAME, VERSION, EMAIL, DEVELOPER, COPYRIGHT, LICENSE, WEBSITE
+from gui.widgets.logindialog import LoginDialog
+from settings import APP_NAME, VERSION, EMAIL, DEVELOPER
+from settings import COPYRIGHT, LICENSE, WEBSITE, ADMIN_ACCOUNT
 
 
 class MyMenuBar(wx.MenuBar):
@@ -12,14 +14,17 @@ class MyMenuBar(wx.MenuBar):
         self.frame = frame
 
         menu1 = wx.Menu()
-        # menu1.Append(wx.ID_OPEN, '&Open', 'Open a file')
-        menu1.Append(102, '&Login', 'User login')
-        menu1.AppendSeparator()
+        # menu1.Append(102, '&Login', 'User login')
+        # menu1.AppendSeparator()
         menu1.Append(wx.ID_EXIT, '&Quit', f'Quit {APP_NAME}')
 
         view_menu = wx.Menu()
-        self.sb_toggle = view_menu.Append(wx.ID_ANY, 'Show Statusbar', 'Show Statusbar', kind=wx.ITEM_CHECK)
-        self.tb_toggle = view_menu.Append(wx.ID_ANY, 'Show Toolbar', 'Show Toolbar', kind=wx.ITEM_CHECK)
+        self.sb_toggle = view_menu.Append(
+            wx.ID_ANY, 'Show Statusbar', 'Show Statusbar', kind=wx.ITEM_CHECK
+        )
+        self.tb_toggle = view_menu.Append(
+            wx.ID_ANY, 'Show Toolbar', 'Show Toolbar', kind=wx.ITEM_CHECK
+        )
 
         # check both items on application start
         view_menu.Check(self.sb_toggle.GetId(), True)
@@ -30,8 +35,7 @@ class MyMenuBar(wx.MenuBar):
         inspector = help_menu.Append(901, 'Widget Inspector', 'Widget Inspector')
         about = help_menu.Append(wx.ID_ABOUT)
 
-        # self.Bind(wx.EVT_MENU, self.open_dialog, id=wx.ID_OPEN)
-        self.Bind(wx.EVT_MENU, self.frame.login, id=102)
+        # self.Bind(wx.EVT_MENU, self.login, id=102)
         self.Bind(wx.EVT_MENU, self.quit, id=wx.ID_EXIT)
         self.Bind(wx.EVT_MENU, self.about_dialog, about)
         self.Bind(wx.EVT_MENU, self.statusbar_toggle, self.sb_toggle)
@@ -57,23 +61,32 @@ class MyMenuBar(wx.MenuBar):
         wx.adv.GenericAboutBox(info)
         return None
 
-    # def open_dialog(self, event):
-    #     """Open dialog"""
+    # def login(self, event):
+    #     """enbable admin mode"""
 
-    #     wildcards = 'CSV file (*.csv)|*.csv|'
+    #     dialog = LoginDialog(self, title='Admin Login')
+    #     if dialog.ShowModal() == wx.ID_OK:
+    #         username = dialog.username_field.GetValue()
+    #         password = dialog.password_field.GetValue()
 
-    #     with wx.FileDialog(
-    #         self,
-    #         message='Choose data file',
-    #         defaultDir=os.getcwd(),
-    #         defaultFile='',
-    #         wildcard=wildcards,
-    #         style=wx.FD_OPEN | wx.FD_CHANGE_DIR | wx.FD_FILE_MUST_EXIST | wx.FD_PREVIEW
-    #     ) as dialog:
+    #         if (username, password) != ADMIN_ACCOUNT:
+    #             self.frame.SetStatusText('Unable to login. Invalid credentials.')
+    #             return None
 
-    #         if dialog.ShowModal() == wx.ID_OK:
-    #             self.frame.reload_data(dialog.GetPath())
-    #             logger.info('New stock data loaded successfully.')
+    #         item = self.FindItemById(102)
+    #         item.SetItemLabel('Logout')
+    #         self.Bind(wx.EVT_MENU, self.logout, id=102)
+
+    #     return None
+
+    # def logout(self, event):
+    #     """disable admin mode"""
+
+    #     item = self.FindItemById(102)
+    #     item.SetItemLabel('Login')
+    #     self.Bind(wx.EVT_MENU, self.login, id=102)
+
+    #     return None
 
     def statusbar_toggle(self, event):
         if self.sb_toggle.IsChecked():
@@ -92,10 +105,4 @@ class MyMenuBar(wx.MenuBar):
         return None
 
     def quit(self, event):
-        # try:
-        #     self.frame.dump_stocks('quit')
-        # except Exception as e:
-        #     logger.exception(f'Failed to dump data during program exit: {e}')
-        # else:
-        #     logger.info('Program exited by file->quit.')
         self.frame.Close()

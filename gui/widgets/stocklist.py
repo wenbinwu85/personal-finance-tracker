@@ -1,8 +1,7 @@
 import wx
 import wx.dataview as dv
 from settings import STOCKLIST_DATA_PATH
-from functions.funcs import logger, load_data_from, dump_data
-from functions.exceptions import StockListWidgetException
+from functions.funcs import load_data_from, dump_data
 from model.stocklist import DVIListModel
 
 
@@ -44,10 +43,7 @@ class StockList(wx.Panel):
         ]
         for idx, val in enumerate(headers):
             stock_list.AppendTextColumn(
-                val,
-                idx,
-                width=wx.COL_WIDTH_AUTOSIZE,
-                mode=dv.DATAVIEW_CELL_EDITABLE
+                val, idx, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE
             )
 
         for col in stock_list.Columns:
@@ -74,35 +70,14 @@ class StockList(wx.Panel):
 
     def add_row(self, event):
         col_count = self.stock_list.GetColumnCount()
-        values = ['x' for i in range(col_count)]
-        try:
-            self.stock_list_model.add_row(values)
-        except Exception as e:
-            error_msg = f'Failed to add new row: {e}'
-            logger.exception(error_msg)
-            raise StockListWidgetException(error_msg)
-        else:
-            logger.info('Added new row successfully.')
+        values = ['0' for _ in range(col_count)]
+        self.stock_list_model.add_row(values)
 
     def delete_rows(self, event):
         selected = self.stock_list.GetSelections()
         rows = [self.stock_list_model.GetRow(item) for item in selected]
-        try:
-            self.stock_list_model.delete_rows(rows)
-        except Exception as e:
-            error_msg = f'Failed to delete rows: {e}'
-            logger.exception(error_msg)
-            raise StockListWidgetException(error_msg)
-        else:
-            logger.info('Deleted rows successully.')
+        self.stock_list_model.delete_rows(rows)
 
     def save_stocks_data(self, event):
-        try:
-            dump_data(self.stock_data, STOCKLIST_DATA_PATH)
-        except Exception as e:
-            error_msg = f'data dump failed: {e}'
-            logger.exception(error_msg)
-            raise StockListWidgetException(error_msg)
-        else:
-            logger.info('Data dumped successfully.')
+        dump_data(self.stock_data, STOCKLIST_DATA_PATH)
         self.main_window.dashboard.update_passive_income()
