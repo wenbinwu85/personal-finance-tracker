@@ -9,7 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>fintrack</string>
 	<key>CFBundleIconFile</key>
-	<string>PythonApplet.icns</string>
+	<string>logo.icns</string>
 	<key>CFBundleIdentifier</key>
 	<string>org.pythonmac.unspecified.fintrack</string>
 	<key>CFBundleInfoDictionaryVersion</key>

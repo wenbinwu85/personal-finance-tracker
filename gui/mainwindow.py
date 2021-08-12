@@ -26,8 +26,8 @@ class MainWindow(wx.Frame):
         )
         self.panel = wx.Panel(self)
 
-        icon = wx.Icon('logo.png', wx.BITMAP_TYPE_ANY)
-        self.SetIcon(icon)
+        # icon = wx.Icon('logo.png', wx.BITMAP_TYPE_ANY)
+        # self.SetIcon(icon)
 
         self.toolbar = MyToolbar(
             self,

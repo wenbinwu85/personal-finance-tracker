@@ -1,6 +1,6 @@
 import wx
 import wx.dataview as dv
-from settings import ASSETS_DEBTS_DATA_PATH, BUDGET_PLAN_DATA_PATH, ACCOUNTS_DATA_PATH, CREDIT_SCORES_DATA_PATH
+from settings import ASSETS_DEBTS_DATA_PATH, BUDGET_PLAN_DATA_PATH, ACCOUNTS_DATA_PATH
 from functions.funcs import load_data_from, dump_data
 
 

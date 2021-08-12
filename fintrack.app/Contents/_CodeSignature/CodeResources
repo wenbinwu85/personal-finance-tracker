@@ -28,11 +28,6 @@
 			<key>symlink</key>
 			<string>/opt/homebrew/opt/python@3.9/bin/python3.9</string>
 		</dict>
-		<key>Resources/PythonApplet.icns</key>
-		<dict>
-			<key>symlink</key>
-			<string>/opt/homebrew/opt/python@3.9/Frameworks/Python.framework/Versions/3.9/Resources/Python.app/Contents/Resources/PythonApplet.icns</string>
-		</dict>
 		<key>Resources/__boot__.py</key>
 		<dict>
 			<key>hash2</key>
@@ -63,6 +58,11 @@
 		<dict>
 			<key>symlink</key>
 			<string>../../site.pyc</string>
+		</dict>
+		<key>Resources/logo.icns</key>
+		<dict>
+			<key>symlink</key>
+			<string>/Users/ahben/Desktop/ahben-financial-tracker/logo.icns</string>
 		</dict>
 		<key>Resources/site.py</key>
 		<dict>
