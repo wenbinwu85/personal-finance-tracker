@@ -104,8 +104,8 @@ class Dashboard(wx.Panel):
         # self.cpane.Expand()
         self.cpane.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self.collapse_pane_change)
         metrics_columns = [
-            'Month', 'TSP', 'Schwab', 'Roth IRA', 'Webull',
-            'Coinbase', 'Dividend', 'Invested', 'Cash', 'Debts', 'Net Worth'
+            'Month', 'TSP', 'Schwab', 'Roth IRA', 'Webull', 'Coinbase',
+            'Dividend', 'Invested', 'Cash', 'Debts', 'Net Worth'
         ]
         self.metrics_dvlc = dv.DataViewListCtrl(self.cpane.GetPane(), size=(860, 280), style=dv.DV_ROW_LINES)
         self.metrics_dvlc.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.metrics_context_menu)
@@ -125,6 +125,7 @@ class Dashboard(wx.Panel):
 
         self.hslider_handler(wx.EVT_SLIDER)
         self.vslider_handler(wx.EVT_SLIDER)
+
         store = self.metrics_dvlc.GetStore()
         last_row = store.GetItemCount()-1
         last_row_data = [store.GetValueByRow(last_row, col) for col in range(store.GetColumnCount())]
@@ -134,7 +135,6 @@ class Dashboard(wx.Panel):
         self.pie_part4.SetValue(float(last_row_data[4]))
         self.pie_part5.SetValue(float(last_row_data[5]))
         self.pie.Refresh()
-
 
     def vslider_handler(self, event):
         self.pie.SetAngle(float(self.vslider.GetValue()) / 180.0 * pi)
