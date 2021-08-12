@@ -10,11 +10,7 @@ Features
 
 
 Screenshots
-<img width="933" alt="01" src="https://user-images.githubusercontent.com/45441140/129131690-d220a421-bea2-4cbc-bf85-9cfac149d1c5.png">
-<img width="977" alt="02" src="https://user-images.githubusercontent.com/45441140/129131693-31185ed9-35e4-4f24-b9dd-9a20e72de902.png">
-<img width="1618" alt="03" src="https://user-images.githubusercontent.com/45441140/129131912-e6040960-2101-4d6d-b094-d0c65b3097e6.png">
-<img width="1412" alt="04" src="https://user-images.githubusercontent.com/45441140/129131929-86c422b8-e9fa-4c5d-8ade-b19aa8cee3ec.png">
-
-
-
-
+<img width="972" alt="fintrack1" src="https://user-images.githubusercontent.com/45441140/128566924-9bcb4fd4-17af-41ce-b899-c2f7dc5c024c.png">
+<img width="972" alt="fintrack2" src="https://user-images.githubusercontent.com/45441140/128566932-ca238277-615b-472c-8831-f996e51930fd.png">
+<img width="1618" alt="fintrack3" src="https://user-images.githubusercontent.com/45441140/128567017-7746dd2e-d567-4d09-bad5-24722efd11bf.png">
+<img width="1412" alt="fintrack4" src="https://user-images.githubusercontent.com/45441140/128567020-4911f308-7c9f-4694-aafa-9b7ee632606b.png">
