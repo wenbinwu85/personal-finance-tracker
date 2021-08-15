@@ -6,10 +6,15 @@ from functions.funcs import load_data_from, dump_data
 
 def make_dvlc(parent, values, size):
     dvlc = dv.DataViewListCtrl(
-        parent, size=size, style=dv.DV_MULTIPLE | dv.DV_ROW_LINES  # | dv.DV_HORIZ_RULES | dv.DV_VERT_RULES
+        parent, size=size, style=dv.DV_MULTIPLE | dv.DV_ROW_LINES
     )
     for v in values:
-        dvlc.AppendTextColumn(v, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
+        dvlc.AppendTextColumn(
+            v,
+            width=wx.COL_WIDTH_AUTOSIZE,
+            mode=dv.DATAVIEW_CELL_EDITABLE,
+            flags=dv.DATAVIEW_COL_SORTABLE | dv.DATAVIEW_COL_REORDERABLE | dv.DATAVIEW_COL_RESIZABLE
+        )
     return dvlc
 
 
@@ -37,7 +42,7 @@ class Financials(wx.Panel):
         asset_debt_sizer.Add(self.dvlc, 0, wx.EXPAND)
 
         ##### budget plan #####
-        columns = ['Item', 'Amount', 'Time', 'Date', 'Type', 'Payback Plan']
+        columns = ['Item', 'Amount', 'Time', 'Due Date', 'Type', 'Payback Plan']
         self.dvlc2 = make_dvlc(self, columns, (600, 640))
         self.dvlc2.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.dvlc2_context_menu)
 
@@ -91,7 +96,7 @@ class Financials(wx.Panel):
         context_menu = wx.Menu()
         item1 = wx.MenuItem(context_menu, self.dvlc2_popup_id1, 'Add New Row')
         item2 = wx.MenuItem(context_menu, self.dvlc2_popup_id2, 'Delete Rows')
-        item9 = wx.MenuItem(context_menu, self.dvlc2_popup_id9, 'Save Budget data')
+        item9 = wx.MenuItem(context_menu, self.dvlc2_popup_id9, 'Save Budget Plan Data')
         context_menu.Append(item1)
         context_menu.Append(item2)
         context_menu.Append(item9)
@@ -121,11 +126,13 @@ class Financials(wx.Panel):
 
     def dvlc_add_row(self, event):
         if event.GetId() == self.dvlc_popup_id1:
-            self.dvlc.AppendItem(['x' for _ in range(self.dvlc.GetColumnCount())])
+            dvlc = self.dvlc
         elif event.GetId() == self.dvlc2_popup_id1:
-            self.dvlc2.AppendItem(['x' for _ in range(self.dvlc2.GetColumnCount())])
+            dvlc = self.dvlc2
         elif event.GetId() == self.dvlc3_popup_id1:
-            self.dvlc3.AppendItem(['x' for _ in range(self.dvlc3.GetColumnCount())])
+            dvlc = self.dvlc3
+        col_count = dvlc.GetColumnCount()
+        dvlc.AppendItem(['0' for _ in range(col_count)])
 
     def dvlc_delete_rows(self, event):
         if event.GetId() == self.dvlc_popup_id2:
@@ -134,7 +141,7 @@ class Financials(wx.Panel):
             dvlc = self.dvlc2
         elif event.GetId() == self.dvlc3_popup_id2:
             dvlc = self.dvlc3
-        for i in range(dvlc.GetItemCount()):
+        for i in range(dvlc.GetItemCount() - 1, -1, -1):
             if dvlc.IsRowSelected(i):
                 dvlc.DeleteItem(i)
 

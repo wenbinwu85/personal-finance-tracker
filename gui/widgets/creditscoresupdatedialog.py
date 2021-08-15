@@ -1,41 +1,27 @@
 import wx
 
 
+def make_credit_score_widget(parent, label):
+    sizer = wx.BoxSizer(wx.HORIZONTAL)
+    cc_label = wx.StaticText(parent, -1, label=label)
+    text_field = wx.TextCtrl(parent)
+    sizer.Add(cc_label, 0, wx.ALL, 5)
+    sizer.Add(text_field, 1, wx.ALL, 5)
+    return sizer, text_field
+
+
 class CreditScoresUpdateDialog(wx.Dialog):
-    def __init__(self, *args, **kw):
+    def __init__(self, *args, **kwargs):
         super().__init__(
             style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX | wx.MINIMIZE_BOX),
             *args,
-            **kw
+            **kwargs
         )
 
-        # ----- Experian -----
-        equifax_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        equifax_label = wx.StaticText(self, -1, label='Equifax:')
-        self.equifax_field = wx.TextCtrl(self)
-        equifax_sizer.Add(equifax_label, 0, wx.ALL, 5)
-        equifax_sizer.Add(self.equifax_field, 1, wx.ALL, 5)
-
-        # ----- Transunion -----
-        transunion_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        transunion_label = wx.StaticText(self, -1, label='Transunion:')
-        self.transunion_field = wx.TextCtrl(self)
-        transunion_sizer.Add(transunion_label, 0, wx.ALL, 5)
-        transunion_sizer.Add(self.transunion_field, 1, wx.ALL, 5)
-
-        # ----- Experian -----
-        experian_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        experian_label = wx.StaticText(self, -1, label='Experian:')
-        self.experian_field = wx.TextCtrl(self)
-        experian_sizer.Add(experian_label, 0, wx.ALL, 5)
-        experian_sizer.Add(self.experian_field, 1, wx.ALL, 5)
-
-        # ----- National Average -----
-        avg_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        avg_label = wx.StaticText(self, -1, label='Average:')
-        self.avg_field = wx.TextCtrl(self)
-        avg_sizer.Add(avg_label, 0, wx.ALL, 5)
-        avg_sizer.Add(self.avg_field, 1, wx.ALL | wx.GROW, 5)
+        equifax_sizer, self.equifax_field = make_credit_score_widget(self, 'Equifax:')
+        transunion_sizer, self.transunion_field = make_credit_score_widget(self, 'Transunion:')
+        experian_sizer, self.experian_field = make_credit_score_widget(self, 'Experian:')
+        avg_sizer, self.avg_field = make_credit_score_widget(self, 'Average:')
 
         # ----- buttons -----
         button_sizer = wx.StdDialogButtonSizer()
@@ -56,3 +42,4 @@ class CreditScoresUpdateDialog(wx.Dialog):
 
         self.SetSizerAndFit(main_sizer)
         self.CenterOnParent()
+        self.ShowWithEffect(True)

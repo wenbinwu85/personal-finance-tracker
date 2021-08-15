@@ -10,7 +10,6 @@
 
 import wx
 from gui.mainwindow import MainWindow
-from functions.funcs import logger
 
 
 class FinTrack(wx.App):
@@ -20,7 +19,6 @@ class FinTrack(wx.App):
         self.frame = MainWindow()
         self.SetTopWindow(self.frame)
         self.frame.ShowWithEffect(True)
-        logger.info('Program started.')
         return True
 
     def OnExit(self):
