@@ -6,8 +6,8 @@ from wx.lib.agw.piectrl import PieCtrl, PiePart
 from wx.lib.agw.pycollapsiblepane import PyCollapsiblePane
 from functions.funcs import load_data_from, dump_data
 from gui.widgets.creditscoresupdatedialog import CreditScoresUpdateDialog
-from settings import METRICS_DATA_PATH, PERSONAL_SUMMARY_DATA_PATH, STOCKLIST_DATA_PATH
-from settings import PASSIVE_INCOME_DATA_PATH, CREDIT_SCORES_DATA_PATH
+from settings import METRICS_DATA_PATH, PERSONAL_SUMMARY_DATA_PATH
+from settings import STOCKLIST_DATA_PATH, CREDIT_SCORES_DATA_PATH
 
 
 def make_led_num_ctrl(parent, label, value, color, size=(200, 50)):
@@ -38,8 +38,9 @@ class Dashboard(wx.Panel):
 
         ##### passive income #####
         self.dividend_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Passive Income')
-        for (text, value) in load_data_from(PASSIVE_INCOME_DATA_PATH):
-            label, led = make_led_num_ctrl(self, text, value, 'forest green', size=(175, 50))
+        labels = ['Annual Yield %', 'Annual Dividend Yield', 'Monthly Yield', 'Total Dividend Earned']
+        for l in labels:
+            label, led = make_led_num_ctrl(self, l, '', 'forest green', size=(175, 50))
             self.dividend_sizer.Add(label)
             self.dividend_sizer.Add(led, 0, wx.BOTTOM, 10)
         self.update_passive_income()

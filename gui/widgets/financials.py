@@ -9,7 +9,9 @@ def make_dvlc(parent, values, size):
         parent, size=size, style=dv.DV_MULTIPLE | dv.DV_ROW_LINES  # | dv.DV_HORIZ_RULES | dv.DV_VERT_RULES
     )
     for v in values:
-        dvlc.AppendTextColumn(v, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE)
+        dvlc.AppendTextColumn(
+            v, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE, flags=dv.DATAVIEW_COL_SORTABLE
+        )
     return dvlc
 
 
@@ -37,7 +39,7 @@ class Financials(wx.Panel):
         asset_debt_sizer.Add(self.dvlc, 0, wx.EXPAND)
 
         ##### budget plan #####
-        columns = ['Item', 'Amount', 'Time', 'Date', 'Type', 'Payback Plan']
+        columns = ['Item', 'Amount', 'Time', 'Due Date', 'Type', 'Payback Plan']
         self.dvlc2 = make_dvlc(self, columns, (600, 640))
         self.dvlc2.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.dvlc2_context_menu)
 
@@ -91,7 +93,7 @@ class Financials(wx.Panel):
         context_menu = wx.Menu()
         item1 = wx.MenuItem(context_menu, self.dvlc2_popup_id1, 'Add New Row')
         item2 = wx.MenuItem(context_menu, self.dvlc2_popup_id2, 'Delete Rows')
-        item9 = wx.MenuItem(context_menu, self.dvlc2_popup_id9, 'Save Budget data')
+        item9 = wx.MenuItem(context_menu, self.dvlc2_popup_id9, 'Save Budget Plan Data')
         context_menu.Append(item1)
         context_menu.Append(item2)
         context_menu.Append(item9)

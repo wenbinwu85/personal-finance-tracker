@@ -1,7 +1,7 @@
 import os
 
 APP_NAME = 'FinTrack'
-VERSION = '  v0.0.6a'
+VERSION = '  v0.0.7a'
 EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'
 WEBSITE = 'https://github.com/wenbinwu85/', 'Github'
@@ -20,5 +20,4 @@ BUDGET_PLAN_DATA_PATH = os.path.join(DATA_PATH, 'budget.csv')
 ACCOUNTS_DATA_PATH = os.path.join(DATA_PATH, 'accounts.csv')
 STOCKLIST_DATA_PATH = os.path.join(DATA_PATH, 'stocklist.csv')
 PERSONAL_SUMMARY_DATA_PATH = os.path.join(DATA_PATH, 'personal_summary.csv')
-PASSIVE_INCOME_DATA_PATH = os.path.join(DATA_PATH, 'passive_income.csv')
 CREDIT_SCORES_DATA_PATH = os.path.join(DATA_PATH, 'credit_scores.csv')

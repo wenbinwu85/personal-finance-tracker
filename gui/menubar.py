@@ -1,9 +1,9 @@
 import wx
 import wx.adv
 import wx.lib.inspection
-from gui.widgets.logindialog import LoginDialog
+# from gui.widgets.logindialog import LoginDialog
 from settings import APP_NAME, VERSION, EMAIL, DEVELOPER
-from settings import COPYRIGHT, LICENSE, WEBSITE, ADMIN_ACCOUNT
+from settings import COPYRIGHT, LICENSE, WEBSITE
 
 
 class MyMenuBar(wx.MenuBar):
