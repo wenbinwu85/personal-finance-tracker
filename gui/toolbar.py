@@ -4,14 +4,10 @@ import wx
 class MyToolbar(wx.ToolBar):
     def __init__(self, frame, *args, **kwargs):
         super().__init__(frame, *args, **kwargs)
-
         self.frame = frame
 
         self.search_field = wx.SearchCtrl(
-            self,
-            size=(300, -1),
-            value='',
-            style=wx.TE_PROCESS_ENTER
+            self, size=(300, -1), value='', style=wx.TE_PROCESS_ENTER
         )
         self.search_field.ShowCancelButton(True)
         self.search_field.ShowSearchButton(True)

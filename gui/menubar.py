@@ -1,7 +1,6 @@
 import wx
 import wx.adv
 import wx.lib.inspection
-# from gui.widgets.logindialog import LoginDialog
 from settings import APP_NAME, VERSION, EMAIL, DEVELOPER
 from settings import COPYRIGHT, LICENSE, WEBSITE
 
@@ -13,10 +12,10 @@ class MyMenuBar(wx.MenuBar):
         super().__init__()
         self.frame = frame
 
-        menu1 = wx.Menu()
-        # menu1.Append(102, '&Login', 'User login')
-        # menu1.AppendSeparator()
-        menu1.Append(wx.ID_EXIT, '&Quit', f'Quit {APP_NAME}')
+        file_menu = wx.Menu()
+        # file_menu.Append(102, '&Login', 'User login')
+        # file_menu.AppendSeparator()
+        file_menu.Append(wx.ID_EXIT, '&Quit', f'Quit {APP_NAME}')
 
         view_menu = wx.Menu()
         self.sb_toggle = view_menu.Append(
@@ -25,7 +24,6 @@ class MyMenuBar(wx.MenuBar):
         self.tb_toggle = view_menu.Append(
             wx.ID_ANY, 'Show Toolbar', 'Show Toolbar', kind=wx.ITEM_CHECK
         )
-
         # check both items on application start
         view_menu.Check(self.sb_toggle.GetId(), True)
         view_menu.Check(self.tb_toggle.GetId(), True)
@@ -42,7 +40,7 @@ class MyMenuBar(wx.MenuBar):
         self.Bind(wx.EVT_MENU, self.toolbar_toggle, self.tb_toggle)
         self.Bind(wx.EVT_MENU, self.widget_inspector, inspector)
 
-        self.Append(menu1, 'File')
+        self.Append(file_menu, 'File')
         self.Append(view_menu, 'View')
         self.Append(window_menu, 'Window')
         self.Append(help_menu, 'Help')
@@ -59,7 +57,6 @@ class MyMenuBar(wx.MenuBar):
         info.SetLicense(LICENSE)
         info.SetWebSite(*WEBSITE)
         wx.adv.GenericAboutBox(info)
-        return None
 
     # def login(self, event):
     #     """enbable admin mode"""
@@ -102,7 +99,6 @@ class MyMenuBar(wx.MenuBar):
 
     def widget_inspector(self, event):
         wx.lib.inspection.InspectionTool().Show()
-        return None
 
     def quit(self, event):
         self.frame.Close()

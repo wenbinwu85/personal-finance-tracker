@@ -24,8 +24,7 @@ class MainWindow(wx.Frame):
         # self.SetIcon(icon)
 
         self.toolbar = MyToolbar(
-            self,
-            style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT
+            self, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT
         )
         self.SetToolBar(self.toolbar)
         self.toolbar.Realize()
@@ -39,11 +38,8 @@ class MainWindow(wx.Frame):
         self.SetStatusText(STATUS_BAR_MESSAGE, 0)
 
         self.tabs = aui.AuiNotebook(
-            self.panel,
-            wx.ID_ANY,
-            style=aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_TAB_MOVE  # | aui.AUI_NB_TAB_SPLIT
+            self.panel, wx.ID_ANY, style=aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_TAB_MOVE
         )
-
         self.dashboard = Dashboard('Dashboard', self.tabs)
         self.financials = Financials('Financials', self.tabs)
         self.stocklist = StockList('Stocks', self.tabs)
@@ -70,11 +66,12 @@ class MainWindow(wx.Frame):
         st = time.strftime("%Y-%b-%d   %I:%M:%S", t)
         self.SetStatusText(st, 2)
 
+
     def tab_change(self, event):
         """Resizes the main window frame to fit notbook page content"""
 
         tab = self.tabs.GetCurrentPage()
-        frame = tab.GetTopLevelParent()
+        frame = tab.GetTopLevelParent()  # TODO: frame == self
         frame.SetClientSize(tab.GetMinSize())
         frame.SendSizeEvent()
         frame.CenterOnScreen()

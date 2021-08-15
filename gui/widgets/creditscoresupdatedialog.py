@@ -2,11 +2,11 @@ import wx
 
 
 class CreditScoresUpdateDialog(wx.Dialog):
-    def __init__(self, *args, **kw):
+    def __init__(self, *args, **kwargs):
         super().__init__(
             style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX | wx.MINIMIZE_BOX),
             *args,
-            **kw
+            **kwargs
         )
 
         # ----- Experian -----
