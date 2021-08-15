@@ -66,12 +66,10 @@ class MainWindow(wx.Frame):
         st = time.strftime("%Y-%b-%d   %I:%M:%S", t)
         self.SetStatusText(st, 2)
 
-
     def tab_change(self, event):
         """Resizes the main window frame to fit notbook page content"""
 
         tab = self.tabs.GetCurrentPage()
-        frame = tab.GetTopLevelParent()  # TODO: frame == self
-        frame.SetClientSize(tab.GetMinSize())
-        frame.SendSizeEvent()
-        frame.CenterOnScreen()
+        self.SetClientSize(tab.GetMinSize())
+        self.SendSizeEvent()
+        self.CenterOnScreen()

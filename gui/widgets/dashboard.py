@@ -38,9 +38,8 @@ class Dashboard(wx.Panel):
 
         ##### passive income #####
         self.dividend_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Passive Income')
-        labels = ['Annual Yield %', 'Annual Dividend Yield', 'Monthly Yield', 'Total Dividend Earned']
-        for l in labels:
-            label, led = make_led_num_ctrl(self, l, '', 'forest green', size=(175, 50))
+        for text in ['Annual Yield %', 'Annual Yield', 'Monthly Yield', 'Total Dividend Earned']:
+            label, led = make_led_num_ctrl(self, text, '', 'forest green', size=(175, 50))
             self.dividend_sizer.Add(label)
             self.dividend_sizer.Add(led, 0, wx.BOTTOM, 10)
         self.update_passive_income()
@@ -55,6 +54,7 @@ class Dashboard(wx.Panel):
             ctrl = child.GetWindow()
             ctrl.Bind(wx.EVT_CONTEXT_MENU, self.credit_scores_context_menu)
 
+        ##### pie chart #####
         self.pie = PieCtrl(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(260, 260))
         self.pie.SetHeight(25)
         self.pie.SetBackColour('dark grey')
@@ -84,7 +84,6 @@ class Dashboard(wx.Panel):
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
         hsizer.Add(self.pie, 0, wx.EXPAND)
         hsizer.Add(self.vslider, 1, wx.EXPAND | wx.GROW)
-
         pie_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Investment Distribution')
         pie_sizer.Add(hsizer)
         pie_sizer.Add(self.hslider, 1)
@@ -135,21 +134,19 @@ class Dashboard(wx.Panel):
         self.pie.SetRotationAngle(float(self.hslider.GetValue()) / 180.0 * pi)
 
     def collapse_pane_change(self, event):
+        self.SetSizerAndFit(self.dashboard_sizer)
+        self.dashboard_sizer.Layout()
+
         if self.cpane.IsExpanded():
-            self.SetSizerAndFit(self.dashboard_sizer)
-            self.dashboard_sizer.Layout()
-            frame = self.GetTopLevelParent()
-            frame.SetClientSize(self.GetSize())
-            frame.SendSizeEvent()
-            frame.CenterOnScreen()
+            size = self.GetSize()
         else:
-            self.SetSizerAndFit(self.dashboard_sizer)
-            self.dashboard_sizer.Layout()
-            self.SetMinSize((self.GetMinWidth(), self.GetMinHeight() + 30))
-            frame = self.GetTopLevelParent()
-            frame.SetClientSize(self.GetMinSize())
-            frame.SendSizeEvent()
-            frame.CenterOnScreen()
+            size = (self.GetMinWidth(), self.GetMinHeight() + 30)
+            self.SetMinSize(size)
+
+        frame = self.GetTopLevelParent()
+        frame.SetClientSize(size)
+        frame.SendSizeEvent()
+        frame.CenterOnScreen()
 
     def credit_scores_context_menu(self, event):
         self.context_menu_id1 = wx.NewIdRef()
@@ -199,11 +196,17 @@ class Dashboard(wx.Panel):
             market_value += float(stock[5])
             annual_dividend += float(stock[9])
             total_dividend += float(stock[10])
+
+        data = {
+            1: str(round(annual_dividend / market_value * 100, 4)),
+            3: str(round(annual_dividend, 2)),
+            5: str(round(annual_dividend / 12, 2)),
+            7: str(round(total_dividend, 2))
+        }
         children = self.dividend_sizer.GetChildren()
-        children[1].GetWindow().SetValue(str(round(annual_dividend / market_value * 100, 4)))
-        children[3].GetWindow().SetValue(str(round(annual_dividend, 2)))
-        children[5].GetWindow().SetValue(str(round(annual_dividend / 12, 2)))
-        children[7].GetWindow().SetValue(str(round(total_dividend, 2)))
+        for key, val in data.items():
+            ctrl = children[key].GetWindow()
+            ctrl.SetValue(val)
 
     def metrics_context_menu(self, event):
         context_menu = wx.Menu()

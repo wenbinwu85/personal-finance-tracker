@@ -40,3 +40,4 @@ class LoginDialog(wx.Dialog):
 
         self.SetSizerAndFit(main_sizer)
         self.CenterOnParent()
+        self.ShowWithEffect(True)

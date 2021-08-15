@@ -21,12 +21,9 @@ class StockList(wx.Panel):
 
         stocklist_sizer = wx.BoxSizer(wx.VERTICAL)
         stocklist_sizer.Add(self.stock_list, 1, wx.EXPAND)
-
         self.SetSizerAndFit(stocklist_sizer)
 
     def generate_stock_list(self):
-        """"""
-
         stock_list = dv.DataViewCtrl(
             self,
             size=(1300, 640),

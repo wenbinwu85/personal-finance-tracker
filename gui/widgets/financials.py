@@ -6,11 +6,14 @@ from functions.funcs import load_data_from, dump_data
 
 def make_dvlc(parent, values, size):
     dvlc = dv.DataViewListCtrl(
-        parent, size=size, style=dv.DV_MULTIPLE | dv.DV_ROW_LINES  # | dv.DV_HORIZ_RULES | dv.DV_VERT_RULES
+        parent, size=size, style=dv.DV_MULTIPLE | dv.DV_ROW_LINES
     )
     for v in values:
         dvlc.AppendTextColumn(
-            v, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE, flags=dv.DATAVIEW_COL_SORTABLE
+            v,
+            width=wx.COL_WIDTH_AUTOSIZE,
+            mode=dv.DATAVIEW_CELL_EDITABLE,
+            flags=dv.DATAVIEW_COL_SORTABLE | dv.DATAVIEW_COL_REORDERABLE | dv.DATAVIEW_COL_RESIZABLE
         )
     return dvlc
 
@@ -123,11 +126,13 @@ class Financials(wx.Panel):
 
     def dvlc_add_row(self, event):
         if event.GetId() == self.dvlc_popup_id1:
-            self.dvlc.AppendItem(['x' for _ in range(self.dvlc.GetColumnCount())])
+            dvlc = self.dvlc
         elif event.GetId() == self.dvlc2_popup_id1:
-            self.dvlc2.AppendItem(['x' for _ in range(self.dvlc2.GetColumnCount())])
+            dvlc = self.dvlc2
         elif event.GetId() == self.dvlc3_popup_id1:
-            self.dvlc3.AppendItem(['x' for _ in range(self.dvlc3.GetColumnCount())])
+            dvlc = self.dvlc3
+        col_count = dvlc.GetColumnCount()
+        dvlc.AppendItem(['0' for _ in range(col_count)])
 
     def dvlc_delete_rows(self, event):
         if event.GetId() == self.dvlc_popup_id2:
@@ -136,7 +141,7 @@ class Financials(wx.Panel):
             dvlc = self.dvlc2
         elif event.GetId() == self.dvlc3_popup_id2:
             dvlc = self.dvlc3
-        for i in range(dvlc.GetItemCount()):
+        for i in range(dvlc.GetItemCount() - 1, -1, -1):
             if dvlc.IsRowSelected(i):
                 dvlc.DeleteItem(i)
 
