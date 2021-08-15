@@ -8,9 +8,8 @@ Features
 - save data to CSV files
 - edit data directly on GUI
 
-
 Screenshots
-<img width="972" alt="fintrack1" src="https://user-images.githubusercontent.com/45441140/128566924-9bcb4fd4-17af-41ce-b899-c2f7dc5c024c.png">
-<img width="972" alt="fintrack2" src="https://user-images.githubusercontent.com/45441140/128566932-ca238277-615b-472c-8831-f996e51930fd.png">
-<img width="1618" alt="fintrack3" src="https://user-images.githubusercontent.com/45441140/128567017-7746dd2e-d567-4d09-bad5-24722efd11bf.png">
-<img width="1412" alt="fintrack4" src="https://user-images.githubusercontent.com/45441140/128567020-4911f308-7c9f-4694-aafa-9b7ee632606b.png">
+<img width="977" alt="fintrack01" src="https://user-images.githubusercontent.com/45441140/129486543-62fea5f9-fda2-4067-b9ef-244e75cadc3d.png">
+<img width="977" alt="fintrack02" src="https://user-images.githubusercontent.com/45441140/129486544-54e3b9e2-7444-4e5d-ac9f-6ef596e7fdcd.png">
+<img width="1618" alt="fintrack03" src="https://user-images.githubusercontent.com/45441140/129486546-b7297ef6-525d-4357-b1d7-dfe6ebabed7a.png">
+<img width="1412" alt="fintrack04" src="https://user-images.githubusercontent.com/45441140/129486547-cacd82d3-be29-4683-b1f6-f0e61fdca3b4.png">
