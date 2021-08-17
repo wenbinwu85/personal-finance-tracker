@@ -1,6 +1,6 @@
 import wx
 import wx.dataview as dv
-from settings import STOCKLIST_DATA_PATH
+from settings import STOCKLIST_DATA_PATH, stocks_list_columns
 from functions.funcs import load_data_from, dump_data
 from model.stocklist import DVIListModel
 
@@ -15,8 +15,6 @@ class StockList(wx.Panel):
         self.name = name
 
         self.stock_list_model, self.stock_list = self.generate_stock_list()
-        # self.stock_list.Bind(dv.EVT_DATAVIEW_ITEM_EDITING_DONE, self.enable_save_button)
-        # self.stock_list.Bind(dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.enable_save_button)
         self.stock_list.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.stock_list_context_menu)
 
         stocklist_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -33,12 +31,7 @@ class StockList(wx.Panel):
         stock_list_model = DVIListModel(self.stock_data)
         stock_list.AssociateModel(stock_list_model)
 
-        headers = [
-            'Symbol', 'Shares', 'Cost Avg', 'Price', 'Cost Basis',
-            'Market Value', 'Gain / Lost', 'Gain / Lost %', 'Yield %', 'Annual Dividend',
-            'Dividend Received', 'Y2C %', 'Sector', 'Account %', 'Account'
-        ]
-        for idx, val in enumerate(headers):
+        for idx, val in enumerate(stocks_list_columns):
             stock_list.AppendTextColumn(
                 val, idx, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE
             )

@@ -8,6 +8,7 @@ from functions.funcs import load_data_from, dump_data
 from gui.widgets.creditscoresupdatedialog import CreditScoresUpdateDialog
 from settings import METRICS_DATA_PATH, PERSONAL_SUMMARY_DATA_PATH
 from settings import STOCKLIST_DATA_PATH, CREDIT_SCORES_DATA_PATH
+from settings import passive_income_labels, metrics_columns
 
 
 def make_led_num_ctrl(parent, label, value, color, size=(200, 50)):
@@ -38,7 +39,7 @@ class Dashboard(wx.Panel):
 
         ##### passive income #####
         self.dividend_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Passive Income')
-        for text in ['Annual Yield %', 'Annual Yield', 'Monthly Yield', 'Total Dividend Earned']:
+        for text in passive_income_labels:
             label, led = make_led_num_ctrl(self, text, '', 'forest green', size=(175, 50))
             self.dividend_sizer.Add(label)
             self.dividend_sizer.Add(led, 0, wx.BOTTOM, 10)
@@ -48,11 +49,9 @@ class Dashboard(wx.Panel):
         self.credit_score_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Credit Scores')
         for (text, value) in load_data_from(CREDIT_SCORES_DATA_PATH):
             label, led = make_led_num_ctrl(self, text, value, 'sky blue', (100, 50))
+            led.Bind(wx.EVT_CONTEXT_MENU, self.credit_scores_context_menu)
             self.credit_score_sizer.Add(label)
             self.credit_score_sizer.Add(led, 0, wx.BOTTOM, 10)
-        for child in self.credit_score_sizer.GetChildren():
-            ctrl = child.GetWindow()
-            ctrl.Bind(wx.EVT_CONTEXT_MENU, self.credit_scores_context_menu)
 
         ##### pie chart #####
         self.pie = PieCtrl(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(260, 260))
@@ -99,10 +98,6 @@ class Dashboard(wx.Panel):
         self.cpane.SetAutoLayout(True)
         # self.cpane.Expand()
         self.cpane.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self.collapse_pane_change)
-        metrics_columns = [
-            'Month', 'TSP', 'Schwab', 'Roth IRA', 'Webull', 'Coinbase',
-            'Dividend', 'Invested', 'Cash', 'Debts', 'Net Worth'
-        ]
         self.metrics_dvlc = dv.DataViewListCtrl(
             self.cpane.GetPane(), size=(860, 280), style=dv.DV_ROW_LINES | dv.DV_VERT_RULES
         )
@@ -210,7 +205,7 @@ class Dashboard(wx.Panel):
 
     def metrics_context_menu(self, event):
         context_menu = wx.Menu()
-        item9 = wx.MenuItem(context_menu, wx.NewIdRef(), 'Save Assets and Debts Data')
+        item9 = wx.MenuItem(context_menu, wx.NewIdRef(), 'Save Metrics Data')
         context_menu.Append(item9)
 
         self.Bind(wx.EVT_MENU, self.save_metrics_data, id=item9.GetId())

@@ -1,7 +1,8 @@
 import wx
 import wx.dataview as dv
-from settings import ASSETS_DEBTS_DATA_PATH, BUDGET_PLAN_DATA_PATH, ACCOUNTS_DATA_PATH
 from functions.funcs import load_data_from, dump_data
+from settings import ASSETS_DEBTS_DATA_PATH, BUDGET_PLAN_DATA_PATH, ACCOUNTS_DATA_PATH
+from settings import assets_debts_columns, budget_plan_columns, accounts_columns
 
 
 def make_dvlc(parent, values, size):
@@ -29,8 +30,7 @@ class Financials(wx.Panel):
         self.name = name
 
         ##### assets and debts #####
-        columns = ['Item', 'Value', 'Type', 'Note']
-        self.dvlc = make_dvlc(self, columns, (500, 600))
+        self.dvlc = make_dvlc(self, assets_debts_columns, (500, 600))
         self.dvlc.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.dvlc_context_menu)
         self.dvlc.Bind(dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.show_dvlc_status)
 
@@ -49,8 +49,7 @@ class Financials(wx.Panel):
         asset_debt_sizer.Add(self.dvlc_status, 0)
 
         ##### budget plan #####
-        columns = ['Item', 'Amount', 'Time', 'Due Date', 'Type', 'Payback Plan']
-        self.dvlc2 = make_dvlc(self, columns, (600, 600))
+        self.dvlc2 = make_dvlc(self, budget_plan_columns, (600, 600))
         self.dvlc2.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.dvlc2_context_menu)
         self.dvlc2.Bind(dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.show_dvlc_status)
 
@@ -69,8 +68,8 @@ class Financials(wx.Panel):
         budget_sizer.Add(self.dvlc2_status, 0)
 
         ##### financial account #####
-        columns = ['Account', 'Type', 'Status']
-        self.dvlc3 = make_dvlc(self, columns, (340, 600))
+
+        self.dvlc3 = make_dvlc(self, accounts_columns, (340, 600))
         self.dvlc3.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.dvlc3_context_menu)
         self.dvlc3.Bind(dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.show_dvlc_status)
 
