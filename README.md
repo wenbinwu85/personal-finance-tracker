@@ -1,7 +1,7 @@
 # personal-finance-tracker
 This is my personal finance tracker :) <br>
 I track my finance with a spreadsheet, and I am trying to turn it into a Python desktop app with a wxPython based GUI. <br>
-This is very much work in progress, there are many more feature I want to implement. <br>
+This is very much work in progress, there are many more features I want to implement. <br>
 
 Features
 - read data from CSV files

@@ -1,4 +1,3 @@
-import time
 import wx
 import wx.aui as aui  # import wx.lib.agw.aui as aui
 from settings import APP_NAME, STATUS_BAR_MESSAGE
@@ -16,7 +15,7 @@ class MainWindow(wx.Frame):
         super().__init__(
             parent=None,
             title=APP_NAME,
-            style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
+            style=wx.DEFAULT_FRAME_STYLE  # & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
         )
         self.panel = wx.Panel(self)
 
@@ -35,7 +34,7 @@ class MainWindow(wx.Frame):
         self.statusbar = self.GetStatusBar()
         self.statusbar.SetFieldsCount(3)
         self.statusbar.SetStatusWidths([-2, 150, 140])
-        self.SetStatusText(STATUS_BAR_MESSAGE, 0)
+        self.SetStatusText(STATUS_BAR_MESSAGE, 2)
 
         self.tabs = aui.AuiNotebook(
             self.panel, wx.ID_ANY, style=aui.AUI_NB_WINDOWLIST_BUTTON | aui.AUI_NB_TAB_MOVE
@@ -51,20 +50,9 @@ class MainWindow(wx.Frame):
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         main_sizer.Add(self.tabs)
 
-        timer = wx.PyTimer(self.add_time)
-        timer.Start(1000)
-
         self.panel.SetSizerAndFit(main_sizer)
-        self.add_time()
         self.SetClientSize(self.dashboard.GetBestSize())
         self.CenterOnScreen()
-
-    def add_time(self):
-        """"""
-
-        t = time.localtime(time.time())
-        st = time.strftime("%Y-%b-%d   %I:%M:%S", t)
-        self.SetStatusText(st, 2)
 
     def tab_change(self, event):
         """Resizes the main window frame to fit notbook page content"""

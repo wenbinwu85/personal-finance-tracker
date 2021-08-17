@@ -6,7 +6,9 @@ from functions.funcs import load_data_from, dump_data
 
 def make_dvlc(parent, values, size):
     dvlc = dv.DataViewListCtrl(
-        parent, size=size, style=dv.DV_MULTIPLE | dv.DV_ROW_LINES
+        parent,
+        size=size,
+        style=dv.DV_MULTIPLE | dv.DV_ROW_LINES | dv.DV_ROW_LINES | dv.DV_VERT_RULES
     )
     for v in values:
         dvlc.AppendTextColumn(
@@ -28,8 +30,9 @@ class Financials(wx.Panel):
 
         ##### assets and debts #####
         columns = ['Item', 'Value', 'Type', 'Note']
-        self.dvlc = make_dvlc(self, columns, (500, 640))
+        self.dvlc = make_dvlc(self, columns, (500, 600))
         self.dvlc.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.dvlc_context_menu)
+        self.dvlc.Bind(dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.show_dvlc_status)
 
         for item in load_data_from(ASSETS_DEBTS_DATA_PATH):
             self.dvlc.AppendItem(item)
@@ -38,13 +41,18 @@ class Financials(wx.Panel):
         self.dvlc_popup_id2 = wx.NewIdRef()  # delete selected rows
         self.dvlc_popup_id9 = wx.NewIdRef()  # save data
 
+        self.dvlc_status = wx.StaticText(self, -1, '     ')
+        self.dvlc_status.SetForegroundColour('red')
+
         asset_debt_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Assets and Debts')
-        asset_debt_sizer.Add(self.dvlc, 0, wx.EXPAND)
+        asset_debt_sizer.Add(self.dvlc, 0)
+        asset_debt_sizer.Add(self.dvlc_status, 0)
 
         ##### budget plan #####
         columns = ['Item', 'Amount', 'Time', 'Due Date', 'Type', 'Payback Plan']
-        self.dvlc2 = make_dvlc(self, columns, (600, 640))
+        self.dvlc2 = make_dvlc(self, columns, (600, 600))
         self.dvlc2.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.dvlc2_context_menu)
+        self.dvlc2.Bind(dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.show_dvlc_status)
 
         for item in load_data_from(BUDGET_PLAN_DATA_PATH):
             self.dvlc2.AppendItem(item)
@@ -53,13 +61,18 @@ class Financials(wx.Panel):
         self.dvlc2_popup_id2 = wx.NewIdRef()
         self.dvlc2_popup_id9 = wx.NewIdRef()
 
+        self.dvlc2_status = wx.StaticText(self, -1, '     ')
+        self.dvlc2_status.SetForegroundColour('red')
+
         budget_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Budget Plan')
-        budget_sizer.Add(self.dvlc2, 0, wx.EXPAND)
+        budget_sizer.Add(self.dvlc2, 0)
+        budget_sizer.Add(self.dvlc2_status, 0)
 
         ##### financial account #####
         columns = ['Account', 'Type', 'Status']
-        self.dvlc3 = make_dvlc(self, columns, (340, 640))
+        self.dvlc3 = make_dvlc(self, columns, (340, 600))
         self.dvlc3.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.dvlc3_context_menu)
+        self.dvlc3.Bind(dv.EVT_DATAVIEW_ITEM_VALUE_CHANGED, self.show_dvlc_status)
 
         for item in load_data_from(ACCOUNTS_DATA_PATH):
             self.dvlc3.AppendItem(item)
@@ -68,13 +81,17 @@ class Financials(wx.Panel):
         self.dvlc3_popup_id2 = wx.NewIdRef()
         self.dvlc3_popup_id9 = wx.NewIdRef()
 
+        self.dvlc3_status = wx.StaticText(self, -1, '    ')
+        self.dvlc3_status.SetForegroundColour('red')
+
         accounts_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Financial Accounts')
-        accounts_sizer.Add(self.dvlc3, 0, wx.EXPAND)
+        accounts_sizer.Add(self.dvlc3, 0)
+        accounts_sizer.Add(self.dvlc3_status, 0)
 
         financials_sizer = wx.BoxSizer(wx.HORIZONTAL)
         financials_sizer.AddMany((asset_debt_sizer, budget_sizer, accounts_sizer))
-
         self.SetSizerAndFit(financials_sizer)
+        self.SetMinSize((self.GetMinWidth(), self.GetMinHeight()+30))
 
     def dvlc_context_menu(self, event):
         context_menu = wx.Menu()
@@ -125,39 +142,56 @@ class Financials(wx.Panel):
         context_menu.Destroy()
 
     def dvlc_add_row(self, event):
-        if event.GetId() == self.dvlc_popup_id1:
-            dvlc = self.dvlc
-        elif event.GetId() == self.dvlc2_popup_id1:
+        dvlc = self.dvlc
+        status_text = self.dvlc_status
+        if event.GetId() == self.dvlc2_popup_id1:
             dvlc = self.dvlc2
+            status_text = self.dvlc2_status
         elif event.GetId() == self.dvlc3_popup_id1:
             dvlc = self.dvlc3
+            status_text = self.dvlc3_status
         col_count = dvlc.GetColumnCount()
         dvlc.AppendItem(['0' for _ in range(col_count)])
+        status_text.SetLabel('Data edited, please save.')
 
     def dvlc_delete_rows(self, event):
-        if event.GetId() == self.dvlc_popup_id2:
-            dvlc = self.dvlc
-        elif event.GetId() == self.dvlc2_popup_id2:
+        dvlc = self.dvlc
+        status_text = self.dvlc_status
+        if event.GetId() == self.dvlc2_popup_id2:
             dvlc = self.dvlc2
+            status_text = self.dvlc2_status
         elif event.GetId() == self.dvlc3_popup_id2:
             dvlc = self.dvlc3
+            status_text = self.dvlc3_status
         for i in range(dvlc.GetItemCount() - 1, -1, -1):
             if dvlc.IsRowSelected(i):
                 dvlc.DeleteItem(i)
+        status_text.SetLabel('Data edited, please save.')
 
     def dvlc_save_data(self, event):
-        if event.GetId() == self.dvlc_popup_id9:
-            path = ASSETS_DEBTS_DATA_PATH
-            dvlc = self.dvlc
-        elif event.GetId() == self.dvlc2_popup_id9:
+        path = ASSETS_DEBTS_DATA_PATH
+        dvlc = self.dvlc
+        status_text = self.dvlc_status
+        if event.GetId() == self.dvlc2_popup_id9:
             path = BUDGET_PLAN_DATA_PATH
             dvlc = self.dvlc2
+            status_text = self.dvlc2_status
         elif event.GetId() == self.dvlc3_popup_id9:
             path = ACCOUNTS_DATA_PATH
             dvlc = self.dvlc3
+            status_text = self.dvlc3_status
         data = []
         col_count = dvlc.GetColumnCount()
         row_count = dvlc.GetItemCount()
         for i in range(row_count):
             data.append([dvlc.GetTextValue(i, j) for j in range(col_count)])
         dump_data(data, path)
+        status_text.SetLabel('     ')
+
+    def show_dvlc_status(self, event):
+        status_text = self.dvlc_status
+        if event.GetEventObject() == self.dvlc2:
+            status_text = self.dvlc2_status
+        elif event.GetEventObject() == self.dvlc3:
+            status_text = self.dvlc3_status
+        status_text.SetLabel('Data edited, please save.')
