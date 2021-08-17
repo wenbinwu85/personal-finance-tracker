@@ -171,6 +171,9 @@ class Financials(wx.Panel):
         path = ASSETS_DEBTS_DATA_PATH
         dvlc = self.dvlc
         status_text = self.dvlc_status
+        # if event.GetId() == self.dvlc_popup_id9:
+        #     self.GetTopLevelParent().dashboard.update_net_worth()
+        #     print('update!')
         if event.GetId() == self.dvlc2_popup_id9:
             path = BUDGET_PLAN_DATA_PATH
             dvlc = self.dvlc2

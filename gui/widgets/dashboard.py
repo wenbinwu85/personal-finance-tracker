@@ -6,9 +6,9 @@ from wx.lib.agw.piectrl import PieCtrl, PiePart
 from wx.lib.agw.pycollapsiblepane import PyCollapsiblePane
 from functions.funcs import load_data_from, dump_data
 from gui.widgets.creditscoresupdatedialog import CreditScoresUpdateDialog
-from settings import METRICS_DATA_PATH, PERSONAL_SUMMARY_DATA_PATH
-from settings import STOCKLIST_DATA_PATH, CREDIT_SCORES_DATA_PATH
-from settings import passive_income_labels, metrics_columns
+from settings import METRICS_DATA_PATH, CREDIT_SCORES_DATA_PATH
+from settings import STOCKLIST_DATA_PATH, ASSETS_DEBTS_DATA_PATH
+from settings import net_worth_labels, passive_income_labels, metrics_columns
 
 
 def make_led_num_ctrl(parent, label, value, color, size=(200, 50)):
@@ -32,10 +32,12 @@ class Dashboard(wx.Panel):
 
         ##### personal net worth #####
         self.net_worth_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Personal Summary')
-        for (text, value, color) in load_data_from(PERSONAL_SUMMARY_DATA_PATH):
-            label, led = make_led_num_ctrl(self, text, value, color)
+        led_colors = ['firebrick', 'forest green', 'lime green', 'forest green']
+        for idx, text in enumerate(net_worth_labels):
+            label, led = make_led_num_ctrl(self, text, '', led_colors[idx])
             self.net_worth_sizer.Add(label)
             self.net_worth_sizer.Add(led, 0, wx.BOTTOM, 10)
+        self.update_net_worth()
 
         ##### passive income #####
         self.dividend_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Passive Income')
@@ -182,6 +184,19 @@ class Dashboard(wx.Panel):
             ]
             dump_data(new_data, CREDIT_SCORES_DATA_PATH)
         return None
+
+    def update_net_worth(self):
+        data = [float(item[1]) for item in load_data_from(ASSETS_DEBTS_DATA_PATH)]
+        debts = sum([i for i in data if i < 0])
+        assets = sum([j for j in data if j > 0])
+        net_worth = debts + assets
+        debt_asset_ratio = round(abs(debts / assets), 4)
+
+        children = self.net_worth_sizer.GetChildren()
+        children[1].GetWindow().SetValue(str(debts))
+        children[3].GetWindow().SetValue(str(assets))
+        children[5].GetWindow().SetValue(str(net_worth))
+        children[7].GetWindow().SetValue(str(debt_asset_ratio))
 
     def update_passive_income(self):
         annual_dividend = 0

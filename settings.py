@@ -19,8 +19,9 @@ ASSETS_DEBTS_DATA_PATH = os.path.join(DATA_PATH, 'assets_debts.csv')
 BUDGET_PLAN_DATA_PATH = os.path.join(DATA_PATH, 'budget.csv')
 ACCOUNTS_DATA_PATH = os.path.join(DATA_PATH, 'accounts.csv')
 STOCKLIST_DATA_PATH = os.path.join(DATA_PATH, 'stocklist.csv')
-PERSONAL_SUMMARY_DATA_PATH = os.path.join(DATA_PATH, 'personal_summary.csv')
 CREDIT_SCORES_DATA_PATH = os.path.join(DATA_PATH, 'credit_scores.csv')
+
+net_worth_labels = ['Debts', 'Assets', 'Net Worth', 'D/A Ratio']
 
 passive_income_labels = [
     'Annual Yield %', 'Annual Yield', 'Monthly Yield', 'Total Dividend Earned'
