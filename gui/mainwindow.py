@@ -58,6 +58,9 @@ class MainWindow(wx.Frame):
         """Resizes the main window frame to fit notbook page content"""
 
         tab = self.tabs.GetCurrentPage()
+        if tab == self.dashboard:
+            self.dashboard.update_net_worth()
+            print('change tab update!')
         self.SetClientSize(tab.GetMinSize())
         self.SendSizeEvent()
         self.CenterOnScreen()

@@ -6,8 +6,9 @@ from wx.lib.agw.piectrl import PieCtrl, PiePart
 from wx.lib.agw.pycollapsiblepane import PyCollapsiblePane
 from functions.funcs import load_data_from, dump_data
 from gui.widgets.creditscoresupdatedialog import CreditScoresUpdateDialog
-from settings import METRICS_DATA_PATH, PERSONAL_SUMMARY_DATA_PATH
-from settings import STOCKLIST_DATA_PATH, CREDIT_SCORES_DATA_PATH
+from settings import METRICS_DATA_PATH, CREDIT_SCORES_DATA_PATH
+from settings import STOCKLIST_DATA_PATH, ASSETS_DEBTS_DATA_PATH
+from settings import net_worth_labels, passive_income_labels, metrics_columns
 
 
 def make_led_num_ctrl(parent, label, value, color, size=(200, 50)):
@@ -31,14 +32,16 @@ class Dashboard(wx.Panel):
 
         ##### personal net worth #####
         self.net_worth_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Personal Summary')
-        for (text, value, color) in load_data_from(PERSONAL_SUMMARY_DATA_PATH):
-            label, led = make_led_num_ctrl(self, text, value, color)
+        led_colors = ['firebrick', 'forest green', 'lime green', 'forest green']
+        for idx, text in enumerate(net_worth_labels):
+            label, led = make_led_num_ctrl(self, text, '', led_colors[idx])
             self.net_worth_sizer.Add(label)
             self.net_worth_sizer.Add(led, 0, wx.BOTTOM, 10)
+        self.update_net_worth()
 
         ##### passive income #####
         self.dividend_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Passive Income')
-        for text in ['Annual Yield %', 'Annual Yield', 'Monthly Yield', 'Total Dividend Earned']:
+        for text in passive_income_labels:
             label, led = make_led_num_ctrl(self, text, '', 'forest green', size=(175, 50))
             self.dividend_sizer.Add(label)
             self.dividend_sizer.Add(led, 0, wx.BOTTOM, 10)
@@ -48,11 +51,9 @@ class Dashboard(wx.Panel):
         self.credit_score_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Credit Scores')
         for (text, value) in load_data_from(CREDIT_SCORES_DATA_PATH):
             label, led = make_led_num_ctrl(self, text, value, 'sky blue', (100, 50))
+            led.Bind(wx.EVT_CONTEXT_MENU, self.credit_scores_context_menu)
             self.credit_score_sizer.Add(label)
             self.credit_score_sizer.Add(led, 0, wx.BOTTOM, 10)
-        for child in self.credit_score_sizer.GetChildren():
-            ctrl = child.GetWindow()
-            ctrl.Bind(wx.EVT_CONTEXT_MENU, self.credit_scores_context_menu)
 
         ##### pie chart #####
         self.pie = PieCtrl(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(260, 260))
@@ -99,10 +100,6 @@ class Dashboard(wx.Panel):
         self.cpane.SetAutoLayout(True)
         # self.cpane.Expand()
         self.cpane.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self.collapse_pane_change)
-        metrics_columns = [
-            'Month', 'TSP', 'Schwab', 'Roth IRA', 'Webull', 'Coinbase',
-            'Dividend', 'Invested', 'Cash', 'Debts', 'Net Worth'
-        ]
         self.metrics_dvlc = dv.DataViewListCtrl(
             self.cpane.GetPane(), size=(860, 280), style=dv.DV_ROW_LINES | dv.DV_VERT_RULES
         )
@@ -188,6 +185,19 @@ class Dashboard(wx.Panel):
             dump_data(new_data, CREDIT_SCORES_DATA_PATH)
         return None
 
+    def update_net_worth(self):
+        data = [float(item[1]) for item in load_data_from(ASSETS_DEBTS_DATA_PATH)]
+        debts = sum([i for i in data if i < 0])
+        assets = sum([j for j in data if j > 0])
+        net_worth = debts + assets
+        debt_asset_ratio = round(abs(debts / assets), 4)
+
+        children = self.net_worth_sizer.GetChildren()
+        children[1].GetWindow().SetValue(str(debts))
+        children[3].GetWindow().SetValue(str(assets))
+        children[5].GetWindow().SetValue(str(net_worth))
+        children[7].GetWindow().SetValue(str(debt_asset_ratio))
+
     def update_passive_income(self):
         annual_dividend = 0
         total_dividend = 0
@@ -210,7 +220,7 @@ class Dashboard(wx.Panel):
 
     def metrics_context_menu(self, event):
         context_menu = wx.Menu()
-        item9 = wx.MenuItem(context_menu, wx.NewIdRef(), 'Save Assets and Debts Data')
+        item9 = wx.MenuItem(context_menu, wx.NewIdRef(), 'Save Metrics Data')
         context_menu.Append(item9)
 
         self.Bind(wx.EVT_MENU, self.save_metrics_data, id=item9.GetId())
