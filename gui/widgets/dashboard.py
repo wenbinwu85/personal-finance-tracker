@@ -98,7 +98,7 @@ class Dashboard(wx.Panel):
         self.cpane.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self.collapse_pane_change)
 
         self.metrics_dvlc = dv.DataViewListCtrl(
-            self.cpane.GetPane(), size=(860, 280), style=dv.DV_ROW_LINES | dv.DV_VERT_RULES
+            self.cpane.GetPane(), size=(880, 280), style=dv.DV_ROW_LINES | dv.DV_VERT_RULES
         )
         self.metrics_dvlc.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.metrics_context_menu)
         self.metrics_dvlc.Bind(dv.EVT_DATAVIEW_SELECTION_CHANGED, self.update_pie_chart)

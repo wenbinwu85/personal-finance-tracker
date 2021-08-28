@@ -90,7 +90,7 @@ class Financials(wx.Panel):
         financials_sizer = wx.BoxSizer(wx.HORIZONTAL)
         financials_sizer.AddMany((asset_debt_sizer, budget_sizer, accounts_sizer))
         self.SetSizerAndFit(financials_sizer)
-        self.SetMinSize((self.GetMinWidth(), self.GetMinHeight()+30))
+        self.SetMinSize((self.GetMinWidth(), self.GetMinHeight() + 30))
 
     def dvlc_context_menu(self, event):
         context_menu = wx.Menu()
