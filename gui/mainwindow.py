@@ -15,7 +15,7 @@ class MainWindow(wx.Frame):
         super().__init__(
             parent=None,
             title=APP_NAME,
-            style=wx.DEFAULT_FRAME_STYLE  # & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
+            style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
         )
         self.panel = wx.Panel(self)
 
@@ -60,7 +60,6 @@ class MainWindow(wx.Frame):
         tab = self.tabs.GetCurrentPage()
         if tab == self.dashboard:
             self.dashboard.update_net_worth()
-            print('change tab update!')
         self.SetClientSize(tab.GetMinSize())
         self.SendSizeEvent()
         self.CenterOnScreen()

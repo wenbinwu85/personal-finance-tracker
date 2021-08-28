@@ -22,7 +22,6 @@ STOCKLIST_DATA_PATH = os.path.join(DATA_PATH, 'stocklist.csv')
 CREDIT_SCORES_DATA_PATH = os.path.join(DATA_PATH, 'credit_scores.csv')
 
 net_worth_labels = ['Debts', 'Assets', 'Net Worth', 'D/A Ratio']
-
 passive_income_labels = [
     'Annual Yield %', 'Annual Yield', 'Monthly Yield', 'Total Dividend Earned'
 ]

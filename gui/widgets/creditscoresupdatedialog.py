@@ -3,9 +3,9 @@ import wx
 
 def make_credit_score_widget(parent, label):
     sizer = wx.BoxSizer(wx.HORIZONTAL)
-    cc_label = wx.StaticText(parent, -1, label=label)
+    cs_label = wx.StaticText(parent, -1, label=label)
     text_field = wx.TextCtrl(parent)
-    sizer.Add(cc_label, 0, wx.ALL, 5)
+    sizer.Add(cs_label, 0, wx.ALL, 5)
     sizer.Add(text_field, 1, wx.ALL, 5)
     return sizer, text_field
 
