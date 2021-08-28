@@ -1,7 +1,7 @@
 import os
 
 APP_NAME = 'FinTrack'
-VERSION = '  v0.0.7a'
+VERSION = '  v0.0.8a'
 EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'
 WEBSITE = 'https://github.com/wenbinwu85/', 'Github'

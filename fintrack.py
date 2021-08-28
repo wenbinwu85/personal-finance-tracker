@@ -1,13 +1,5 @@
 #! /usr/bin/python3
 
-# fix DPI problems in fucking windows
-# if wx.Platform == '__WXMSW__':
-#     import ctypes
-#     try:
-#         ctypes.windll.shcore.SetProcessDpiAwareness(True)
-#     except AttributeError:
-#         pass
-
 import wx
 from gui.mainwindow import MainWindow
 

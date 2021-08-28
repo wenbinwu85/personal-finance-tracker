@@ -23,7 +23,7 @@ class MainWindow(wx.Frame):
         # self.SetIcon(icon)
 
         self.toolbar = MyToolbar(
-            self, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT
+            self, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT
         )
         self.SetToolBar(self.toolbar)
         self.toolbar.Realize()
