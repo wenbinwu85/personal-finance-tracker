@@ -1,6 +1,6 @@
 import wx
 import wx.dataview as dv
-from settings import STOCKLIST_DATA_PATH, stocks_list_columns
+from settings import STOCKLIST_DATA_PATH, stocks_list_columns, stocks_footer_columns
 from functions.funcs import load_data_from, dump_data
 from model.stocklist import DVIListModel
 
@@ -14,33 +14,34 @@ class StockList(wx.Panel):
         self.parent = parent
         self.name = name
 
-        self.stock_list_model, self.stock_list = self.generate_stock_list()
-        self.stock_list.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.stock_list_context_menu)
-
-        stocklist_sizer = wx.BoxSizer(wx.VERTICAL)
-        stocklist_sizer.Add(self.stock_list, 1, wx.EXPAND)
-        self.SetSizerAndFit(stocklist_sizer)
-
-    def generate_stock_list(self):
-        stock_list = dv.DataViewCtrl(
+        self.stock_list = dv.DataViewCtrl(
             self,
-            size=(1300, 640),
+            size=(1200, 700),
             style=wx.BORDER_THEME | dv.DV_ROW_LINES | dv.DV_VERT_RULES | dv.DV_MULTIPLE
         )
         self.stock_data = load_data_from(STOCKLIST_DATA_PATH)
-        stock_list_model = DVIListModel(self.stock_data)
-        stock_list.AssociateModel(stock_list_model)
+        self.stock_list_model = DVIListModel(self.stock_data)
+        self.stock_list.AssociateModel(self.stock_list_model)
+        self.stock_list.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.stock_list_context_menu)
 
         for idx, val in enumerate(stocks_list_columns):
-            stock_list.AppendTextColumn(
+            self.stock_list.AppendTextColumn(
                 val, idx, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE
             )
-
-        for col in stock_list.Columns:
+        for col in self.stock_list.Columns:
             col.Sortable = True
             col.Reorderable = True
 
-        return stock_list_model, stock_list
+        self.stock_list_footer = dv.DataViewListCtrl(self, size=(1200, 10), style=dv.DV_VERT_RULES)
+        for val in stocks_footer_columns:
+            self.stock_list_footer.AppendTextColumn(val, width=wx.COL_WIDTH_AUTOSIZE)
+        self.stock_list_footer.AppendItem(['0' for _ in range(len(stocks_footer_columns))])
+        
+        stocklist_sizer = wx.BoxSizer(wx.VERTICAL)
+        stocklist_sizer.Add(self.stock_list, 0, wx.EXPAND)
+        stocklist_sizer.Add(self.stock_list_footer, 1, wx.EXPAND)
+        self.SetSizerAndFit(stocklist_sizer)
+        self.SetMinSize((1200, 785))
 
     def stock_list_context_menu(self, event):
         context_menu = wx.Menu()
@@ -71,3 +72,6 @@ class StockList(wx.Panel):
     def save_stocks_data(self, event):
         dump_data(self.stock_data, STOCKLIST_DATA_PATH)
         self.parent.GetTopLevelParent().dashboard.update_passive_income()
+
+    def stock_select(self, event):
+        pass

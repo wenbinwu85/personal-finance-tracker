@@ -1,4 +1,5 @@
 import os
+from re import A
 
 APP_NAME = 'FinTrack'
 VERSION = 'v0.0.8a'
@@ -37,5 +38,10 @@ accounts_columns = ['Account', 'Type', 'Status']
 stocks_list_columns = [
     'Symbol', 'Shares', 'Cost Avg', 'Price', 'Cost Basis',
     'Market Value', 'Gain / Lost', 'Gain / Lost %', 'Yield %', 'Annual Dividend',
-    'Dividend Received', 'Y2C %', 'Sector', 'Account %', 'Account'
+    'Div. Received', 'Y2C %', 'Sector', 'Account %', 'Account'
+]
+
+stocks_footer_columns = [
+    'Selected', 'Cost Basis', 'Market Value', 'Gain / Lost', 'Gain / Lost %',
+    'Yield %', 'Annual Dividend', 'Div. Received', 'Y2C %', 'Account %'
 ]

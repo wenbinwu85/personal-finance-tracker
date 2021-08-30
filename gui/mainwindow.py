@@ -16,7 +16,7 @@ class MainWindow(wx.Frame):
         super().__init__(
             parent=None,
             title=APP_NAME,
-            style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
+            style=wx.DEFAULT_FRAME_STYLE  # & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
         )
         self.panel = wx.Panel(self)
 
