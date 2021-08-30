@@ -6,7 +6,8 @@ from wx.lib.agw.piectrl import PieCtrl, PiePart
 from wx.lib.agw.pycollapsiblepane import PyCollapsiblePane
 from functions.funcs import load_data_from, dump_data
 from gui.widgets.creditscoresupdatedialog import CreditScoresUpdateDialog
-from settings import METRICS_DATA_PATH, CREDIT_SCORES_DATA_PATH, ASSETS_DEBTS_DATA_PATH, STOCKLIST_DATA_PATH
+from settings import METRICS_DATA_PATH, CREDIT_SCORES_DATA_PATH
+from settings import ASSETS_DEBTS_DATA_PATH, STOCKLIST_DATA_PATH
 from settings import net_worth_labels, passive_income_labels, metrics_columns
 
 
@@ -170,7 +171,7 @@ class Dashboard(wx.Panel):
         coinbase = self.metrics_dvlc.GetTextValue(last_row, 5)
         dividend = self.metrics_dvlc.GetTextValue(last_row, 6)
 
-        investments = float(tsp) + float(stonks) + float(roth) + float(webull) + float(coinbase) + float(dividend)
+        investments = sum(map(float, (tsp, stonks, roth, webull, coinbase, dividend)))
         total_assets = assets + investments + cash
         net_worth = total_assets + debts  # debts is negative
         debt_asset_ratio = round(abs(debts / total_assets), 4)
@@ -292,4 +293,4 @@ class Dashboard(wx.Panel):
         for row in range(self.metrics_dvlc.GetItemCount()):
             data.append([self.metrics_dvlc.GetTextValue(row, col) for col in range(col_count)])
         dump_data(data, METRICS_DATA_PATH)
-        self.update_pie_chart(dv.EVT_DATAVIEW_SELECTION_CHANGED)
+        self.update_metrics_net_worth()
