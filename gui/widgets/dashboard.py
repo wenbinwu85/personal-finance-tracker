@@ -160,12 +160,21 @@ class Dashboard(wx.Panel):
             elif item[2] == 'Assets':
                 assets += float(item[1])
 
-        total_assets = assets + cash
+        last_col = self.metrics_dvlc.GetColumnCount() - 1
+        last_row = self.metrics_dvlc.GetItemCount() - 1
+
+        tsp = self.metrics_dvlc.GetTextValue(last_row, 1)
+        stonks = self.metrics_dvlc.GetTextValue(last_row, 2)
+        roth = self.metrics_dvlc.GetTextValue(last_row, 3)
+        webull = self.metrics_dvlc.GetTextValue(last_row, 4)
+        coinbase = self.metrics_dvlc.GetTextValue(last_row, 5)
+        dividend = self.metrics_dvlc.GetTextValue(last_row, 6)
+
+        investments = float(tsp) + float(stonks) + float(roth) + float(webull) + float(coinbase) + float(dividend)
+        total_assets = assets + investments + cash
         net_worth = total_assets + debts  # debts is negative
         debt_asset_ratio = round(abs(debts / total_assets), 4)
 
-        last_col = self.metrics_dvlc.GetColumnCount() - 1
-        last_row = self.metrics_dvlc.GetItemCount() - 1
         self.metrics_dvlc.SetTextValue(str(net_worth), last_row, last_col)
         self.metrics_dvlc.SetTextValue(str(assets), last_row, last_col - 1)
         self.metrics_dvlc.SetTextValue(str(debts), last_row, last_col - 2)
@@ -271,7 +280,7 @@ class Dashboard(wx.Panel):
 
     def metrics_add_row(self, event):
         col_count = self.metrics_dvlc.GetColumnCount()
-        self.metrics_dvlc.AppendItem(['0' for _ in range(col_count)])
+        self.metrics_dvlc.AppendItem(['123' for _ in range(col_count)])
         self.update_metrics_net_worth()
 
     def metrics_delete_last_row(self, event):
