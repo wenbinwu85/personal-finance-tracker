@@ -11,7 +11,7 @@ class StockList(wx.Panel):
     def __init__(self, name, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
-        self.main_window = parent.GetTopLevelParent()
+        self.parent = parent
         self.name = name
 
         self.stock_list_model, self.stock_list = self.generate_stock_list()
@@ -70,4 +70,4 @@ class StockList(wx.Panel):
 
     def save_stocks_data(self, event):
         dump_data(self.stock_data, STOCKLIST_DATA_PATH)
-        self.main_window.dashboard.update_passive_income()
+        self.parent.GetTopLevelParent().dashboard.update_passive_income()

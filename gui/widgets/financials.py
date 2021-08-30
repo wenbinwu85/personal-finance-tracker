@@ -27,6 +27,7 @@ class Financials(wx.Panel):
     def __init__(self, name, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
+        self.parent = parent
         self.name = name
 
         ##### assets and debts #####
@@ -186,6 +187,8 @@ class Financials(wx.Panel):
             data.append([dvlc.GetTextValue(i, j) for j in range(col_count)])
         dump_data(data, path)
         status_text.SetLabel('     ')
+
+        self.parent.GetTopLevelParent().dashboard.update_metrics_net_worth()
 
     def show_dvlc_status(self, event):
         status_text = self.dvlc_status

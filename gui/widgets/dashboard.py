@@ -6,7 +6,7 @@ from wx.lib.agw.piectrl import PieCtrl, PiePart
 from wx.lib.agw.pycollapsiblepane import PyCollapsiblePane
 from functions.funcs import load_data_from, dump_data
 from gui.widgets.creditscoresupdatedialog import CreditScoresUpdateDialog
-from settings import METRICS_DATA_PATH, CREDIT_SCORES_DATA_PATH, STOCKLIST_DATA_PATH
+from settings import METRICS_DATA_PATH, CREDIT_SCORES_DATA_PATH, ASSETS_DEBTS_DATA_PATH, STOCKLIST_DATA_PATH
 from settings import net_worth_labels, passive_income_labels, metrics_columns
 
 
@@ -29,7 +29,7 @@ class Dashboard(wx.Panel):
 
         self.name = name
 
-        ##### personal net worth #####
+        ##### net worth LEDs #####
         net_worth_led_colors = ['firebrick', 'forest green', 'lime green', 'forest green']
         self.net_worth_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Personal Summary')
         for idx, text in enumerate(net_worth_labels):
@@ -37,14 +37,14 @@ class Dashboard(wx.Panel):
             self.net_worth_sizer.Add(label)
             self.net_worth_sizer.Add(led, 0, wx.BOTTOM, 10)
 
-        ##### passive income #####
+        ##### passive income LEDs #####
         self.dividend_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Passive Income')
         for text in passive_income_labels:
             label, led = make_led_num_ctrl(self, text, '', 'forest green', size=(175, 50))
             self.dividend_sizer.Add(label)
             self.dividend_sizer.Add(led, 0, wx.BOTTOM, 10)
 
-        ##### credit scores #####
+        ##### credit scores LEDs #####
         self.credit_score_sizer = wx.StaticBoxSizer(wx.VERTICAL, self, label='Credit Scores')
         for (text, value) in load_data_from(CREDIT_SCORES_DATA_PATH):
             label, led = make_led_num_ctrl(self, text, value, 'sky blue', (100, 50))
@@ -53,7 +53,7 @@ class Dashboard(wx.Panel):
             self.credit_score_sizer.Add(led, 0, wx.BOTTOM, 10)
 
         ##### pie chart #####
-        self.pie = PieCtrl(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(280, 260))
+        self.pie = PieCtrl(self, wx.ID_ANY, wx.DefaultPosition, wx.Size(320, 260))
         self.pie.SetHeight(25)
         self.pie.SetBackColour('dark grey')
         self.pie.SetShowEdges(False)
@@ -76,7 +76,7 @@ class Dashboard(wx.Panel):
         )
         self.hslider.Bind(wx.EVT_SLIDER, self.hslider_handler)
         self.vslider = wx.Slider(
-            self, wx.ID_ANY, 30, 20, 60, size=wx.DefaultSize, style=wx.SL_VERTICAL | wx.SL_LABELS
+            self, wx.ID_ANY, 40, 20, 60, size=wx.DefaultSize, style=wx.SL_VERTICAL | wx.SL_LABELS
         )
         self.vslider.Bind(wx.EVT_SLIDER, self.vslider_handler)
         hsizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -86,29 +86,34 @@ class Dashboard(wx.Panel):
         pie_sizer.Add(hsizer)
         pie_sizer.Add(self.hslider, 1, wx.EXPAND | wx.GROW)
 
-        summary_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        summary_sizer.Add(self.net_worth_sizer, 0, wx.BOTTOM)
-        summary_sizer.Add(self.dividend_sizer, 0, wx.BOTTOM)
-        summary_sizer.Add(self.credit_score_sizer, 0, wx.BOTTOM)
-        summary_sizer.Add(pie_sizer, 0, wx.BOTTOM | wx.EXPAND)
+        led_pie_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        led_pie_sizer.Add(self.net_worth_sizer, 0, wx.BOTTOM)
+        led_pie_sizer.Add(self.dividend_sizer, 0, wx.BOTTOM)
+        led_pie_sizer.Add(self.credit_score_sizer, 0, wx.BOTTOM)
+        led_pie_sizer.Add(pie_sizer, 0, wx.BOTTOM | wx.EXPAND)
 
-        ##### Monthly Metrics #####
+        ##### Monthly Metrics dataview #####
         self.cpane = PyCollapsiblePane(self, label='Monthly Metrics', style=wx.CP_DEFAULT_STYLE)
         self.cpane.SetAutoLayout(True)
         self.cpane.Bind(wx.EVT_COLLAPSIBLEPANE_CHANGED, self.collapse_pane_change)
 
         self.metrics_dvlc = dv.DataViewListCtrl(
-            self.cpane.GetPane(), size=(880, 280), style=dv.DV_ROW_LINES | dv.DV_VERT_RULES
+            self.cpane.GetPane(), size=(920, 280), style=dv.DV_ROW_LINES | dv.DV_VERT_RULES
         )
         self.metrics_dvlc.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.metrics_context_menu)
         self.metrics_dvlc.Bind(dv.EVT_DATAVIEW_SELECTION_CHANGED, self.update_pie_chart)
-        for i in metrics_columns:
+
+        for i in metrics_columns[:8]:
             self.metrics_dvlc.AppendTextColumn(
                 i, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE
             )
+        for i in metrics_columns[8:]:
+            self.metrics_dvlc.AppendTextColumn(i, width=wx.COL_WIDTH_AUTOSIZE)
+        for item in load_data_from(METRICS_DATA_PATH):
+            self.metrics_dvlc.AppendItem(item)
 
         self.dashboard_sizer = wx.BoxSizer(wx.VERTICAL)
-        self.dashboard_sizer.Add(summary_sizer, 0, wx.EXPAND)
+        self.dashboard_sizer.Add(led_pie_sizer, 0, wx.EXPAND)
         self.dashboard_sizer.Add(self.cpane, 0, wx.EXPAND)
 
         self.SetSizerAndFit(self.dashboard_sizer)
@@ -118,8 +123,7 @@ class Dashboard(wx.Panel):
         self.hslider_handler(wx.EVT_SLIDER)
         self.vslider_handler(wx.EVT_SLIDER)
 
-        self.update_metrics()
-        self.update_net_worth()
+        self.update_metrics_net_worth()
         self.update_passive_income()
         self.update_pie_chart(dv.EVT_DATAVIEW_SELECTION_CHANGED)
 
@@ -143,6 +147,71 @@ class Dashboard(wx.Panel):
         frame.SetClientSize(size)
         frame.SendSizeEvent()
         frame.CenterOnScreen()
+
+    def update_metrics_net_worth(self):
+        debts = 0
+        cash = 0
+        assets = 0
+        for item in load_data_from(ASSETS_DEBTS_DATA_PATH):
+            if item[2] == 'Debt':
+                debts += float(item[1])
+            elif item[2] == 'Cash':
+                cash += float(item[1])
+            elif item[2] == 'Assets':
+                assets += float(item[1])
+
+        total_assets = assets + cash
+        net_worth = total_assets + debts  # debts is negative
+        debt_asset_ratio = round(abs(debts / total_assets), 4)
+
+        last_col = self.metrics_dvlc.GetColumnCount() - 1
+        last_row = self.metrics_dvlc.GetItemCount() - 1
+        self.metrics_dvlc.SetTextValue(str(net_worth), last_row, last_col)
+        self.metrics_dvlc.SetTextValue(str(assets), last_row, last_col - 1)
+        self.metrics_dvlc.SetTextValue(str(debts), last_row, last_col - 2)
+        self.metrics_dvlc.SetTextValue(str(cash), last_row, last_col - 3)
+
+        children = self.net_worth_sizer.GetChildren()
+        children[1].GetWindow().SetValue(str(debts))
+        children[3].GetWindow().SetValue(str(total_assets))
+        children[5].GetWindow().SetValue(str(net_worth))
+        children[7].GetWindow().SetValue(str(debt_asset_ratio))
+
+    def update_passive_income(self):
+        annual_dividend = 0
+        total_dividend = 0
+        market_value = 0
+        for stock in load_data_from(STOCKLIST_DATA_PATH):
+            market_value += float(stock[5])
+            annual_dividend += float(stock[9])
+            total_dividend += float(stock[10])
+
+        data = {
+            1: str(round(annual_dividend / market_value * 100, 4)),
+            3: str(round(annual_dividend, 2)),
+            5: str(round(annual_dividend / 12, 2)),
+            7: str(round(total_dividend, 2))
+        }
+        children = self.dividend_sizer.GetChildren()
+        for key, val in data.items():
+            ctrl = children[key].GetWindow()
+            ctrl.SetValue(val)
+
+    def update_pie_chart(self, event):
+        row = self.metrics_dvlc.GetSelectedRow()
+        if row is wx.NOT_FOUND:
+            row = self.metrics_dvlc.GetItemCount() - 1
+
+        data_store = self.metrics_dvlc.GetStore()
+        col_count = self.metrics_dvlc.GetColumnCount()
+        row_data = [data_store.GetValueByRow(row, col) for col in range(col_count)]
+
+        self.pie_part1.SetValue(float(row_data[1]))
+        self.pie_part2.SetValue(float(row_data[2]))
+        self.pie_part3.SetValue(float(row_data[3]))
+        self.pie_part4.SetValue(float(row_data[4]))
+        self.pie_part5.SetValue(float(row_data[5]))
+        self.pie.Refresh()
 
     def credit_scores_context_menu(self, event):
         self.context_menu_id1 = wx.NewIdRef()
@@ -184,78 +253,34 @@ class Dashboard(wx.Panel):
             dump_data(new_data, CREDIT_SCORES_DATA_PATH)
         return None
 
-    def get_row_data(self, row):
-        data_store = self.metrics_dvlc.GetStore()
-        col_count = self.metrics_dvlc.GetColumnCount()
-        return [data_store.GetValueByRow(row, col) for col in range(col_count)]
-
-    def update_net_worth(self):
-        last_row = self.metrics_dvlc.GetItemCount() - 1
-        row_data = self.get_row_data(last_row)
-
-        net_worth = round(float(row_data[-1]), 2)
-        debts = round(float(row_data[-2]), 2)
-        assets = round(net_worth - debts, 2)
-        debt_asset_ratio = round(abs(debts / assets), 4)
-
-        children = self.net_worth_sizer.GetChildren()
-        children[1].GetWindow().SetValue(str(debts))
-        children[3].GetWindow().SetValue(str(assets))
-        children[5].GetWindow().SetValue(str(net_worth))
-        children[7].GetWindow().SetValue(str(debt_asset_ratio))
-
-    def update_passive_income(self):
-        annual_dividend = 0
-        total_dividend = 0
-        market_value = 0
-        for stock in load_data_from(STOCKLIST_DATA_PATH):
-            market_value += float(stock[5])
-            annual_dividend += float(stock[9])
-            total_dividend += float(stock[10])
-
-        data = {
-            1: str(round(annual_dividend / market_value * 100, 4)),
-            3: str(round(annual_dividend, 2)),
-            5: str(round(annual_dividend / 12, 2)),
-            7: str(round(total_dividend, 2))
-        }
-        children = self.dividend_sizer.GetChildren()
-        for key, val in data.items():
-            ctrl = children[key].GetWindow()
-            ctrl.SetValue(val)
-
-    def update_pie_chart(self, event):
-        row = self.metrics_dvlc.GetSelectedRow()
-        if row is wx.NOT_FOUND:
-            row = self.metrics_dvlc.GetItemCount() - 1
-        row_data = self.get_row_data(row)
-        self.pie_part1.SetValue(float(row_data[1]))
-        self.pie_part2.SetValue(float(row_data[2]))
-        self.pie_part3.SetValue(float(row_data[3]))
-        self.pie_part4.SetValue(float(row_data[4]))
-        self.pie_part5.SetValue(float(row_data[5]))
-        self.pie.Refresh()
-
-    def update_metrics(self):
-        for item in load_data_from(METRICS_DATA_PATH):
-            self.metrics_dvlc.AppendItem(item)
-
     def metrics_context_menu(self, event):
         context_menu = wx.Menu()
+        item1 = wx.MenuItem(context_menu, wx.NewIdRef(), 'Add new row')
+        item2 = wx.MenuItem(context_menu, wx.NewIdRef(), 'Delete last row')
         item9 = wx.MenuItem(context_menu, wx.NewIdRef(), 'Save Metrics Data')
+        context_menu.Append(item1)
+        context_menu.Append(item2)
         context_menu.Append(item9)
 
-        self.Bind(wx.EVT_MENU, self.save_metrics_data, id=item9.GetId())
+        self.Bind(wx.EVT_MENU, self.metrics_add_row, id=item1.GetId())
+        self.Bind(wx.EVT_MENU, self.metrics_delete_last_row, id=item2.GetId())
+        self.Bind(wx.EVT_MENU, self.metrics_save_data, id=item9.GetId())
 
         self.PopupMenu(context_menu)
         context_menu.Destroy()
 
-    def save_metrics_data(self, event):
+    def metrics_add_row(self, event):
+        col_count = self.metrics_dvlc.GetColumnCount()
+        self.metrics_dvlc.AppendItem(['0' for _ in range(col_count)])
+        self.update_metrics_net_worth()
+
+    def metrics_delete_last_row(self, event):
+        self.metrics_dvlc.DeleteItem(self.metrics_dvlc.GetItemCount() - 1)
+
+    def metrics_save_data(self, event):
         data = []
         col_count = self.metrics_dvlc.GetColumnCount()
-        row_count = self.metrics_dvlc.GetItemCount()
-        for i in range(row_count):
-            data.append([self.metrics_dvlc.GetTextValue(i, j) for j in range(col_count)])
+        for row in range(self.metrics_dvlc.GetItemCount()):
+            data.append([self.metrics_dvlc.GetTextValue(row, col) for col in range(col_count)])
         dump_data(data, METRICS_DATA_PATH)
-        self.update_net_worth()
         self.update_pie_chart(dv.EVT_DATAVIEW_SELECTION_CHANGED)
