@@ -23,6 +23,7 @@ class StockList(wx.Panel):
         self.stock_list_model = DVIListModel(self.stock_data)
         self.stock_list.AssociateModel(self.stock_list_model)
         self.stock_list.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.stock_list_context_menu)
+        self.stock_list.Bind(dv.EVT_DATAVIEW_SELECTION_CHANGED, self.stock_selected)
 
         for idx, val in enumerate(stocks_list_columns):
             self.stock_list.AppendTextColumn(
@@ -36,7 +37,7 @@ class StockList(wx.Panel):
         for val in stocks_footer_columns:
             self.stock_list_footer.AppendTextColumn(val, width=wx.COL_WIDTH_AUTOSIZE)
         self.stock_list_footer.AppendItem(['0' for _ in range(len(stocks_footer_columns))])
-        
+
         stocklist_sizer = wx.BoxSizer(wx.VERTICAL)
         stocklist_sizer.Add(self.stock_list, 0, wx.EXPAND)
         stocklist_sizer.Add(self.stock_list_footer, 1, wx.EXPAND)
@@ -73,5 +74,5 @@ class StockList(wx.Panel):
         dump_data(self.stock_data, STOCKLIST_DATA_PATH)
         self.parent.GetTopLevelParent().dashboard.update_passive_income()
 
-    def stock_select(self, event):
+    def stock_selected(self, event):
         pass

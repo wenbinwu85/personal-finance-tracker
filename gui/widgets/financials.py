@@ -163,9 +163,11 @@ class Financials(wx.Panel):
         elif event.GetId() == self.dvlc3_popup_id2:
             dvlc = self.dvlc3
             status_text = self.dvlc3_status
+
         for i in range(dvlc.GetItemCount() - 1, -1, -1):
             if dvlc.IsRowSelected(i):
                 dvlc.DeleteItem(i)
+
         status_text.SetLabel('Data edited, please save.')
 
     def dvlc_save_data(self, event):
