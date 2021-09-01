@@ -74,7 +74,7 @@ class StockList(wx.Panel):
         self.stocks_dvc_model.delete_rows(rows)
 
     def save_stocks_data(self, event):
-        data = [self.stocks_data_header] + self.stocks_data
+        data = [self.stocks_data_header] + self.stocks_data  # TODO: investigate this!!!!
         dump_data(data, STOCKLIST_DATA_PATH)
         self.parent.GetTopLevelParent().dashboard.update_passive_income()
 

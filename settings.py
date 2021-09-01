@@ -43,5 +43,5 @@ accounts_columns = ['Account', 'Type', 'Status']
 
 stocks_footer_columns = [
     'Selected', 'Cost Basis', 'Market Value', 'Gain / Lost', 'Gain / Lost %',
-    'Yield %', 'Annual Dividend', 'Div. Received', 'Y2C %', 'Account %'
+    'Yield %', 'Annual Dividend', 'Div. Received', 'Account %'
 ]
