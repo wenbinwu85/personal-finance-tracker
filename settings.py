@@ -19,7 +19,7 @@ METRICS_DATA_PATH = os.path.join(DATA_PATH, 'metrics.csv')
 ASSETS_DEBTS_DATA_PATH = os.path.join(DATA_PATH, 'assets_debts.csv')
 BUDGET_PLAN_DATA_PATH = os.path.join(DATA_PATH, 'budget.csv')
 ACCOUNTS_DATA_PATH = os.path.join(DATA_PATH, 'accounts.csv')
-STOCKLIST_DATA_PATH = os.path.join(DATA_PATH, 'stocklist.csv')
+STOCKLIST_DATA_PATH = os.path.join(DATA_PATH, 'stocks.csv')
 CREDIT_SCORES_DATA_PATH = os.path.join(DATA_PATH, 'credit_scores.csv')
 
 net_worth_labels = ['Total Debts', 'Total Assets', 'Net Worth', 'D/A Ratio']
@@ -35,11 +35,11 @@ assets_debts_columns = ['Item', 'Value', 'Type', 'Note']
 budget_plan_columns = ['Item', 'Amount', 'Time', 'Due Date', 'Type', 'Payback Plan']
 accounts_columns = ['Account', 'Type', 'Status']
 
-stocks_list_columns = [
-    'Symbol', 'Shares', 'Cost Avg', 'Price', 'Cost Basis',
-    'Market Value', 'Gain / Lost', 'Gain / Lost %', 'Yield %', 'Annual Dividend',
-    'Div. Received', 'Y2C %', 'Sector', 'Account %', 'Account'
-]
+# stocks_list_columns = [
+#     'Symbol', 'Shares', 'Cost Avg', 'Price', 'Cost Basis',
+#     'Market Value', 'Gain / Lost', 'Gain / Lost %', 'Yield %', 'Annual Dividend',
+#     'Div. Received', 'Y2C %', 'Sector', 'Account %', 'Account'
+# ]
 
 stocks_footer_columns = [
     'Selected', 'Cost Basis', 'Market Value', 'Gain / Lost', 'Gain / Lost %',

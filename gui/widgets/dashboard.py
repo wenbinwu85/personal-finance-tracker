@@ -172,8 +172,8 @@ class Dashboard(wx.Panel):
         dividend = self.metrics_dvlc.GetTextValue(last_row, 6)
 
         investments = sum(map(float, (tsp, stonks, roth, webull, coinbase, dividend)))
-        total_assets = assets + investments + cash
-        net_worth = total_assets + debts  # debts is negative
+        total_assets = round(assets + investments + cash, 2)
+        net_worth = round(total_assets + debts, 2)  # debts is negative
         debt_asset_ratio = round(abs(debts / total_assets), 4)
 
         self.metrics_dvlc.SetTextValue(str(net_worth), last_row, last_col)
@@ -189,18 +189,18 @@ class Dashboard(wx.Panel):
 
     def update_passive_income(self):
         annual_dividend = 0
-        total_dividend = 0
+        earned_dividend = 0
         market_value = 0
-        for stock in load_data_from(STOCKLIST_DATA_PATH):
+        for stock in load_data_from(STOCKLIST_DATA_PATH)[1:]:
             market_value += float(stock[5])
             annual_dividend += float(stock[9])
-            total_dividend += float(stock[10])
+            earned_dividend += float(stock[10])
 
         data = {
             1: str(round(annual_dividend / market_value * 100, 4)),
             3: str(round(annual_dividend, 2)),
             5: str(round(annual_dividend / 12, 2)),
-            7: str(round(total_dividend, 2))
+            7: str(round(earned_dividend, 2))
         }
         children = self.dividend_sizer.GetChildren()
         for key, val in data.items():

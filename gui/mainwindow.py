@@ -61,6 +61,7 @@ class MainWindow(wx.Frame):
         tab = self.tabs.GetCurrentPage()
         if tab == self.dashboard:
             self.dashboard.update_metrics_net_worth()
+            self.dashboard.update_passive_income()
             self.dashboard.update_pie_chart(dv.EVT_DATAVIEW_SELECTION_CHANGED)
         self.SetClientSize(tab.GetMinSize())
         self.SendSizeEvent()
