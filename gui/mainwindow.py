@@ -1,5 +1,6 @@
 import wx
 import wx.aui as aui  # import wx.lib.agw.aui as aui
+import wx.dataview as dv
 from settings import APP_NAME, STATUS_BAR_MESSAGE
 from gui.menubar import MyMenuBar
 from gui.toolbar import MyToolbar
@@ -23,7 +24,7 @@ class MainWindow(wx.Frame):
         # self.SetIcon(icon)
 
         self.toolbar = MyToolbar(
-            self, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT | wx.TB_TEXT
+            self, style=wx.TB_HORIZONTAL | wx.NO_BORDER | wx.TB_FLAT
         )
         self.SetToolBar(self.toolbar)
         self.toolbar.Realize()
@@ -59,8 +60,9 @@ class MainWindow(wx.Frame):
 
         tab = self.tabs.GetCurrentPage()
         if tab == self.dashboard:
-            self.dashboard.update_net_worth()
-            print('change tab update!')
+            self.dashboard.update_metrics_net_worth()
+            self.dashboard.update_passive_income()
+            self.dashboard.update_pie_chart(dv.EVT_DATAVIEW_SELECTION_CHANGED)
         self.SetClientSize(tab.GetMinSize())
         self.SendSizeEvent()
         self.CenterOnScreen()

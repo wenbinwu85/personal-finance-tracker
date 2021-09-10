@@ -27,6 +27,7 @@ class Financials(wx.Panel):
     def __init__(self, name, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
+        self.parent = parent
         self.name = name
 
         ##### assets and debts #####
@@ -90,7 +91,7 @@ class Financials(wx.Panel):
         financials_sizer = wx.BoxSizer(wx.HORIZONTAL)
         financials_sizer.AddMany((asset_debt_sizer, budget_sizer, accounts_sizer))
         self.SetSizerAndFit(financials_sizer)
-        self.SetMinSize((self.GetMinWidth(), self.GetMinHeight()+30))
+        self.SetMinSize((self.GetMinWidth(), self.GetMinHeight() + 30))
 
     def dvlc_context_menu(self, event):
         context_menu = wx.Menu()
@@ -162,18 +163,17 @@ class Financials(wx.Panel):
         elif event.GetId() == self.dvlc3_popup_id2:
             dvlc = self.dvlc3
             status_text = self.dvlc3_status
+
         for i in range(dvlc.GetItemCount() - 1, -1, -1):
             if dvlc.IsRowSelected(i):
                 dvlc.DeleteItem(i)
+
         status_text.SetLabel('Data edited, please save.')
 
     def dvlc_save_data(self, event):
         path = ASSETS_DEBTS_DATA_PATH
         dvlc = self.dvlc
         status_text = self.dvlc_status
-        # if event.GetId() == self.dvlc_popup_id9:
-        #     self.GetTopLevelParent().dashboard.update_net_worth()
-        #     print('update!')
         if event.GetId() == self.dvlc2_popup_id9:
             path = BUDGET_PLAN_DATA_PATH
             dvlc = self.dvlc2
@@ -189,6 +189,8 @@ class Financials(wx.Panel):
             data.append([dvlc.GetTextValue(i, j) for j in range(col_count)])
         dump_data(data, path)
         status_text.SetLabel('     ')
+
+        self.parent.GetTopLevelParent().dashboard.update_metrics_net_worth()
 
     def show_dvlc_status(self, event):
         status_text = self.dvlc_status

@@ -27,13 +27,16 @@ class DVIListModel(dv.DataViewIndexListModel):
         self.data[row][col] = value
         return True
 
+    def GetRowData(self, row):
+        return self.data[row]
+
     def GetColumnCount(self):
         try:
             return len(self.data[0])
         except IndexError:
             return 1
 
-    def GetCount(self):
+    def GetRowCount(self):
         return len(self.data)
 
     def Compare(self, item1, item2, col, ascending):
