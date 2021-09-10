@@ -9,7 +9,8 @@ Features
 - edit data directly on GUI
 
 Screenshots
-<img width="977" alt="fintrack1" src="https://user-images.githubusercontent.com/45441140/129779108-dde480e2-94b8-455d-ae00-7e882ecf8935.png">
-<img width="1618" alt="fintrack2" src="https://user-images.githubusercontent.com/45441140/129779118-d3fe20f4-c572-473b-9586-6edb487dfed6.png">
-<img width="1412" alt="fintrack3" src="https://user-images.githubusercontent.com/45441140/129779124-0fb46852-fca8-48e8-aed9-bf194dcc859e.png">
+<img width="1037" alt="Screen Shot 2021-09-10 at 6 50 31 PM" src="https://user-images.githubusercontent.com/45441140/132925687-260e25e2-4020-44de-b527-a36f9422e638.png">
+<img width="1618" alt="Screen Shot 2021-09-10 at 6 50 42 PM" src="https://user-images.githubusercontent.com/45441140/132925690-76cee64e-f3b7-4478-9e33-54ee7557443b.png">
+<img width="1712" alt="Screen Shot 2021-09-10 at 6 50 52 PM" src="https://user-images.githubusercontent.com/45441140/132925693-fdb18ab6-360e-4406-aac1-128439ed53e0.png">
+
 
