@@ -8,9 +8,13 @@ Features
 - save data to CSV files
 - edit data directly on GUI
 
+v.0.0.9
+- updated stocks list tab
+- code cleanup 
+
 Screenshots
-<img width="1037" alt="Screen Shot 2021-09-10 at 6 50 31 PM" src="https://user-images.githubusercontent.com/45441140/132925687-260e25e2-4020-44de-b527-a36f9422e638.png">
-<img width="1618" alt="Screen Shot 2021-09-10 at 6 50 42 PM" src="https://user-images.githubusercontent.com/45441140/132925690-76cee64e-f3b7-4478-9e33-54ee7557443b.png">
-<img width="1712" alt="Screen Shot 2021-09-10 at 6 50 52 PM" src="https://user-images.githubusercontent.com/45441140/132925693-fdb18ab6-360e-4406-aac1-128439ed53e0.png">
+<img width="960" alt="dashboard" src="https://user-images.githubusercontent.com/45441140/139755857-39c42055-e467-4cc2-8c6f-95507882277a.png">
+<img width="960" alt="financials" src="https://user-images.githubusercontent.com/45441140/139755971-2e3a240a-ff61-4d03-b1e6-c46c1d2447ad.png">
+<img width="960" alt="dashboard" src="https://user-images.githubusercontent.com/45441140/139755866-d37ade91-1630-4d8e-91b1-79b391a6d3fc.png">
 
 
