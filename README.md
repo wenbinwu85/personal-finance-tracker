@@ -15,6 +15,7 @@ v.0.0.9
 Screenshots
 <img width="960" alt="dashboard" src="https://user-images.githubusercontent.com/45441140/139755857-39c42055-e467-4cc2-8c6f-95507882277a.png">
 <img width="960" alt="financials" src="https://user-images.githubusercontent.com/45441140/139755971-2e3a240a-ff61-4d03-b1e6-c46c1d2447ad.png">
-<img width="960" alt="dashboard" src="https://user-images.githubusercontent.com/45441140/139755866-d37ade91-1630-4d8e-91b1-79b391a6d3fc.png">
+<img width="960" alt="stocks" src="https://user-images.githubusercontent.com/45441140/139756075-78a66dbf-7baa-411d-a680-c176fa302851.png">
+
 
 
