@@ -2,7 +2,7 @@ import os
 from re import A
 
 APP_NAME = 'FinTrack'
-VERSION = 'v0.0.8a'
+VERSION = 'v0.0.9'
 EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'
 WEBSITE = 'https://github.com/wenbinwu85/', 'Github'
@@ -22,7 +22,7 @@ ACCOUNTS_DATA_PATH = os.path.join(DATA_PATH, 'accounts.csv')
 STOCKLIST_DATA_PATH = os.path.join(DATA_PATH, 'stocks.csv')
 CREDIT_SCORES_DATA_PATH = os.path.join(DATA_PATH, 'credit_scores.csv')
 
-net_worth_labels = ['Total Debts', 'Total Assets', 'Net Worth', 'D/A Ratio']
+net_worth_labels = ['Total Debts', 'Total Assets', 'Net Worth', 'D/A Ratio %']
 passive_income_labels = [
     'Annual Yield %', 'Annual Yield', 'Monthly Yield', 'Total Dividend Earned'
 ]
@@ -35,11 +35,14 @@ assets_debts_columns = ['Item', 'Value', 'Type', 'Note']
 budget_plan_columns = ['Item', 'Amount', 'Time', 'Due Date', 'Type', 'Payback Plan']
 accounts_columns = ['Account', 'Type', 'Status']
 
-# stocks_list_columns = [
-#     'Symbol', 'Shares', 'Cost Avg', 'Price', 'Cost Basis',
-#     'Market Value', 'Gain / Lost', 'Gain / Lost %', 'Yield %', 'Annual Dividend',
-#     'Div. Received', 'Y2C %', 'Sector', 'Account %', 'Account'
-# ]
+stocks_columns = [
+    'Symbol', 'Shares', 'Cost Avg',
+    'Price', 'Cost Basis', 'Market Value', 'Gain / Lost', 'G / L %',
+    'Yield %', 'Annual Div', 'Div. Earned',
+    'Y / C %', 'Beta', 'P/E', 'EPS', '1Y Target',
+    'Payout %', '1Y Div ^', '3Y Div ^', '5Y Div ^',
+    'Sector', 'Account'
+]
 
 stocks_footer_columns = [
     'Selected', 'Cost Basis', 'Market Value', 'Gain / Lost', 'Gain / Lost %',
