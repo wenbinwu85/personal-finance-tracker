@@ -176,10 +176,10 @@ class Dashboard(wx.Panel):
         net_worth = round(total_assets + debts, 2)  # debts is negative
         debt_asset_ratio = round(abs(debts / total_assets), 4)
 
-        self.metrics_dvlc.SetTextValue(str(net_worth), last_row, last_col)
-        self.metrics_dvlc.SetTextValue(str(assets), last_row, last_col - 1)
-        self.metrics_dvlc.SetTextValue(str(debts), last_row, last_col - 2)
-        self.metrics_dvlc.SetTextValue(str(cash), last_row, last_col - 3)
+        self.metrics_dvlc.SetTextValue(str(round(net_worth, 2)), last_row, last_col)
+        self.metrics_dvlc.SetTextValue(str(round(assets, 2)), last_row, last_col - 1)
+        self.metrics_dvlc.SetTextValue(str(round(debts, 2)), last_row, last_col - 2)
+        self.metrics_dvlc.SetTextValue(str(round(cash)), last_row, last_col - 3)
 
         children = self.net_worth_sizer.GetChildren()
         children[1].GetWindow().SetValue(str(debts))
@@ -282,7 +282,6 @@ class Dashboard(wx.Panel):
     def metrics_add_row(self, event):
         col_count = self.metrics_dvlc.GetColumnCount()
         self.metrics_dvlc.AppendItem(['123' for _ in range(col_count)])
-        self.update_metrics_net_worth()
 
     def metrics_delete_last_row(self, event):
         self.metrics_dvlc.DeleteItem(self.metrics_dvlc.GetItemCount() - 1)

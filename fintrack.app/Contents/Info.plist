@@ -71,8 +71,8 @@
 		<key>PythonExecutable</key>
 		<string>/opt/homebrew/opt/python@3.9/bin/python3.9</string>
 		<key>PythonLongVersion</key>
-		<string>3.9.6 (default, Jun 28 2021, 19:24:41) 
-[Clang 12.0.5 (clang-1205.0.22.9)]</string>
+		<string>3.9.7 (default, Oct 12 2021, 22:38:23) 
+[Clang 13.0.0 (clang-1300.0.29.3)]</string>
 		<key>PythonShortVersion</key>
 		<string>3.9</string>
 		<key>py2app</key>
@@ -82,7 +82,7 @@
 			<key>template</key>
 			<string>app</string>
 			<key>version</key>
-			<string>0.25</string>
+			<string>0.26.1</string>
 		</dict>
 	</dict>
 </dict>

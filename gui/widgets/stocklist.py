@@ -1,6 +1,6 @@
 import wx
 import wx.dataview as dv
-from settings import STOCKLIST_DATA_PATH, stocks_footer_columns
+from settings import STOCKLIST_DATA_PATH, stocks_columns, stocks_footer_columns
 from functions.funcs import load_data_from, dump_data
 from model.stocklist import DVIListModel
 
@@ -22,16 +22,22 @@ class StockList(wx.Panel):
         self.stocks_dvc.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU, self.stocks_dvc_context_menu)
         self.stocks_dvc.Bind(dv.EVT_DATAVIEW_SELECTION_CHANGED, self.stock_selected)
 
-        stocks = load_data_from(STOCKLIST_DATA_PATH)
-        self.stocks_data_header = stocks[0]
-        self.stocks_data = stocks[1:]
-        self.stocks_dvc_model = DVIListModel(self.stocks_data)
+        self.stocks_dvc_model = DVIListModel(load_data_from(STOCKLIST_DATA_PATH))
         self.stocks_dvc.AssociateModel(self.stocks_dvc_model)
 
-        for idx, val in enumerate(self.stocks_data_header):
+        for i in range(3):
             self.stocks_dvc.AppendTextColumn(
-                val, idx, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE
+                stocks_columns[i], i, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE
             )
+        for idx, val in enumerate(stocks_columns[3:-2]):
+            self.stocks_dvc.AppendTextColumn(val, idx+3, width=wx.COL_WIDTH_AUTOSIZE)
+        col_count = self.stocks_dvc.GetColumnCount()
+        self.stocks_dvc.AppendTextColumn(
+            stocks_columns[-2], col_count, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE
+        )
+        self.stocks_dvc.AppendTextColumn(
+            stocks_columns[-1], col_count+1, width=wx.COL_WIDTH_AUTOSIZE, mode=dv.DATAVIEW_CELL_EDITABLE
+        )
         for col in self.stocks_dvc.Columns:
             col.Sortable = True
             col.Reorderable = True
@@ -74,9 +80,46 @@ class StockList(wx.Panel):
         self.stocks_dvc_model.delete_rows(rows)
 
     def save_stocks_data(self, event):
-        data = [self.stocks_data_header] + self.stocks_data  # TODO: investigate this!!!!
-        dump_data(data, STOCKLIST_DATA_PATH)
+        dump_data(self.stocks_dvc_model.data, STOCKLIST_DATA_PATH)
         self.parent.GetTopLevelParent().dashboard.update_passive_income()
 
     def stock_selected(self, event):
-        pass
+        selected = self.stocks_dvc.GetSelections()
+        count = len(selected)
+        cost_basis = 0
+        market_value = 0
+        gain_lost = 0
+        annual_dividend = 0
+        dividend_received = 0
+
+        for i in selected:
+            row = self.stocks_dvc_model.GetRow(i)
+            row_data = self.stocks_dvc_model.GetRowData(row)
+            cost_basis += float(row_data[4])
+            market_value += float(row_data[5])
+            gain_lost += float(row_data[6])
+            annual_dividend += float(row_data[9])
+            dividend_received += float(row_data[10])
+
+        row_count = self.stocks_dvc_model.GetRowCount()
+        account_total = sum([float(self.stocks_dvc_model.GetValueByRow(i, 5)) for i in range(row_count)])
+
+        try:
+            gain_lost_percentage = gain_lost / cost_basis * 100
+            yield_percentage = annual_dividend / market_value * 100
+            account_percentage = market_value / account_total * 100
+        except ZeroDivisionError:
+            gain_lost_percentage = 0
+            yield_percentage = 0
+            account_percentage = 0
+
+        footer_data = [
+            count, cost_basis, market_value,
+            gain_lost, gain_lost_percentage,
+            yield_percentage, annual_dividend, dividend_received,
+            account_percentage
+        ]
+        footer_data = [str(round(i, 2)) for i in footer_data]
+
+        self.stocks_footer_dvlc.DeleteItem(0)
+        self.stocks_footer_dvlc.AppendItem(footer_data)
