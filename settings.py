@@ -1,5 +1,4 @@
 import os
-from re import A
 
 APP_NAME = 'FinTrack'
 VERSION = 'v0.0.9'
