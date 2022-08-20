@@ -4,71 +4,18 @@
 <dict>
 	<key>files</key>
 	<dict>
-		<key>Resources/__boot__.py</key>
+		<key>Resources/icon-windowed.icns</key>
 		<data>
-		ZEGicFvvUyPvCzXTb90ecemNpQM=
-		</data>
-		<key>Resources/__error__.sh</key>
-		<data>
-		jiMXHe2/gGu9p3+O3RpqVGbONRE=
-		</data>
-		<key>Resources/__pycache__/site.cpython-39.pyc</key>
-		<data>
-		QzlL/4o3l23Y0E/4/ZFviljCfH8=
-		</data>
-		<key>Resources/site.py</key>
-		<data>
-		z3OB0BTMhVqqhAbEE/YFmGkYad4=
+		eEHOuYpZLB0vKGVIWGZOh5rH8+o=
 		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
-		<key>MacOS/python</key>
-		<dict>
-			<key>symlink</key>
-			<string>/opt/homebrew/opt/python@3.9/bin/python3.9</string>
-		</dict>
-		<key>Resources/__boot__.py</key>
+		<key>Resources/icon-windowed.icns</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			JnKrmTtVz7KFsMM7h58v3/T2tX7ld37rlpCH2Y4UWBM=
-			</data>
-		</dict>
-		<key>Resources/__error__.sh</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			X92yvDN0TrSkH2FT7nqBEm6WgAZJ9CS2MXV1a7IpE4o=
-			</data>
-		</dict>
-		<key>Resources/__pycache__/site.cpython-39.pyc</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			CdN7BvhgrYcD4AEc5Qk6EZdZ5l00jRU/G2JlXb/vlLQ=
-			</data>
-		</dict>
-		<key>Resources/lib/python3.9/config</key>
-		<dict>
-			<key>symlink</key>
-			<string>/opt/homebrew/opt/python@3.9/Frameworks/Python.framework/Versions/3.9/lib/python3.9/config</string>
-		</dict>
-		<key>Resources/lib/python3.9/site.pyc</key>
-		<dict>
-			<key>symlink</key>
-			<string>../../site.pyc</string>
-		</dict>
-		<key>Resources/logo.icns</key>
-		<dict>
-			<key>symlink</key>
-			<string>/Users/ahben/Desktop/ahben-financial-tracker/logo.icns</string>
-		</dict>
-		<key>Resources/site.py</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			1rYFQ0EePKQzZG7JD4A71wcC8+0FZ0h2YybjmkY+oIo=
+			uQo7VuWRab4Phv4EEGmfQsyqFqDIXZgO8OtgaAMvCzY=
 			</data>
 		</dict>
 	</dict>

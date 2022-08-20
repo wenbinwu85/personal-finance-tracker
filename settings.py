@@ -1,8 +1,8 @@
 import os
 from re import A
 
-APP_NAME = 'FinTrack'
-VERSION = 'v0.0.9'
+APP_NAME = "FinanceTracker"
+VERSION = 'v0.0.10'
 EMAIL = 'Email: ahbenebha@gmail.com'
 DEVELOPER = 'Wenbin Wu'
 WEBSITE = 'https://github.com/wenbinwu85/', 'Github'
@@ -11,7 +11,7 @@ COPYRIGHT = f'\t(c) 2021 {DEVELOPER}\t'
 
 ADMIN_ACCOUNT = ('ahben', 'ahben')  # hardcoded admin account
 
-STATUS_BAR_MESSAGE = VERSION
+STATUS_BAR_MESSAGE = f'{APP_NAME} {VERSION}'
 
 APP_DIR = os.path.abspath(os.path.dirname(__file__))
 DATA_PATH = os.path.join(APP_DIR, 'data')
