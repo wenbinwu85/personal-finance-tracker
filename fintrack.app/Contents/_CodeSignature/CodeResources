@@ -4,18 +4,102 @@
 <dict>
 	<key>files</key>
 	<dict>
-		<key>Resources/icon-windowed.icns</key>
+		<key>Resources/__boot__.py</key>
 		<data>
-		eEHOuYpZLB0vKGVIWGZOh5rH8+o=
+		Dg0D6OmS92NeeUSoTZSEbLn1KQA=
+		</data>
+		<key>Resources/__error__.sh</key>
+		<data>
+		jiMXHe2/gGu9p3+O3RpqVGbONRE=
+		</data>
+		<key>Resources/__pycache__/site.cpython-310.opt-1.pyc</key>
+		<data>
+		6jwgVAxJh4x6c2uYdCmbmdzxOH8=
+		</data>
+		<key>Resources/__pycache__/site.cpython-310.pyc</key>
+		<data>
+		A8gS7NDv5iqNhQa0ukPnAw24Jcs=
+		</data>
+		<key>Resources/site.py</key>
+		<data>
+		hVOAaI28CXHytfoByVdYfNDxy9k=
 		</data>
 	</dict>
 	<key>files2</key>
 	<dict>
-		<key>Resources/icon-windowed.icns</key>
+		<key>MacOS/python</key>
 		<dict>
+			<key>symlink</key>
+			<string>/Library/Frameworks/Python.framework/Versions/3.10/bin/python3</string>
+		</dict>
+		<key>Resources/PythonApplet.icns</key>
+		<dict>
+			<key>symlink</key>
+			<string>/Library/Frameworks/Python.framework/Versions/3.10/Resources/Python.app/Contents/Resources/PythonApplet.icns</string>
+		</dict>
+		<key>Resources/__boot__.py</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			Dg0D6OmS92NeeUSoTZSEbLn1KQA=
+			</data>
 			<key>hash2</key>
 			<data>
-			uQo7VuWRab4Phv4EEGmfQsyqFqDIXZgO8OtgaAMvCzY=
+			cT4tB+5bkedg5WCYfbyjVMcbHi35ir8Cc5bShYdpWHQ=
+			</data>
+		</dict>
+		<key>Resources/__error__.sh</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			jiMXHe2/gGu9p3+O3RpqVGbONRE=
+			</data>
+			<key>hash2</key>
+			<data>
+			X92yvDN0TrSkH2FT7nqBEm6WgAZJ9CS2MXV1a7IpE4o=
+			</data>
+		</dict>
+		<key>Resources/__pycache__/site.cpython-310.opt-1.pyc</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			6jwgVAxJh4x6c2uYdCmbmdzxOH8=
+			</data>
+			<key>hash2</key>
+			<data>
+			1FzbV5KNjnQ+ZZMdtrGxiZN/ZVs1recLbrz9ajPVN8g=
+			</data>
+		</dict>
+		<key>Resources/__pycache__/site.cpython-310.pyc</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			A8gS7NDv5iqNhQa0ukPnAw24Jcs=
+			</data>
+			<key>hash2</key>
+			<data>
+			hRAwVFDCJ2SnJ6TeYzHCgnGeolMN7AM4Qqq1CxRTJQE=
+			</data>
+		</dict>
+		<key>Resources/lib/python3.10/config</key>
+		<dict>
+			<key>symlink</key>
+			<string>/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/config</string>
+		</dict>
+		<key>Resources/lib/python3.10/site.pyc</key>
+		<dict>
+			<key>symlink</key>
+			<string>../../site.pyc</string>
+		</dict>
+		<key>Resources/site.py</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			hVOAaI28CXHytfoByVdYfNDxy9k=
+			</data>
+			<key>hash2</key>
+			<data>
+			OJjuwoQlOOy9eI1StcNkpXbaXSFT4KM6Uyhwn22JYHk=
 			</data>
 		</dict>
 	</dict>
